@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
-import { useOverlayContext } from "../Overlay.context";
-import { Dialog } from "./Dialog";
+import { ReactNode } from 'react';
+import { useOverlayContext } from '../Overlay.context';
+import { Dialog } from './Dialog';
 
 export const useDialog = () => {
   const { mount: _mount, unmount: _unmount } = useOverlayContext();
@@ -9,20 +9,20 @@ export const useDialog = () => {
   const Confirm: ConfirmType = element => {
     return new Promise(resolve => {
       _mount(
-        "Confirm",
+        'Confirm',
         <Dialog
           type="Confirm"
           onClose={() => {
             resolve(false);
-            _unmount("Confirm");
+            _unmount('Confirm');
           }}
-          onSucess={() => {
+          onSuccess={() => {
             resolve(true);
-            _unmount("Confirm");
+            _unmount('Confirm');
           }}
         >
           {element}
-        </Dialog>
+        </Dialog>,
       );
     });
   };
@@ -31,16 +31,16 @@ export const useDialog = () => {
   const Alert: AlertType = element => {
     return new Promise(resolve => {
       _mount(
-        "Alert",
+        'Alert',
         <Dialog
           type="Alert"
           onClose={() => {
             resolve(true);
-            _unmount("Alert");
+            _unmount('Alert');
           }}
         >
           {element}
-        </Dialog>
+        </Dialog>,
       );
     });
   };

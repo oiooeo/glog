@@ -1,13 +1,4 @@
-import {
-  createContext,
-  Fragment,
-  PropsWithChildren,
-  ReactNode,
-  useCallback,
-  useContext,
-  useMemo,
-  useState
-} from "react";
+import { createContext, Fragment, PropsWithChildren, ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 
 const OverlayContext = createContext<{
   mount(id: string, element: ReactNode): void;
@@ -38,9 +29,9 @@ export const OverlayProvider = ({ children }: PropsWithChildren) => {
   const values = useMemo(
     () => ({
       mount,
-      unmount
+      unmount,
     }),
-    [mount, unmount]
+    [mount, unmount],
   );
 
   return (
@@ -57,7 +48,7 @@ export const useOverlayContext = () => {
   const overlayContext = useContext(OverlayContext);
 
   if (!overlayContext) {
-    throw new Error("useOverlayContext is only available within OverlayProvider");
+    throw new Error('useOverlayContext is only available within OverlayProvider');
   }
 
   return overlayContext;
