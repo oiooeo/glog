@@ -1,4 +1,3 @@
-import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { OverlayProvider } from './components/common/overlay/Overlay.context';
 import Router from './shared/Router';
@@ -17,6 +16,5 @@ const App = () => {
       </OverlayProvider>
     </QueryClientProvider>
   );
-};
 
 export default App;
