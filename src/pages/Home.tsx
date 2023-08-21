@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AuthError, googleLogin } from '../api/supabaseAuth';
 import { supabase } from '../api/supabaseClient';
+import Switch from '../components/common/switch/Switch';
 
 const Home = () => {
   const [user, setUser] = useState({});
@@ -27,10 +28,13 @@ const Home = () => {
     }
   };
 
+  const [switch1Checked, setSwitch1Checked] = useState(false);
+
   return (
     <div>
       Home
       <button onClick={googleLoginHandler}>로그인</button>
+      <Switch checked={switch1Checked} onChange={setSwitch1Checked} left={'탐색'} right={'MY'} />
     </div>
   );
 };

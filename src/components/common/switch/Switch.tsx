@@ -18,6 +18,7 @@ const Switch: React.FC<SwitchProps> = ({ checked, onChange, left, right }) => {
       <Styled.SwitchLabel checked={checked} onClick={handleClick}>
         <Styled.SwitchLeftText checked={checked}>{left}</Styled.SwitchLeftText>
         <Styled.SwitchRightText checked={checked}>{right}</Styled.SwitchRightText>
+        <Styled.SwitchSpan checked={checked}>{checked ? right : left}</Styled.SwitchSpan>
       </Styled.SwitchLabel>
     </>
   );
