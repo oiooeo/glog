@@ -1,7 +1,26 @@
 import React from 'react';
+import * as Styled from './style';
 
-const Switch = () => {
-  return <div>Switch</div>;
+interface SwitchProps {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  left: string;
+  right: string;
+}
+
+const Switch: React.FC<SwitchProps> = ({ checked, onChange, left, right }) => {
+  const handleClick = () => {
+    onChange(!checked);
+  };
+
+  return (
+    <>
+      <Styled.SwitchLabel checked={checked} onClick={handleClick}>
+        <Styled.SwitchLeftText checked={checked}>{left}</Styled.SwitchLeftText>
+        <Styled.SwitchRightText checked={checked}>{right}</Styled.SwitchRightText>
+      </Styled.SwitchLabel>
+    </>
+  );
 };
 
 export default Switch;
