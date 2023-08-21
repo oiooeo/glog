@@ -66,7 +66,43 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom }) => {
       },
     ],
   };
+  useEffect(() => {
+    const placeLocation = async (location: { lng: number; lat: number }) => {
+      const zoomSized = map.current?.getZoom();
+      console.log(zoomSized);
+      try {
+        const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${location.lng},${location.lat}.json?access_token=${mapboxgl.accessToken}&language=ko`);
+        const data = await response.json();
+        const placeName = data.features[0].place_name;
+        const placeComponents = placeName.split(', ');
+        const city = placeComponents[placeComponents.length - 3];
+        const country = placeComponents[placeComponents.length - 1];
+        const popupContent = `${country}, ${city}`; // 팝업 내용을 장소 정보로 설정
+        const popup = new mapboxgl.Popup({ offset: 25 }).setText(popupContent);
 
+        if (zoomSized && zoomSized >= 9) {
+          const textMarker = document.createElement('div');
+          textMarker.className = 'formMarker';
+          textMarker.style.width = `40px`;
+          textMarker.style.height = `40px`;
+          textMarker.style.backgroundSize = '100%';
+          const marker = new mapboxgl.Marker(textMarker)
+            .setLngLat([location.lng, location.lat])
+            .setPopup(popup) // 마커에 팝업 연결
+            .addTo(map.current!);
+          if (!popup.isOpen()) {
+            marker.togglePopup();
+          }
+        } else {
+          // 이미 생성된 마커가 있는 경우 팝업만 업데이트
+          const oldMarker = document.querySelector('formMarker');
+          oldMarker?.remove();
+        }
+      } catch (error) {
+        console.error('error', error);
+      }
+    };
+  }, [initialCenter, zoom]);
   return <div>Globe</div>;
 };
 
