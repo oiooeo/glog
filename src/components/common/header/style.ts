@@ -28,3 +28,10 @@ export const Circle = styled.button`
   justify-content: center;
   margin: 5px;
 `;
+
+export const AuthText = styled.span`
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 5px;
+`;
