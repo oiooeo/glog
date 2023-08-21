@@ -11,7 +11,7 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom }) => {
   const map = useRef<mapboxgl.Map | null>(null);
 
   mapboxgl.accessToken = process.env.REACT_APP_ACCESS_TOKEN ? process.env.REACT_APP_ACCESS_TOKEN : '';
-
+  // DB
   const geojson = {
     type: 'FeatureCollection',
     features: [
@@ -66,6 +66,7 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom }) => {
       },
     ],
   };
+
   useEffect(() => {
     const placeLocation = async (location: { lng: number; lat: number }) => {
       const zoomSized = map.current?.getZoom();
@@ -110,43 +111,44 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom }) => {
         zoom: zoom,
       });
       // mapPost 기능때 사용
-      // map.current.on('click', e => {
-      //   const coordinates = e.lngLat;
+      map.current.on('click', e => {
+        const coordinates = e.lngLat;
 
-      //   map.current?.on('zoom', async () => {
-      //     const zoomSize = map.current?.getZoom();
-      //     //zoom이 9 이하일때는 삭제
-      //     console.log(zoomSize);
-      //     if (zoomSize && zoomSize <= 9) {
-      //       const oldMarker = document.querySelector('.new-marker');
-      //       if (oldMarker) {
-      //         oldMarker.remove();
-      //       }
-      //     }
-      //     // 확대가 다 됐을 경우 생성
-      //     if (zoomSize && zoomSize == 10) {
-      //       const oldMarker = document.querySelector('.new-marker');
-      //       if (oldMarker) {
-      //         oldMarker.remove();
-      //       }
-      //       const newMarker = document.createElement('div');
-      //       newMarker.className = 'new-marker';
-      //       newMarker.style.backgroundImage = `url(https://img.icons8.com/?size=512&id=21613&format=png)`;
-      //       newMarker.style.width = '30px';
-      //       newMarker.style.height = '30px';
-      //       newMarker.style.backgroundSize = '100%';
-      //       new mapboxgl.Marker(newMarker).setLngLat([coordinates.lng, coordinates.lat]).addTo(map.current!);
+        map.current?.on('zoom', async () => {
+          const zoomSize = map.current?.getZoom();
+          //zoom이 9 이하일때는 삭제
+          console.log(zoomSize);
+          if (zoomSize && zoomSize <= 9) {
+            const oldMarker = document.querySelector('.new-marker');
+            if (oldMarker) {
+              oldMarker.remove();
+            }
+          }
+          // 확대가 다 됐을 경우 생성
+          if (zoomSize && zoomSize == 10) {
+            const oldMarker = document.querySelector('.new-marker');
+            if (oldMarker) {
+              oldMarker.remove();
+            }
+            const newMarker = document.createElement('div');
+            newMarker.className = 'new-marker';
+            newMarker.style.backgroundImage = `url(https://img.icons8.com/?size=512&id=21613&format=png)`;
+            newMarker.style.width = '30px';
+            newMarker.style.height = '30px';
+            newMarker.style.backgroundSize = '100%';
+            new mapboxgl.Marker(newMarker).setLngLat([coordinates.lng, coordinates.lat]).addTo(map.current!);
 
-      //       placeLocation(coordinates);
-      //     }
-      //   });
-      //   // post 지역으로 확대
-      //   map.current?.flyTo({
-      //     center: [coordinates.lng, coordinates.lat],
-      //     zoom: 10,
-      //     speed: 0.8,
-      //   });
-      // });
+            placeLocation(coordinates);
+          }
+        });
+        // post 지역으로 확대
+        map.current?.flyTo({
+          center: [coordinates.lng, coordinates.lat],
+          zoom: 10,
+          speed: 0.8,
+        });
+      });
+
       for (let i = 0; i < geojson.features.length; i++) {
         const marker = geojson.features[i];
         // 작성한 marker 생성
@@ -183,7 +185,11 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom }) => {
       }
     }
   }, [initialCenter, zoom]);
-  return <div>Globe</div>;
+  return (
+    <div>
+      <div ref={mapContainerRef} style={{ height: '1000px' }} />
+    </div>
+  );
 };
 
 export default Globe;
