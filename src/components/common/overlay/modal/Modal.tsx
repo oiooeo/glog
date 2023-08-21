@@ -1,12 +1,14 @@
-import { MouseEvent, ReactNode } from "react";
-import { useOverlayContext } from "../Overlay.context";
+import { MouseEvent, ReactNode } from 'react';
+import * as Styled from './style';
+import { useOverlayContext } from '../Overlay.context';
 
 interface Props {
   children: ReactNode;
   name: string;
+  position: 'left' | 'center' | 'right';
 }
 
-const Modal = ({ children, name }: Props) => {
+const Modal = ({ children, name, position }: Props) => {
   const { unmount } = useOverlayContext();
 
   type CloseModal = (event: MouseEvent<HTMLDivElement>) => void;
@@ -18,14 +20,22 @@ const Modal = ({ children, name }: Props) => {
     unmount(name);
   };
 
-  return (
-    <div
-      className="fixed top-0 left-0 z-40 flex items-center justify-center w-full h-full bg-black bg-opacity-30"
-      onClick={handleClose}
-    >
-      <div className="max-w-lg p-5 text-white rounded-lg bg-mainDark1">{children}</div>
-    </div>
-  );
+  let content;
+  switch (position) {
+    case 'center':
+      content = <Styled.ModalInner>{children}</Styled.ModalInner>;
+      break;
+    case 'left':
+      content = <Styled.LeftModalInner>{children}</Styled.LeftModalInner>;
+      break;
+    case 'right':
+      content = <Styled.RightModalInner>{children}</Styled.RightModalInner>;
+      break;
+    default:
+      content = <Styled.ModalInner>{children}</Styled.ModalInner>;
+  }
+
+  return <Styled.ModalOuter onClick={handleClose}>{content}</Styled.ModalOuter>;
 };
 
 export default Modal;

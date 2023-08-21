@@ -78,6 +78,7 @@ export interface Database {
           latitude: string | null
           likes: number | null
           longitude: string | null
+          private: boolean
           regionId: string | null
           userId: string
         }
@@ -90,6 +91,7 @@ export interface Database {
           latitude?: string | null
           likes?: number | null
           longitude?: string | null
+          private?: boolean
           regionId?: string | null
           userId: string
         }
@@ -102,6 +104,7 @@ export interface Database {
           latitude?: string | null
           likes?: number | null
           longitude?: string | null
+          private?: boolean
           regionId?: string | null
           userId?: string
         }
