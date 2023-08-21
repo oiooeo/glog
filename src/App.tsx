@@ -16,5 +16,6 @@ const App = () => {
       </OverlayProvider>
     </QueryClientProvider>
   );
+};
 
 export default App;
