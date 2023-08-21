@@ -102,6 +102,52 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom }) => {
         console.error('error', error);
       }
     };
+    if (!map.current && mapContainerRef.current) {
+      map.current = new mapboxgl.Map({
+        container: mapContainerRef.current,
+        style: 'mapbox://styles/seungbeom1999/cllfu8drf00gy01pu6gf4h98b/draft',
+        center: initialCenter,
+        zoom: zoom,
+      });
+      // mapPost 기능때 사용
+      map.current.on('click', e => {
+        const coordinates = e.lngLat;
+
+        map.current?.on('zoom', async () => {
+          const zoomSize = map.current?.getZoom();
+          //zoom이 9 이하일때는 삭제
+          console.log(zoomSize);
+          if (zoomSize && zoomSize <= 9) {
+            const oldMarker = document.querySelector('.new-marker');
+            if (oldMarker) {
+              oldMarker.remove();
+            }
+          }
+          // 확대가 다 됐을 경우 생성
+          if (zoomSize && zoomSize == 10) {
+            const oldMarker = document.querySelector('.new-marker');
+            if (oldMarker) {
+              oldMarker.remove();
+            }
+            const newMarker = document.createElement('div');
+            newMarker.className = 'new-marker';
+            newMarker.style.backgroundImage = `url(https://img.icons8.com/?size=512&id=21613&format=png)`;
+            newMarker.style.width = '30px';
+            newMarker.style.height = '30px';
+            newMarker.style.backgroundSize = '100%';
+            new mapboxgl.Marker(newMarker).setLngLat([coordinates.lng, coordinates.lat]).addTo(map.current!);
+
+            placeLocation(coordinates);
+          }
+        });
+        // post 지역으로 확대
+        map.current?.flyTo({
+          center: [coordinates.lng, coordinates.lat],
+          zoom: 10,
+          speed: 0.8,
+        });
+      });
+    }
   }, [initialCenter, zoom]);
   return <div>Globe</div>;
 };
