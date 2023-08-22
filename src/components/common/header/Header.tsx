@@ -8,9 +8,11 @@ import Switch from '../switch/Switch';
 import { useModal } from '../overlay/modal/Modal.hooks';
 import LikesList from '../../likesList/LikesList';
 import SearchList from '../../searchList/SearchList';
+import { User } from '@supabase/supabase-js';
+import { addNewUser } from '../../../api/supabaseDatabase';
 
 const Header = () => {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState<User>();
   const [switchChecked, setSwitchChecked] = useState(false);
   const { rightMount, unmount } = useModal();
   const session = useSessionStore(state => state.session);
@@ -19,17 +21,20 @@ const Header = () => {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      if (session && session.user && session.user.email) addNewUser(session.user.email);
     });
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
+  }, [setSession]);
 
+  useEffect(() => {
     if (switchChecked) {
       console.log('MY 탭 활성화');
     } else {
       console.log('탐색 탭 활성화');
     }
-  }, [setSession, switchChecked]);
+  }, [switchChecked]);
 
   useEffect(() => {
     async function getUserData() {
@@ -43,9 +48,9 @@ const Header = () => {
     getUserData();
   }, []);
 
-  const signinHandler = () => {
+  const signinHandler = async () => {
     try {
-      signin();
+      await signin();
     } catch (error) {
       if (error instanceof AuthError) {
         alert({ type: 'alert', title: '로그인 실패', content: error.message });
@@ -56,6 +61,7 @@ const Header = () => {
   const signoutHandler = async () => {
     try {
       signout();
+      setUser(undefined);
     } catch (error) {
       if (error instanceof AuthError) {
         alert({ type: 'alert', title: '로그아웃 실패', content: error.message });
