@@ -111,43 +111,43 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom }) => {
         zoom: zoom,
       });
       // mapPost 기능때 사용
-      map.current.on('click', e => {
-        const coordinates = e.lngLat;
+      // map.current.on('click', e => {
+      //   const coordinates = e.lngLat;
 
-        map.current?.on('zoom', async () => {
-          const zoomSize = map.current?.getZoom();
-          //zoom이 9 이하일때는 삭제
-          console.log(zoomSize);
-          if (zoomSize && zoomSize <= 9) {
-            const oldMarker = document.querySelector('.new-marker');
-            if (oldMarker) {
-              oldMarker.remove();
-            }
-          }
-          // 확대가 다 됐을 경우 생성
-          if (zoomSize && zoomSize == 10) {
-            const oldMarker = document.querySelector('.new-marker');
-            if (oldMarker) {
-              oldMarker.remove();
-            }
-            const newMarker = document.createElement('div');
-            newMarker.className = 'new-marker';
-            newMarker.style.backgroundImage = `url(https://img.icons8.com/?size=512&id=21613&format=png)`;
-            newMarker.style.width = '30px';
-            newMarker.style.height = '30px';
-            newMarker.style.backgroundSize = '100%';
-            new mapboxgl.Marker(newMarker).setLngLat([coordinates.lng, coordinates.lat]).addTo(map.current!);
+      //   map.current?.on('zoom', async () => {
+      //     const zoomSize = map.current?.getZoom();
+      //     //zoom이 9 이하일때는 삭제
+      //     console.log(zoomSize);
+      //     if (zoomSize && zoomSize <= 9) {
+      //       const oldMarker = document.querySelector('.new-marker');
+      //       if (oldMarker) {
+      //         oldMarker.remove();
+      //       }
+      //     }
+      //     // 확대가 다 됐을 경우 생성
+      //     if (zoomSize && zoomSize == 10) {
+      //       const oldMarker = document.querySelector('.new-marker');
+      //       if (oldMarker) {
+      //         oldMarker.remove();
+      //       }
+      //       const newMarker = document.createElement('div');
+      //       newMarker.className = 'new-marker';
+      //       newMarker.style.backgroundImage = `url(https://img.icons8.com/?size=512&id=21613&format=png)`;
+      //       newMarker.style.width = '30px';
+      //       newMarker.style.height = '30px';
+      //       newMarker.style.backgroundSize = '100%';
+      //       new mapboxgl.Marker(newMarker).setLngLat([coordinates.lng, coordinates.lat]).addTo(map.current!);
 
-            placeLocation(coordinates);
-          }
-        });
-        // post 지역으로 확대
-        map.current?.flyTo({
-          center: [coordinates.lng, coordinates.lat],
-          zoom: 10,
-          speed: 0.8,
-        });
-      });
+      //       placeLocation(coordinates);
+      //     }
+      //   });
+      //   // post 지역으로 확대
+      //   map.current?.flyTo({
+      //     center: [coordinates.lng, coordinates.lat],
+      //     zoom: 10,
+      //     speed: 0.8,
+      //   });
+      // });
 
       for (let i = 0; i < geojson.features.length; i++) {
         const marker = geojson.features[i];
@@ -184,6 +184,29 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom }) => {
         new mapboxgl.Marker(el).setLngLat([markerInfo.lng, markerInfo.lat]).addTo(map.current!);
       }
     }
+
+    //searchBox
+    const searchScript = document.createElement('script');
+    searchScript.src = 'https://api.mapbox.com/search-js/v1.0.0-beta.17/web.js';
+    searchScript.defer = true;
+    searchScript.onload = function () {
+      if ((window as any).MapboxSearchBox) {
+        const geocoder = new (window as any).MapboxSearchBox();
+        geocoder.accessToken = mapboxgl.accessToken;
+        geocoder.flyTo = {
+          bearing: 0,
+          speed: 8,
+          curve: 1,
+          easing: function (t: any) {
+            return t;
+          },
+        };
+        geocoder.marker = true;
+        geocoder.mapboxgl = mapboxgl;
+        map.current?.addControl(geocoder);
+      }
+    };
+    document.head.appendChild(searchScript);
   }, [initialCenter, zoom]);
   return (
     <div>
