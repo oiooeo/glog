@@ -24,21 +24,23 @@ export const ModalInner = styled.div`
 
 export const LeftModalInner = styled.div`
   position: absolute;
-  box-sizing: border-box;
-  width: 300px;
-  height: 100%;
+  width: fit-content;
+  height: calc(100vh - 65px);
+  margin-top: 65px;
   padding: 20px;
-  background-color: #343434;
+  background: #ffffff;
   color: #ffffff;
 `;
 
 export const RightModalInner = styled.div`
   position: absolute;
-  box-sizing: border-box;
+  overflow-y: scroll;
   right: 0;
-  width: 300px;
-  height: 100%;
+  width: fit-content;
+  height: calc(100vh - 65px);
+  margin-top: 65px;
   padding: 20px;
-  background-color: #343434;
-  color: #ffffff;
+  /* background: linear-gradient(to left, #ffffff, #ffffff50); */
+  background: #ffffff;
+  color: #000000;
 `;
