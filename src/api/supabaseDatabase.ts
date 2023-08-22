@@ -1,3 +1,4 @@
+import { Tables } from '../types/supabase';
 import { supabase } from './supabaseClient';
 import { uuid } from '@supabase/gotrue-js/dist/module/lib/helpers';
 
@@ -12,4 +13,8 @@ export const addNewUser = async (email: string) => {
   if (!data) {
     await supabase.from('users').insert({ id: uuid(), email: email });
   }
+};
+
+export const addPost = async (newPost: Tables<'posts'>) => {
+  await supabase.from('posts').insert(newPost);
 };

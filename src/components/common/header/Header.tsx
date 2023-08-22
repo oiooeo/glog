@@ -10,11 +10,12 @@ import LikesList from '../../likesList/LikesList';
 import SearchList from '../../searchList/SearchList';
 import { User } from '@supabase/supabase-js';
 import { addNewUser } from '../../../api/supabaseDatabase';
+import Post from '../../post/Post';
 
 const Header = () => {
   const [user, setUser] = useState<User>();
   const [switchChecked, setSwitchChecked] = useState(false);
-  const { rightMount, unmount } = useModal();
+  const { leftMount, rightMount, unmount } = useModal();
   const session = useSessionStore(state => state.session);
   const setSession = useSessionStore(state => state.setSession);
 
@@ -69,6 +70,10 @@ const Header = () => {
     }
   };
 
+  const openPost = () => {
+    leftMount('searchList', <Post />);
+  };
+
   const openSearchList = () => {
     rightMount('searchList', <SearchList />);
   };
@@ -81,7 +86,7 @@ const Header = () => {
     <Styled.HeaderWrapper>
       <Styled.Wrapper>
         <Styled.Circle>로고</Styled.Circle>
-        <Styled.Circle>
+        <Styled.Circle onClick={session ? openPost : signinHandler}>
           <BsPlusLg size={'16px'} />
         </Styled.Circle>
         {session ? <Styled.AuthSpan onClick={signoutHandler}>로그아웃</Styled.AuthSpan> : <Styled.AuthSpan onClick={signinHandler}>로그인</Styled.AuthSpan>}
@@ -91,7 +96,7 @@ const Header = () => {
         <Styled.Circle onClick={openSearchList}>
           <BsSearch size={'16px'} />
         </Styled.Circle>
-        <Styled.Circle onClick={openLikesList}>
+        <Styled.Circle onClick={session ? openLikesList : signinHandler}>
           <BsHeart size={'16px'} />
         </Styled.Circle>
       </Styled.Wrapper>
