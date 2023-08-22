@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
+import * as Styled from './style';
 
 interface MapProps {
   initialCenter: [number, number];
@@ -185,11 +186,7 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom }) => {
       }
     }
   }, [initialCenter, zoom]);
-  return (
-    <div>
-      <div ref={mapContainerRef} style={{ height: '1000px' }} />
-    </div>
-  );
+  return <Styled.GlobeLayout ref={mapContainerRef} />;
 };
 
 export default Globe;

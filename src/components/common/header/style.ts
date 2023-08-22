@@ -1,11 +1,14 @@
 import { styled } from 'styled-components';
 
 export const HeaderWrapper = styled.header`
+  position: fixed;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 5px 15px;
-  background-color: #ffffff;
+  width: 100%;
+  padding: 10px 15px;
+  background: transparent;
+  z-index: 100;
 `;
 
 export const Wrapper = styled.div`
