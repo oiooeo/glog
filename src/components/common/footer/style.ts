@@ -1,19 +1,24 @@
 import { styled } from 'styled-components';
 
 export const FooterWrapper = styled.footer`
-  background-color: transparent;
-  padding: 5px;
-  text-align: center;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000000;
+  width: 100%;
+  height: 30px;
+  z-index: 98;
 `;
 
 export const FooterText = styled.p`
-  margin: 0;
   font-size: 12px;
-  color: #333;
+  color: #ffffff;
 `;
 
 export const GitHubLink = styled.a`
-  color: #333;
+  color: #ffffff;
   font-size: 12px;
   text-decoration: none;
 `;

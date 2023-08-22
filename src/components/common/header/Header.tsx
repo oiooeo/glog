@@ -5,10 +5,14 @@ import * as Styled from './style';
 import { BsSearch, BsHeart, BsPlusLg } from 'react-icons/bs';
 import useSessionStore from '../../../hooks/useSessionStore';
 import Switch from '../switch/Switch';
+import { useModal } from '../overlay/modal/Modal.hooks';
+import LikesList from '../../likesList/LikesList';
+import SearchList from '../../searchList/SearchList';
 
 const Header = () => {
   const [user, setUser] = useState({});
   const [switchChecked, setSwitchChecked] = useState(false);
+  const { rightMount, unmount } = useModal();
   const session = useSessionStore(state => state.session);
   const setSession = useSessionStore(state => state.setSession);
 
@@ -59,6 +63,14 @@ const Header = () => {
     }
   };
 
+  const openSearchList = () => {
+    rightMount('searchList', <SearchList />);
+  };
+
+  const openLikesList = () => {
+    rightMount('likesList', <LikesList />);
+  };
+
   return (
     <Styled.HeaderWrapper>
       <Styled.Wrapper>
@@ -70,10 +82,10 @@ const Header = () => {
       </Styled.Wrapper>
       <Switch checked={switchChecked} onChange={setSwitchChecked} left={'탐색'} right={'MY'} />
       <Styled.Wrapper>
-        <Styled.Circle>
+        <Styled.Circle onClick={openSearchList}>
           <BsSearch size={'16px'} />
         </Styled.Circle>
-        <Styled.Circle>
+        <Styled.Circle onClick={openLikesList}>
           <BsHeart size={'16px'} />
         </Styled.Circle>
       </Styled.Wrapper>
