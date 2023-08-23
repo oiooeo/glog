@@ -1,27 +1,16 @@
 import React from 'react';
-import * as Styled from './style';
+import PostItem from '../common/postItem/PostItem';
 
 const SearchList = () => {
   return (
     <>
-      <div>
-        <Styled.LikesListImg src="https://i.pinimg.com/564x/b8/8c/b2/b88cb27e9d70d7c0a3258eacab65e01e.jpg" alt="사진" />
-      </div>
-      <div>
-        <Styled.LikesListImg src="https://i.pinimg.com/564x/b8/8c/b2/b88cb27e9d70d7c0a3258eacab65e01e.jpg" alt="사진" />
-      </div>
-      <div>
-        <Styled.LikesListImg src="https://i.pinimg.com/564x/b8/8c/b2/b88cb27e9d70d7c0a3258eacab65e01e.jpg" alt="사진" />
-      </div>
-      <div>
-        <Styled.LikesListImg src="https://i.pinimg.com/564x/b8/8c/b2/b88cb27e9d70d7c0a3258eacab65e01e.jpg" alt="사진" />
-      </div>
-      <div>
-        <Styled.LikesListImg src="https://i.pinimg.com/564x/b8/8c/b2/b88cb27e9d70d7c0a3258eacab65e01e.jpg" alt="사진" />
-      </div>
-      <div>
-        <Styled.LikesListImg src="https://i.pinimg.com/564x/b8/8c/b2/b88cb27e9d70d7c0a3258eacab65e01e.jpg" alt="사진" />
-      </div>
+      <PostItem imgUrl={'https://i.pinimg.com/564x/b8/8c/b2/b88cb27e9d70d7c0a3258eacab65e01e.jpg'} />
+      <PostItem imgUrl={'https://i.pinimg.com/564x/b8/8c/b2/b88cb27e9d70d7c0a3258eacab65e01e.jpg'} />
+      <PostItem imgUrl={'https://i.pinimg.com/564x/b8/8c/b2/b88cb27e9d70d7c0a3258eacab65e01e.jpg'} />
+      <PostItem imgUrl={'https://i.pinimg.com/564x/b8/8c/b2/b88cb27e9d70d7c0a3258eacab65e01e.jpg'} />
+      <PostItem imgUrl={'https://i.pinimg.com/564x/b8/8c/b2/b88cb27e9d70d7c0a3258eacab65e01e.jpg'} />
+      <PostItem imgUrl={'https://i.pinimg.com/564x/b8/8c/b2/b88cb27e9d70d7c0a3258eacab65e01e.jpg'} />
+      <PostItem imgUrl={'https://i.pinimg.com/564x/b8/8c/b2/b88cb27e9d70d7c0a3258eacab65e01e.jpg'} />
     </>
   );
 };
