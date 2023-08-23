@@ -8,11 +8,12 @@ import Switch from '../switch/Switch';
 import { useModal } from '../overlay/modal/Modal.hooks';
 import LikesList from '../../likesList/LikesList';
 import SearchList from '../../searchList/SearchList';
+import Post from '../../post/Post';
 
 const Header = () => {
   const [user, setUser] = useState({});
   const [switchChecked, setSwitchChecked] = useState(false);
-  const { rightMount, unmount } = useModal();
+  const { leftMount, rightMount, unmount } = useModal();
   const session = useSessionStore(state => state.session);
   const setSession = useSessionStore(state => state.setSession);
 
@@ -63,6 +64,10 @@ const Header = () => {
     }
   };
 
+  const openPost = () => {
+    leftMount('searchList', <Post />);
+  };
+
   const openSearchList = () => {
     rightMount('searchList', <SearchList />);
   };
@@ -75,7 +80,7 @@ const Header = () => {
     <Styled.HeaderWrapper>
       <Styled.Wrapper>
         <Styled.Circle>로고</Styled.Circle>
-        <Styled.Circle>
+        <Styled.Circle onClick={openPost}>
           <BsPlusLg size={'16px'} />
         </Styled.Circle>
         {session ? <Styled.AuthSpan onClick={signoutHandler}>로그아웃</Styled.AuthSpan> : <Styled.AuthSpan onClick={signinHandler}>로그인</Styled.AuthSpan>}
