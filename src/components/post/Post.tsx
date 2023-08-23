@@ -8,7 +8,11 @@ import Button from '../common/button/Button';
 import useInput from '../../hooks/useInput';
 import { useLocationStore, useSessionStore } from '../../zustand/store';
 
-const Post = () => {
+type PostProps = {
+  unmount: (name: string) => void;
+};
+
+const Post: React.FC<PostProps> = ({ unmount }) => {
   const queryClient = useQueryClient();
   const [imgFile, setImgFile] = useState<string>();
   const [imgUrl, setImgUrl] = useState<string>('');
@@ -66,26 +70,37 @@ const Post = () => {
     e.preventDefault();
     console.log('찍은곳', clickedLocation);
     mutate();
+    unmount('post');
   };
 
   return (
     <div>
       <form onSubmit={handleToSubmit}>
-        <div>
-          <Styled.ImgUpload>
-            <div>
-              <Styled.UploadBox>
-                <label htmlFor="inputImg">{imgFile ? <Styled.UploadImgFile src={imgFile} alt="이미지 업로드" /> : <Styled.ImgBox>사진 선택</Styled.ImgBox>}</label>
-                <input id="inputImg" type="file" accept="image/png, image/jpeg, image/jpg" name="images" onChange={uploadImgFile} ref={imgRef} />
-              </Styled.UploadBox>
-              <br />
-              <br />
-            </div>
-          </Styled.ImgUpload>
-        </div>
-        <input placeholder="짧은 글을 남겨주세요!" type="text" name="contents" onChange={handleChangeContents} maxLength={50} />
-        <Switch checked={switchChecked} onChange={setSwitchChecked} left={'전체공유'} right={'나만보기'} />
-        <Button type="submit">작성하기</Button>
+        <Styled.Grid>
+          <div>
+            <Styled.UploadBox>
+              <label htmlFor="inputImg">{imgFile ? <Styled.UploadImgFile src={imgFile} alt="이미지 업로드" /> : <Styled.ImgBox>사진 선택</Styled.ImgBox>}</label>
+              <input id="inputImg" type="file" accept="image/png, image/jpeg, image/jpg" name="images" onChange={uploadImgFile} ref={imgRef} />
+            </Styled.UploadBox>
+          </div>
+          {imgFile && (
+            <>
+              <Styled.SearchInput placeholder="지역 탐색 임시 input & 핀 찍으세요 !" />
+              <p>
+                {clickedLocation?.countryId}, {clickedLocation?.regionId}
+              </p>
+              <Styled.ContentsInputBox>
+                <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" type="text" name="contents" onChange={handleChangeContents} maxLength={50} />
+              </Styled.ContentsInputBox>
+              <Switch checked={switchChecked} onChange={setSwitchChecked} left={'전체공유'} right={'나만보기'} />
+            </>
+          )}
+          {imgFile && contents && (
+            <Button size="large" type="submit">
+              작성하기
+            </Button>
+          )}
+        </Styled.Grid>
       </form>
     </div>
   );

@@ -5,6 +5,16 @@ export const ModalOuter = styled.div`
   top: 0;
   left: 0;
   width: fit-content;
+  height: fit-content;
+  background-color: #00000000;
+  z-index: 99;
+`;
+
+export const RightModalOuter = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: fit-content;
   height: 100%;
   background-color: #00000000;
   z-index: 99;

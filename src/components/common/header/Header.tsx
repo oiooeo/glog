@@ -70,7 +70,7 @@ const Header = () => {
   };
 
   const openPost = () => {
-    leftMount('searchList', <Post />);
+    leftMount('post', <Post unmount={unmount} />);
   };
 
   const openSearchList = () => {
