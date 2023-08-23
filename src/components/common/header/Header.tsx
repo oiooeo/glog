@@ -8,10 +8,12 @@ import Switch from '../switch/Switch';
 import { useModal } from '../overlay/modal/Modal.hooks';
 import LikesList from '../../likesList/LikesList';
 import SearchList from '../../searchList/SearchList';
+import { User } from '@supabase/supabase-js';
+import { addNewUser } from '../../../api/supabaseDatabase';
 import Post from '../../post/Post';
 
 const Header = () => {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState<User>();
   const [switchChecked, setSwitchChecked] = useState(false);
   const { leftMount, rightMount, unmount } = useModal();
   const session = useSessionStore(state => state.session);
@@ -20,17 +22,20 @@ const Header = () => {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      if (session && session.user && session.user.email) addNewUser(session.user.email);
     });
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
+  }, [setSession]);
 
+  useEffect(() => {
     if (switchChecked) {
       console.log('MY 탭 활성화');
     } else {
       console.log('탐색 탭 활성화');
     }
-  }, [setSession, switchChecked]);
+  }, [switchChecked]);
 
   useEffect(() => {
     async function getUserData() {
@@ -44,9 +49,9 @@ const Header = () => {
     getUserData();
   }, []);
 
-  const signinHandler = () => {
+  const signinHandler = async () => {
     try {
-      signin();
+      await signin();
     } catch (error) {
       if (error instanceof AuthError) {
         alert({ type: 'alert', title: '로그인 실패', content: error.message });
@@ -57,6 +62,7 @@ const Header = () => {
   const signoutHandler = async () => {
     try {
       signout();
+      setUser(undefined);
     } catch (error) {
       if (error instanceof AuthError) {
         alert({ type: 'alert', title: '로그아웃 실패', content: error.message });
@@ -80,7 +86,7 @@ const Header = () => {
     <Styled.HeaderWrapper>
       <Styled.Wrapper>
         <Styled.Circle>로고</Styled.Circle>
-        <Styled.Circle onClick={openPost}>
+        <Styled.Circle onClick={session ? openPost : signinHandler}>
           <BsPlusLg size={'16px'} />
         </Styled.Circle>
         {session ? <Styled.AuthSpan onClick={signoutHandler}>로그아웃</Styled.AuthSpan> : <Styled.AuthSpan onClick={signinHandler}>로그인</Styled.AuthSpan>}
@@ -90,7 +96,7 @@ const Header = () => {
         <Styled.Circle onClick={openSearchList}>
           <BsSearch size={'16px'} />
         </Styled.Circle>
-        <Styled.Circle onClick={openLikesList}>
+        <Styled.Circle onClick={session ? openLikesList : signinHandler}>
           <BsHeart size={'16px'} />
         </Styled.Circle>
       </Styled.Wrapper>
