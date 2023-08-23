@@ -33,6 +33,7 @@ export const Circle = styled.button`
 
 export const AuthSpan = styled.span`
   margin: 5px;
+  color: #ffffff;
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;

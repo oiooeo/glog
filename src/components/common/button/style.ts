@@ -7,6 +7,7 @@ export interface ButtonProps {
   size?: string;
   onClick?: () => void;
   children: ReactNode;
+  type?: string;
 }
 
 export const Button = styled.button<ButtonProps>`

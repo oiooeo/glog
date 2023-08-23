@@ -35,7 +35,7 @@ const Modal = ({ children, name, position }: Props) => {
       content = <Styled.ModalInner>{children}</Styled.ModalInner>;
   }
 
-  return <Styled.ModalOuter onClick={handleClose}>{content}</Styled.ModalOuter>;
+  return <Styled.ModalOuter>{content}</Styled.ModalOuter>;
 };
 
 export default Modal;
