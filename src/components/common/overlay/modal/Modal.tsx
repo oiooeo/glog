@@ -23,19 +23,35 @@ const Modal = ({ children, name, position }: Props) => {
   let content;
   switch (position) {
     case 'center':
-      content = <Styled.ModalInner>{children}</Styled.ModalInner>;
+      content = (
+        <Styled.ModalOuter>
+          <Styled.ModalInner>{children}</Styled.ModalInner>
+        </Styled.ModalOuter>
+      );
       break;
     case 'left':
-      content = <Styled.LeftModalInner>{children}</Styled.LeftModalInner>;
+      content = (
+        <Styled.ModalOuter>
+          <Styled.LeftModalInner>{children}</Styled.LeftModalInner>
+        </Styled.ModalOuter>
+      );
       break;
     case 'right':
-      content = <Styled.RightModalInner>{children}</Styled.RightModalInner>;
+      content = (
+        <Styled.RightModalOuter>
+          <Styled.RightModalInner>{children}</Styled.RightModalInner>
+        </Styled.RightModalOuter>
+      );
       break;
     default:
-      content = <Styled.ModalInner>{children}</Styled.ModalInner>;
+      content = (
+        <Styled.ModalOuter>
+          <Styled.ModalInner>{children}</Styled.ModalInner>
+        </Styled.ModalOuter>
+      );
   }
 
-  return <Styled.ModalOuter>{content}</Styled.ModalOuter>;
+  return <>{content}</>;
 };
 
 export default Modal;

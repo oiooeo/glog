@@ -1,36 +1,63 @@
 import { styled } from 'styled-components';
 
-export const ImgUpload = styled.div`
+export const Grid = styled.div`
   display: grid;
-  align-content: space-evenly;
-  text-align: center;
+  justify-items: center;
+  height: auto;
+  grid-row-gap: 12px;
 `;
 
 export const ImgBox = styled.div`
   align-items: center;
   width: 300px;
   height: 300px;
-  background-color: #333;
+  background-color: #616161;
   color: #ffffff;
-  text-align: center;
+  justify-content: center;
+  border-radius: 20px;
 `;
 
 export const UploadImgFile = styled.img`
   width: 300px;
   height: 300px;
   object-fit: cover;
-`;
-
-export const UdLabels = styled.div`
-  display: flex;
-  justify-content: center;
+  border-radius: 20px;
 `;
 
 export const UploadBox = styled.div`
-  transform: translate(-20px, 25px);
   font-weight: bolder;
 
   & > input {
     display: none;
+  }
+`;
+
+export const SearchInput = styled.input`
+  width: 300px;
+  height: 50px;
+  border: none;
+  border-radius: 99px;
+`;
+
+export const ContentsInputBox = styled.div`
+  width: 300px;
+  height: 103px;
+  border: none;
+  border-radius: 99px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ContentsInput = styled.input`
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #616161;
+
+  &:focus {
+    border: none;
+    outline: none;
+    border-bottom: 1px solid #616161;
   }
 `;

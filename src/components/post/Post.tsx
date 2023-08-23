@@ -2,13 +2,17 @@ import React, { useState, useRef } from 'react';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import * as Styled from './style';
 import { supabase } from '../../api/supabaseClient';
-import useSessionStore from '../../hooks/useSessionStore';
 import { uuid } from '@supabase/gotrue-js/dist/module/lib/helpers';
 import Switch from '../common/switch/Switch';
 import Button from '../common/button/Button';
 import useInput from '../../hooks/useInput';
+import { useLocationStore, useSessionStore } from '../../zustand/store';
 
-const Post = () => {
+type PostProps = {
+  unmount: (name: string) => void;
+};
+
+const Post: React.FC<PostProps> = ({ unmount }) => {
   const queryClient = useQueryClient();
   const [imgFile, setImgFile] = useState<string>();
   const [imgUrl, setImgUrl] = useState<string>('');
@@ -16,17 +20,18 @@ const Post = () => {
   const [contents, handleChangeContents] = useInput();
   const imgRef = useRef<any>();
   const session = useSessionStore(state => state.session);
+  const clickedLocation = useLocationStore(state => state.clickedLocation);
   const userId = session?.user.id;
 
   const { mutate } = useMutation({
     mutationFn: async () => {
       await supabase.from('posts').insert({
-        contents,
+        contents: contents,
         images: imgUrl,
-        countryId: '',
-        regionId: '',
-        latitude: '',
-        longitude: '',
+        countryId: clickedLocation?.countryId,
+        regionId: clickedLocation?.regionId,
+        latitude: clickedLocation?.latitude,
+        longitude: clickedLocation?.longitude,
         private: switchChecked,
         userId: session?.user.id,
       });
@@ -63,28 +68,39 @@ const Post = () => {
 
   const handleToSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    console.log('찍은곳', clickedLocation);
     mutate();
+    unmount('post');
   };
 
   return (
     <div>
       <form onSubmit={handleToSubmit}>
-        <div>
-          <Styled.ImgUpload>
-            <div>
-              <Styled.UploadBox>
-                <label htmlFor="inputImg">{imgFile ? <Styled.UploadImgFile src={imgFile} alt="이미지 업로드" /> : <Styled.ImgBox>사진 선택</Styled.ImgBox>}</label>
-                <input id="inputImg" type="file" accept="image/png, image/jpeg, image/jpg" name="images" onChange={uploadImgFile} ref={imgRef} />
-              </Styled.UploadBox>
-              <br />
-              <br />
-            </div>
-          </Styled.ImgUpload>
-        </div>
-        <input placeholder="짧은 글을 남겨주세요!" type="text" name="contents" onChange={handleChangeContents} maxLength={50} />
-        <Switch checked={switchChecked} onChange={setSwitchChecked} left={'전체공유'} right={'나만보기'} />
-        <Button type="submit">작성하기</Button>
+        <Styled.Grid>
+          <div>
+            <Styled.UploadBox>
+              <label htmlFor="inputImg">{imgFile ? <Styled.UploadImgFile src={imgFile} alt="이미지 업로드" /> : <Styled.ImgBox>사진 선택</Styled.ImgBox>}</label>
+              <input id="inputImg" type="file" accept="image/png, image/jpeg, image/jpg" name="images" onChange={uploadImgFile} ref={imgRef} />
+            </Styled.UploadBox>
+          </div>
+          {imgFile && (
+            <>
+              <Styled.SearchInput placeholder="지역 탐색 임시 input & 핀 찍으세요 !" />
+              <p>
+                {clickedLocation?.countryId}, {clickedLocation?.regionId}
+              </p>
+              <Styled.ContentsInputBox>
+                <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" type="text" name="contents" onChange={handleChangeContents} maxLength={50} />
+              </Styled.ContentsInputBox>
+              <Switch checked={switchChecked} onChange={setSwitchChecked} left={'전체공유'} right={'나만보기'} />
+            </>
+          )}
+          {imgFile && contents && (
+            <Button size="large" type="submit">
+              작성하기
+            </Button>
+          )}
+        </Styled.Grid>
       </form>
     </div>
   );
