@@ -2,11 +2,11 @@ import React, { useState, useRef } from 'react';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import * as Styled from './style';
 import { supabase } from '../../api/supabaseClient';
-import useSessionStore from '../../hooks/useSessionStore';
 import { uuid } from '@supabase/gotrue-js/dist/module/lib/helpers';
 import Switch from '../common/switch/Switch';
 import Button from '../common/button/Button';
 import useInput from '../../hooks/useInput';
+import { useLocationStore, useSessionStore } from '../../zustand/store';
 
 const Post = () => {
   const queryClient = useQueryClient();
@@ -16,17 +16,18 @@ const Post = () => {
   const [contents, handleChangeContents] = useInput();
   const imgRef = useRef<any>();
   const session = useSessionStore(state => state.session);
+  const clickedLocation = useLocationStore(state => state.clickedLocation);
   const userId = session?.user.id;
 
   const { mutate } = useMutation({
     mutationFn: async () => {
       await supabase.from('posts').insert({
-        contents,
+        contents: contents,
         images: imgUrl,
-        countryId: '',
-        regionId: '',
-        latitude: '',
-        longitude: '',
+        countryId: clickedLocation?.countryId,
+        regionId: clickedLocation?.regionId,
+        latitude: clickedLocation?.latitude,
+        longitude: clickedLocation?.longitude,
         private: switchChecked,
         userId: session?.user.id,
       });
@@ -63,7 +64,7 @@ const Post = () => {
 
   const handleToSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    console.log('찍은곳', clickedLocation);
     mutate();
   };
 

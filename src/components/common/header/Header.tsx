@@ -3,7 +3,6 @@ import { AuthError, signin, signout } from '../../../api/supabaseAuth';
 import { supabase } from '../../../api/supabaseClient';
 import * as Styled from './style';
 import { BsSearch, BsHeart, BsPlusLg } from 'react-icons/bs';
-import useSessionStore from '../../../hooks/useSessionStore';
 import Switch from '../switch/Switch';
 import { useModal } from '../overlay/modal/Modal.hooks';
 import LikesList from '../../likesList/LikesList';
@@ -11,6 +10,7 @@ import SearchList from '../../searchList/SearchList';
 import { User } from '@supabase/supabase-js';
 import { addNewUser } from '../../../api/supabaseDatabase';
 import Post from '../../post/Post';
+import { useSessionStore } from '../../../zustand/store';
 
 const Header = () => {
   const [user, setUser] = useState<User>();
@@ -22,7 +22,7 @@ const Header = () => {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      if (session && session.user && session.user.email) addNewUser(session.user.email);
+      if (session && session.user && session.user.email) addNewUser(session.user.id, session.user.email);
     });
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
@@ -41,7 +41,6 @@ const Header = () => {
     async function getUserData() {
       await supabase.auth.getUser().then(value => {
         if (value.data.user) {
-          console.log(value.data.user);
           setUser(value.data.user);
         }
       });
