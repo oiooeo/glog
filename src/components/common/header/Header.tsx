@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AuthError, signin, signout } from '../../../api/supabaseAuth';
 import { supabase } from '../../../api/supabaseClient';
 import * as Styled from './style';
-import { BsSearch, BsHeart, BsPlusLg } from 'react-icons/bs';
+import { BsSearch, BsHeart, BsPlusLg, BsXLg } from 'react-icons/bs';
 import Switch from '../switch/Switch';
 import { useModal } from '../overlay/modal/Modal.hooks';
 import LikesList from '../../likesList/LikesList';
@@ -15,6 +15,7 @@ import { useSessionStore } from '../../../zustand/store';
 const Header = () => {
   const [user, setUser] = useState<User>();
   const [switchChecked, setSwitchChecked] = useState(false);
+  const [isLikeOpened, setIsLikeOpened] = useState(false);
   const { leftMount, rightMount, unmount } = useModal();
   const session = useSessionStore(state => state.session);
   const setSession = useSessionStore(state => state.setSession);
@@ -79,6 +80,12 @@ const Header = () => {
 
   const openLikesList = () => {
     rightMount('likesList', <LikesList />);
+    setIsLikeOpened(true);
+  };
+
+  const closeLikesList = () => {
+    unmount('likesList');
+    setIsLikeOpened(false);
   };
 
   return (
@@ -95,9 +102,15 @@ const Header = () => {
         <Styled.Circle onClick={openSearchList}>
           <BsSearch size={'16px'} />
         </Styled.Circle>
-        <Styled.Circle onClick={session ? openLikesList : signinHandler}>
-          <BsHeart size={'16px'} />
-        </Styled.Circle>
+        {isLikeOpened ? (
+          <Styled.Circle onClick={closeLikesList}>
+            <BsXLg size={'16px'} />
+          </Styled.Circle>
+        ) : (
+          <Styled.Circle onClick={session ? openLikesList : signinHandler}>
+            <BsHeart size={'16px'} />
+          </Styled.Circle>
+        )}
       </Styled.Wrapper>
     </Styled.HeaderWrapper>
   );
