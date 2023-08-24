@@ -13,9 +13,24 @@ export const HeaderWrapper = styled.header`
   z-index: 100;
 `;
 
+export const SwitchBox = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
 export const Wrapper = styled.div`
   display: flex;
   align-items: center;
+`;
+
+export const SearchInput = styled.input`
+  width: 250px;
+  height: 35px;
+  padding: 0 10px;
+  border-radius: 16px;
+  font-size: 15px;
 `;
 
 export const Circle = styled.button`

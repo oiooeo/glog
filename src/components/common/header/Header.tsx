@@ -15,7 +15,8 @@ import { useSessionStore } from '../../../zustand/store';
 const Header = () => {
   const [user, setUser] = useState<User>();
   const [switchChecked, setSwitchChecked] = useState(false);
-  const [isLikeOpened, setIsLikeOpened] = useState(false);
+  const [isLikeListOpened, setIsLikeListOpened] = useState(false);
+  const [isSearchListOpened, setIsSearchListOpened] = useState(false);
   const { leftMount, rightMount, unmount } = useModal();
   const session = useSessionStore(state => state.session);
   const setSession = useSessionStore(state => state.setSession);
@@ -74,18 +75,31 @@ const Header = () => {
     leftMount('post', <Post unmount={unmount} />);
   };
 
-  const openSearchList = () => {
-    rightMount('searchList', <SearchList />);
-  };
-
-  const openLikesList = () => {
-    rightMount('likesList', <LikesList />);
-    setIsLikeOpened(true);
+  const closeSearchList = () => {
+    unmount('searchList');
+    setIsSearchListOpened(false);
   };
 
   const closeLikesList = () => {
     unmount('likesList');
-    setIsLikeOpened(false);
+    setIsLikeListOpened(false);
+  };
+
+  const openSearchList = () => {
+    rightMount('searchList', <SearchList />);
+    setIsSearchListOpened(true);
+    closeLikesList();
+  };
+
+  const openLikesList = () => {
+    rightMount('likesList', <LikesList />);
+    setIsLikeListOpened(true);
+    closeSearchList();
+  };
+
+  const handleToSearch = () => {
+    // 검색 결과를 SearchList 컴포넌트로 보내주기?
+    // input 값만 SearchList 컴포넌트로 보내주기? < 이게 나을듯?
   };
 
   return (
@@ -97,12 +111,26 @@ const Header = () => {
         </Styled.Circle>
         {session ? <Styled.AuthSpan onClick={signoutHandler}>로그아웃</Styled.AuthSpan> : <Styled.AuthSpan onClick={signinHandler}>로그인</Styled.AuthSpan>}
       </Styled.Wrapper>
-      <Switch checked={switchChecked} onChange={setSwitchChecked} left={'탐색'} right={'MY'} />
+
+      <Styled.SwitchBox>
+        <Switch checked={switchChecked} onChange={setSwitchChecked} left={'탐색'} right={'MY'} />
+      </Styled.SwitchBox>
+
       <Styled.Wrapper>
-        <Styled.Circle onClick={openSearchList}>
+        {isSearchListOpened ? (
+          <>
+            <Styled.Circle onClick={closeSearchList}>
+              <BsXLg size={'16px'} />
+            </Styled.Circle>
+            <Styled.SearchInput />
+          </>
+        ) : null}
+
+        <Styled.Circle onClick={isSearchListOpened ? handleToSearch : openSearchList}>
           <BsSearch size={'16px'} />
         </Styled.Circle>
-        {isLikeOpened ? (
+
+        {isLikeListOpened ? (
           <Styled.Circle onClick={closeLikesList}>
             <BsXLg size={'16px'} />
           </Styled.Circle>
