@@ -1,10 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
-import ReactDOM from 'react-dom/client';
 import mapboxgl from 'mapbox-gl';
 import * as Styled from './style';
 import { useLocationStore, useMapLocationStore } from '../../zustand/store';
-import { getPosts } from '../../api/supabaseDatabase';
-import { useQuery } from '@tanstack/react-query';
 import Preview from './preview/Preview';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Detail from '../detail/Detail';
@@ -16,8 +13,6 @@ interface MapProps {
 }
 
 const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postData }) => {
-  // const { data: postData } = useQuery(['getPosts'], getPosts);
-
   const [isModalOpened, setIsModalOpened] = useState(false);
   const { mount, unmount } = useModal();
 
@@ -49,7 +44,6 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postData }) => {
         };
 
         const popupContent = `${country}, ${city}`; // 팝업 내용을 장소 정보로 설정
-        const popup = new mapboxgl.Popup({ offset: 25 }).setText(popupContent);
 
         useLocationStore.getState().setClickedLocation(clickedLocation);
 
@@ -59,22 +53,19 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postData }) => {
           textMarker.style.width = `40px`;
           textMarker.style.height = `40px`;
           textMarker.style.backgroundSize = '100%';
-          marker = new mapboxgl.Marker(textMarker)
-            .setLngLat([location.lng, location.lat])
-            .setPopup(popup) // 마커에 팝업 연결
-            .addTo(map.current!);
 
-          if (!popup.isOpen()) {
-            marker.togglePopup();
+          if (marker) {
+            const popup = marker.getPopup();
+            if (popup) {
+              popup.remove();
+            }
+            marker.setLngLat([location.lng, location.lat]);
           } else {
-            marker.remove();
+            marker = new mapboxgl.Marker(textMarker).setLngLat([location.lng, location.lat]).addTo(map.current!);
           }
+          const popup = new mapboxgl.Popup({ offset: 25 }).setText(popupContent);
+          marker.setPopup(popup).togglePopup();
         }
-        // } else {
-        //   // 이미 생성된 마커가 있는 경우 팝업만 업데이트
-        //   const oldMarker = document.querySelector('formMarker');
-        //   oldMarker?.remove();
-        // }
       } catch (error) {
         console.error('error', error);
       }
@@ -181,10 +172,10 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postData }) => {
   }, [initialCenter, zoom, postData]);
 
   // 지역 검색에 필요한 코드
-  // useEffect(() => {
-  //   if (mapLocation) {
-  //   }
-  // }, [mapLocation]);
+  useEffect(() => {
+    if (mapLocation) {
+    }
+  }, [mapLocation]);
 
   return <Styled.GlobeLayout ref={mapContainerRef} />;
 };
