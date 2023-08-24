@@ -109,7 +109,8 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postData }) => {
         });
         // post 지역으로 확대
         map.current?.flyTo({
-          center: [coordinates.lng, coordinates.lat],
+          // 핀으로 됐을 때 확인 필요!
+          center: [coordinates.lng + 13, coordinates.lat + 25],
           zoom: 2,
           // speed: 0.8,
         });
@@ -147,10 +148,11 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postData }) => {
           markerElement.addEventListener('click', async () => {
             if (markerInfo.lng !== null && markerInfo.lat !== null) {
               map.current?.flyTo({
-                center: [markerInfo.lng, markerInfo.lat],
+                // center: [markerInfo.lng, markerInfo.lat],
                 zoom: 2,
                 speed: 0.8,
               });
+              map.current?.panTo([markerInfo.lng, markerInfo.lat]);
 
               map.current?.once('moveend', () => {
                 placeLocation(markerInfo);
