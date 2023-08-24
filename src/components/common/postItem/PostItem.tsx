@@ -1,16 +1,20 @@
 import React from 'react';
 import * as Styled from './style';
+import Like from '../../like/Like';
+import { Tables } from '../../../types/supabase';
 
-type PostItemProps = { images: string | null; countryId: string | null; regionId: string | null };
+type PostItemProps = { data: Tables<'posts'> };
 
-const PostItem: React.FC<PostItemProps> = ({ images, countryId, regionId }) => {
+const PostItem: React.FC<PostItemProps> = ({ data }) => {
   return (
     <Styled.PostItemLayout>
-      {images !== null ? <Styled.PostItemImg src={images} alt="" /> : null}
+      {data.images !== null ? <Styled.PostItemImg src={data.images} alt="" /> : null}
       <Styled.PostItemLocation>
-        {countryId}, {regionId}
+        {data.countryId}, {data.regionId}
       </Styled.PostItemLocation>
-      <Styled.PostItemLikeBox>좋아요</Styled.PostItemLikeBox>
+      <Styled.PostItemLikeBox>
+        <Like data={data} />
+      </Styled.PostItemLikeBox>
     </Styled.PostItemLayout>
   );
 };
