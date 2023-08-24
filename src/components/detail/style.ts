@@ -12,7 +12,7 @@ export const DetailLayout = styled.div`
 
   &:after {
     position: absolute;
-    left: 10%;
+    left: 18%;
     top: 410px;
     border-top: 40px solid #ffffff;
     border-left: 0px solid transparent;

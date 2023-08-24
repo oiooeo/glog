@@ -26,7 +26,7 @@ const Detail: React.FC<DetailProps> = ({ data }) => {
       </Styled.DetailImageContainer>
 
       <Styled.DetailContainer>
-        <Styled.NameParagraph>아이디</Styled.NameParagraph>
+        <Styled.NameParagraph>{(data as any).user.name}</Styled.NameParagraph>
         {/* {session?.user.id === data.userId && (
           <div>
             <CiEdit />
