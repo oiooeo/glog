@@ -40,25 +40,28 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postData }) => {
         const popupContent = `${country}, ${city}`; // 팝업 내용을 장소 정보로 설정
 
         useLocationStore.getState().setClickedLocation(clickedLocation);
-        const textMarker = document.createElement('div');
-        textMarker.className = 'formMarker';
-        textMarker.style.width = `40px`;
-        textMarker.style.height = `40px`;
-        textMarker.style.backgroundSize = '100%';
 
-        if (!marker) {
-          const popup = marker.getPopup();
-          if (popup) {
-            await popup.remove();
+        if (zoomSized && zoomSized >= 2) {
+          const textMarker = document.createElement('div');
+          textMarker.className = 'formMarker';
+          textMarker.style.width = `40px`;
+          textMarker.style.height = `40px`;
+          textMarker.style.backgroundSize = '100%';
+
+          if (marker) {
+            const popup = marker.getPopup();
+            if (popup) {
+              popup.remove();
+            }
+            marker.setLngLat([location.lng, location.lat]);
+          } else {
+            marker = new mapboxgl.Marker(textMarker).setLngLat([location.lng, location.lat]).addTo(map.current!);
           }
-          marker = new mapboxgl.Marker(textMarker).setLngLat([location.lng, location.lat]).addTo(map.current!);
-        } else {
-          marker.setLngLat([location.lng, location.lat]);
-        }
 
-        // 새로운 팝업 설정
-        const popup = new mapboxgl.Popup({ offset: 25 }).setText(popupContent);
-        marker.setPopup(popup).togglePopup();
+          // 새로운 팝업 설정
+          const popup = new mapboxgl.Popup({ offset: 25 }).setText(popupContent);
+          marker.setPopup(popup).togglePopup();
+        }
       } catch (error) {
         console.error('error', error);
       }

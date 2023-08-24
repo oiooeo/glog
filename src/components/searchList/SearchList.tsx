@@ -3,6 +3,8 @@ import PostItem from '../common/postItem/PostItem';
 import { useQuery } from '@tanstack/react-query';
 import { getPosts } from '../../api/supabaseDatabase';
 import { Tables } from '../../types/supabase';
+import { useSessionStore } from '../../zustand/store';
+import { signin } from '../../api/supabaseAuth';
 
 type SearchListProps = {
   keyword: string;
@@ -12,6 +14,7 @@ type SearchListProps = {
 const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) => {
   const [key, setKey] = useState('');
   const [searchResult, setSearchResult] = useState<Tables<'posts'>[]>();
+  const session = useSessionStore(state => state.session);
   const { data } = useQuery(['getPosts'], getPosts);
 
   useEffect(() => {
@@ -28,11 +31,23 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
   }, [data, key]);
 
   console.log(searchResult);
+  console.log(session);
   return (
     <>
-      {searchResult?.map(item => (
-        <PostItem images={item.images} countryId={item.countryId} regionId={item.regionId} />
-      ))}
+      {session ? (
+        <>
+          {searchResult?.map(item => (
+            <PostItem images={item.images} countryId={item.countryId} regionId={item.regionId} />
+          ))}
+        </>
+      ) : (
+        <>
+          {searchResult?.slice(0, 5).map(item => (
+            <PostItem images={item.images} countryId={item.countryId} regionId={item.regionId} />
+          ))}
+          <button onClick={signin}>로그인하세요</button>
+        </>
+      )}
     </>
   );
 };
