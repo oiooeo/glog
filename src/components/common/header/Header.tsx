@@ -11,6 +11,7 @@ import { User } from '@supabase/supabase-js';
 import { addNewUser } from '../../../api/supabaseDatabase';
 import Post from '../../post/Post';
 import { useSessionStore } from '../../../zustand/store';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [user, setUser] = useState<User>();
@@ -19,6 +20,7 @@ const Header = () => {
   const { leftMount, rightMount, unmount } = useModal();
   const session = useSessionStore(state => state.session);
   const setSession = useSessionStore(state => state.setSession);
+  const navigate = useNavigate();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -33,8 +35,10 @@ const Header = () => {
   useEffect(() => {
     if (switchChecked) {
       console.log('MY 탭 활성화');
+      navigate('/my');
     } else {
       console.log('탐색 탭 활성화');
+      navigate('/');
     }
   }, [switchChecked]);
 

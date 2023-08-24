@@ -8,11 +8,10 @@ import { useQuery } from '@tanstack/react-query';
 interface MapProps {
   initialCenter: [number, number];
   zoom: number;
+  postData: any;
 }
 
-const Globe: React.FC<MapProps> = ({ initialCenter, zoom }) => {
-  const { data: postData } = useQuery(['getPosts'], getPosts);
-
+const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postData }) => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const mapLocation = useMapLocationStore(state => state.mapLocation);
