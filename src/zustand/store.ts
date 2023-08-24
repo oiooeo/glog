@@ -17,6 +17,7 @@ interface LocationStore {
     longitude: number;
     regionId: string;
     countryId: string;
+    address: string;
   } | null;
   setClickedLocation: (location: LocationStore['clickedLocation']) => void;
 }
