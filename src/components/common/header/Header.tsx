@@ -47,7 +47,7 @@ const Header = () => {
       }
     } else {
       console.log('탐색 탭 활성화');
-      navigate('/');
+      // navigate('/');
     }
   }, [switchChecked]);
 
@@ -74,7 +74,7 @@ const Header = () => {
 
   const signoutHandler = async () => {
     try {
-      signout();
+      await signout();
       setUser(undefined);
       navigate('/');
       window.location.reload();

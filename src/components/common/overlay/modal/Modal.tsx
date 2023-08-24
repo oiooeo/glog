@@ -8,10 +8,11 @@ interface Props {
   position: 'left' | 'center' | 'right';
 }
 
+type CloseModal = (event: MouseEvent<HTMLDivElement>) => void;
+
 const Modal = ({ children, name, position }: Props) => {
   const { unmount } = useOverlayContext();
 
-  type CloseModal = (event: MouseEvent<HTMLDivElement>) => void;
   const handleClose: CloseModal = event => {
     const { target, currentTarget } = event;
 
@@ -24,16 +25,16 @@ const Modal = ({ children, name, position }: Props) => {
   switch (position) {
     case 'center':
       content = (
-        <Styled.ModalOuter>
+        <Styled.ModalOuter onClick={handleClose}>
           <Styled.ModalInner>{children}</Styled.ModalInner>
         </Styled.ModalOuter>
       );
       break;
     case 'left':
       content = (
-        <Styled.ModalOuter>
+        <Styled.LeftModalOuter>
           <Styled.LeftModalInner>{children}</Styled.LeftModalInner>
-        </Styled.ModalOuter>
+        </Styled.LeftModalOuter>
       );
       break;
     case 'right':
@@ -45,7 +46,7 @@ const Modal = ({ children, name, position }: Props) => {
       break;
     default:
       content = (
-        <Styled.ModalOuter>
+        <Styled.ModalOuter onClick={handleClose}>
           <Styled.ModalInner>{children}</Styled.ModalInner>
         </Styled.ModalOuter>
       );

@@ -1,9 +1,13 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import ReactDOM from 'react-dom/client';
 import mapboxgl from 'mapbox-gl';
 import * as Styled from './style';
 import { useLocationStore, useMapLocationStore } from '../../zustand/store';
 import { getPosts } from '../../api/supabaseDatabase';
 import { useQuery } from '@tanstack/react-query';
+import Preview from './preview/Preview';
+import { useModal } from '../common/overlay/modal/Modal.hooks';
+import Detail from '../detail/Detail';
 
 interface MapProps {
   initialCenter: [number, number];
@@ -12,6 +16,11 @@ interface MapProps {
 }
 
 const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postData }) => {
+  // const { data: postData } = useQuery(['getPosts'], getPosts);
+
+  const [isModalOpened, setIsModalOpened] = useState(false);
+  const { mount, unmount } = useModal();
+
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const mapLocation = useMapLocationStore(state => state.mapLocation);
@@ -31,6 +40,7 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postData }) => {
         const country = placeComponents[placeComponents.length - 1];
 
         const popupContent = `${country}, ${city}`; // 팝업 내용을 장소 정보로 설정
+        const popup = new mapboxgl.Popup({ offset: 25 }).setText(popupContent);
 
         const clickedLocation = {
           latitude: location.lat,
@@ -47,21 +57,22 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postData }) => {
           textMarker.style.width = `40px`;
           textMarker.style.height = `40px`;
           textMarker.style.backgroundSize = '100%';
+          marker = new mapboxgl.Marker(textMarker)
+            .setLngLat([location.lng, location.lat])
+            .setPopup(popup) // 마커에 팝업 연결
+            .addTo(map.current!);
 
-          if (marker) {
-            const popup = marker.getPopup();
-            if (popup) {
-              popup.remove();
-            }
-            marker.setLngLat([location.lng, location.lat]);
+          if (!popup.isOpen()) {
+            marker.togglePopup();
           } else {
-            marker = new mapboxgl.Marker(textMarker).setLngLat([location.lng, location.lat]).addTo(map.current!);
+            marker.remove();
           }
-
-          // 새로운 팝업 설정
-          const popup = new mapboxgl.Popup({ offset: 25 }).setText(popupContent);
-          marker.setPopup(popup).togglePopup();
         }
+        // } else {
+        //   // 이미 생성된 마커가 있는 경우 팝업만 업데이트
+        //   const oldMarker = document.querySelector('formMarker');
+        //   oldMarker?.remove();
+        // }
       } catch (error) {
         console.error('error', error);
       }
@@ -112,30 +123,39 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postData }) => {
       });
     }
 
-    // db 불러와서 이미지 데이터 미리보기 둥둥 띄우는 거
     if (postData) {
       for (let i = 0; i < postData.length; i++) {
         const marker = postData[i];
-        const el = document.createElement('div');
-        el.className = 'marker';
+        console.log(marker);
+        const markerElement = document.createElement('div');
+        // const previewComponent = <Preview image={marker.images} />;
+        // ReactDOM.createRoot(previewComponent, markerElement);
 
         if (marker.latitude !== null && marker.longitude !== null) {
-          el.style.backgroundImage = `url(${marker.images})`;
-          el.style.width = `50px`;
-          el.style.height = `50px`;
-          el.style.backgroundSize = '100%';
-          el.style.borderRadius = `15px`;
+          markerElement.style.backgroundImage = `url(${marker.images})`;
+          markerElement.style.width = `70px`;
+          markerElement.style.height = `70px`;
+          markerElement.style.backgroundSize = '100%';
+          markerElement.style.borderRadius = `15px`;
+
+          markerElement.addEventListener('click', async () => {
+            if (markerInfo.lng !== null && markerInfo.lat !== null) {
+              console.log('클릭');
+              mount('detail', <Detail data={marker} />);
+              setIsModalOpened(true);
+            }
+          });
 
           const markerInfo = {
             lng: marker.longitude,
             lat: marker.latitude,
           };
 
-          el.addEventListener('click', async () => {
+          markerElement.addEventListener('click', async () => {
             if (markerInfo.lng !== null && markerInfo.lat !== null) {
               map.current?.flyTo({
                 center: [markerInfo.lng, markerInfo.lat],
-                zoom: 10,
+                zoom: 2,
                 speed: 0.8,
               });
 
@@ -144,20 +164,25 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postData }) => {
               });
             }
           });
+          new mapboxgl.Marker(markerElement).setLngLat([markerInfo.lng, markerInfo.lat]).addTo(map.current!);
 
-          new mapboxgl.Marker(el).setLngLat([markerInfo.lng, markerInfo.lat]).addTo(map.current!);
+          // const markerInstance = new mapboxgl.Marker(markerElement);
+          // markerInstance.setLngLat([markerInfo.lng, markerInfo.lat]);
+          // markerInstance.addTo(map.current!);
         }
       }
     }
+
     if (map) {
       useMapLocationStore.getState().setMapLocation(map.current);
     }
   }, [initialCenter, zoom, postData]);
 
-  useEffect(() => {
-    if (mapLocation) {
-    }
-  }, [mapLocation]);
+  // 지역 검색에 필요한 코드
+  // useEffect(() => {
+  //   if (mapLocation) {
+  //   }
+  // }, [mapLocation]);
 
   return <Styled.GlobeLayout ref={mapContainerRef} />;
 };
