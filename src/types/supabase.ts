@@ -115,14 +115,20 @@ export interface Database {
         Row: {
           email: string;
           id: string;
+          name: string | null;
+          profileImg: string | null;
         };
         Insert: {
           email: string;
           id?: string;
+          name?: string | null;
+          profileImg?: string | null;
         };
         Update: {
           email?: string;
           id?: string;
+          name?: string | null;
+          profileImg?: string | null;
         };
         Relationships: [];
       };
