@@ -67,12 +67,14 @@ const Like: React.FC<LikeProps> = ({ data }) => {
   });
 
   const pressLike = () => {
-    if (isLiked) {
+    if (session && isLiked) {
       minusLikesMutate();
       minusPostsMutate();
-    } else {
+    } else if (session && !isLiked) {
       plusLikesMutate();
       plusPostsMutate();
+    } else {
+      console.log('로그인하세요!');
     }
   };
 
