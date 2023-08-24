@@ -32,14 +32,13 @@ export const RightModalOuter = styled.div`
 
 export const ModalInner = styled.div`
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 50%;
   width: fit-content;
   height: fit-content;
   margin: 0 auto;
   padding: 20px;
-  /* background-color: #343434; */
-  transform: translate(-50%, -100%);
+  transform: translate(-40%, -100%);
 `;
 
 export const LeftModalInner = styled.div`
@@ -53,12 +52,15 @@ export const LeftModalInner = styled.div`
 
 export const RightModalInner = styled.div`
   position: absolute;
-  overflow-y: scroll;
+  overflow-y: auto;
   right: 0;
   width: fit-content;
   height: calc(100vh - 65px);
   margin-top: 65px;
   padding-right: 20px;
-  /* background: linear-gradient(to left, #ffffff, #ffffff50); */
   background: transparent;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;

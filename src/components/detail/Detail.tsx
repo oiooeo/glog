@@ -1,7 +1,6 @@
 import React from 'react';
 import * as Styled from './style';
 import { Tables } from '../../types/supabase';
-import { BsHeart } from 'react-icons/bs';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin4Line } from 'react-icons/ri';
 import Like from '../like/Like';
@@ -27,9 +26,15 @@ const Detail: React.FC<DetailProps> = ({ data }) => {
       </Styled.DetailImageContainer>
 
       <Styled.DetailContainer>
-        <p>아이디</p>
-        <p>{data.contents}</p>
-        <p>
+        <Styled.NameParagraph>아이디</Styled.NameParagraph>
+        {/* {session?.user.id === data.userId && (
+          <div>
+            <CiEdit />
+            <RiDeleteBin4Line />
+          </div>
+        )} */}
+        <Styled.ContentsParagraph>{data.contents}</Styled.ContentsParagraph>
+        <Styled.TimeParagraph>
           {new Intl.DateTimeFormat('ko-KR', {
             year: 'numeric',
             month: '2-digit',
@@ -38,13 +43,7 @@ const Detail: React.FC<DetailProps> = ({ data }) => {
             minute: '2-digit',
             hour12: false,
           }).format(new Date(data.createdAt))}
-        </p>
-        {session?.user.id === data.userId && (
-          <div>
-            <CiEdit />
-            <RiDeleteBin4Line />
-          </div>
-        )}
+        </Styled.TimeParagraph>
       </Styled.DetailContainer>
     </Styled.DetailLayout>
   );
