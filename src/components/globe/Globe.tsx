@@ -2,8 +2,6 @@ import React, { useRef, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
 import * as Styled from './style';
 import { useLocationStore, useMapLocationStore } from '../../zustand/store';
-import { getPosts } from '../../api/supabaseDatabase';
-import { useQuery } from '@tanstack/react-query';
 
 interface MapProps {
   initialCenter: [number, number];
