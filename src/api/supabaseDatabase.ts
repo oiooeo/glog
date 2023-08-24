@@ -21,6 +21,5 @@ export const addPost = async (newPost: Tables<'posts'>) => {
 export const getPosts = async () => {
   const { data, error } = await supabase.from('posts').select('*');
   if (error) throw new Error(`에러!! ${error.message}`);
-  console.log(data);
   return data;
 };
