@@ -17,3 +17,10 @@ export const addNewUser = async (id: string, email: string) => {
 export const addPost = async (newPost: Tables<'posts'>) => {
   await supabase.from('posts').insert(newPost);
 };
+
+export const getPosts = async () => {
+  const { data, error } = await supabase.from('posts').select('*');
+  if (error) throw new Error(`에러!! ${error.message}`);
+  console.log(data);
+  return data;
+};
