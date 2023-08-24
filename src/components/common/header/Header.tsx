@@ -38,8 +38,13 @@ const Header = () => {
 
   useEffect(() => {
     if (switchChecked) {
-      console.log('MY 탭 활성화');
-      navigate('/my');
+      if (session) {
+        console.log('MY 탭 활성화');
+        navigate('/my');
+      }
+      if (!session) {
+        signinHandler();
+      }
     } else {
       console.log('탐색 탭 활성화');
       navigate('/');
@@ -71,6 +76,8 @@ const Header = () => {
     try {
       signout();
       setUser(undefined);
+      navigate('/');
+      window.location.reload();
     } catch (error) {
       if (error instanceof AuthError) {
         alert({ type: 'alert', title: '로그아웃 실패', content: error.message });
