@@ -1,13 +1,15 @@
 import React from 'react';
 import * as Styled from './style';
 
-type PostItemProps = { imgUrl: string };
+type PostItemProps = { images: string | null; countryId: string | null; regionId: string | null };
 
-const PostItem: React.FC<PostItemProps> = ({ imgUrl }) => {
+const PostItem: React.FC<PostItemProps> = ({ images, countryId, regionId }) => {
   return (
     <Styled.PostItemLayout>
-      <Styled.PostItemImg src={imgUrl} alt="" />
-      <Styled.PostItemLocation>나라, 지역</Styled.PostItemLocation>
+      {images !== null ? <Styled.PostItemImg src={images} alt="" /> : null}
+      <Styled.PostItemLocation>
+        {countryId}, {regionId}
+      </Styled.PostItemLocation>
       <Styled.PostItemLikeBox>좋아요</Styled.PostItemLikeBox>
     </Styled.PostItemLayout>
   );

@@ -8,6 +8,7 @@ export const Grid = styled.div`
 `;
 
 export const ImgBox = styled.div`
+  display: flex;
   align-items: center;
   width: 300px;
   height: 300px;

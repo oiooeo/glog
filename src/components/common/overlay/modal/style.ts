@@ -37,7 +37,7 @@ export const LeftModalInner = styled.div`
   height: calc(100vh - 65px);
   margin-top: 65px;
   padding: 20px;
-  background: #ffffff;
+  background: transparent;
 `;
 
 export const RightModalInner = styled.div`
@@ -47,7 +47,7 @@ export const RightModalInner = styled.div`
   width: fit-content;
   height: calc(100vh - 65px);
   margin-top: 65px;
-  padding: 20px;
+  padding-right: 20px;
   /* background: linear-gradient(to left, #ffffff, #ffffff50); */
-  background: #ffffff;
+  background: transparent;
 `;

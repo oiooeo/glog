@@ -11,12 +11,16 @@ import { User } from '@supabase/supabase-js';
 import { addNewUser } from '../../../api/supabaseDatabase';
 import Post from '../../post/Post';
 import { useSessionStore } from '../../../zustand/store';
+import useInput from '../../../hooks/useInput';
 import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [user, setUser] = useState<User>();
   const [switchChecked, setSwitchChecked] = useState(false);
-  const [isLikeOpened, setIsLikeOpened] = useState(false);
+  const [isPostOpened, setIsPostOpened] = useState(false);
+  const [isLikeListOpened, setIsLikeListOpened] = useState(false);
+  const [isSearchListOpened, setIsSearchListOpened] = useState(false);
+  const [keyword, handleChangeKeyword] = useInput();
   const { leftMount, rightMount, unmount } = useModal();
   const session = useSessionStore(state => state.session);
   const setSession = useSessionStore(state => state.setSession);
@@ -74,47 +78,104 @@ const Header = () => {
     }
   };
 
-  const openPost = () => {
-    leftMount('post', <Post unmount={unmount} />);
+  const closePost = () => {
+    unmount('post');
+    setIsPostOpened(false);
   };
 
-  const openSearchList = () => {
-    rightMount('searchList', <SearchList />);
-  };
-
-  const openLikesList = () => {
-    rightMount('likesList', <LikesList />);
-    setIsLikeOpened(true);
+  const closeSearchList = () => {
+    unmount('searchList');
+    setIsSearchListOpened(false);
   };
 
   const closeLikesList = () => {
     unmount('likesList');
-    setIsLikeOpened(false);
+    setIsLikeListOpened(false);
+  };
+
+  const openPost = () => {
+    leftMount('post', <Post unmount={unmount} />);
+    setIsPostOpened(true);
+    closeLikesList();
+    closeSearchList();
+  };
+
+  const handleToSearch = () => {
+    rightMount('searchList', <SearchList keyword={keyword} isSearchListOpened={isSearchListOpened} />);
+  };
+
+  const handleOnEnterPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleToSearch();
+    }
+  };
+
+  const openSearchList = () => {
+    closeLikesList();
+    setIsSearchListOpened(true);
+    handleToSearch();
+  };
+
+  const openLikesList = () => {
+    closeSearchList();
+    setIsLikeListOpened(true);
+    rightMount('likesList', <LikesList />);
   };
 
   return (
     <Styled.HeaderWrapper>
       <Styled.Wrapper>
         <Styled.Circle>로고</Styled.Circle>
-        <Styled.Circle onClick={session ? openPost : signinHandler}>
-          <BsPlusLg size={'16px'} />
-        </Styled.Circle>
-        {session ? <Styled.AuthSpan onClick={signoutHandler}>로그아웃</Styled.AuthSpan> : <Styled.AuthSpan onClick={signinHandler}>로그인</Styled.AuthSpan>}
-      </Styled.Wrapper>
-      <Switch checked={switchChecked} onChange={setSwitchChecked} left={'탐색'} right={'MY'} />
-      <Styled.Wrapper>
-        <Styled.Circle onClick={openSearchList}>
-          <BsSearch size={'16px'} />
-        </Styled.Circle>
-        {isLikeOpened ? (
-          <Styled.Circle onClick={closeLikesList}>
+        {isPostOpened ? (
+          <Styled.Circle onClick={closePost}>
             <BsXLg size={'16px'} />
           </Styled.Circle>
         ) : (
-          <Styled.Circle onClick={session ? openLikesList : signinHandler}>
-            <BsHeart size={'16px'} />
+          <Styled.Circle onClick={session ? openPost : signinHandler}>
+            <BsPlusLg size={'16px'} />
           </Styled.Circle>
         )}
+
+        {session ? <Styled.AuthSpan onClick={signoutHandler}>로그아웃</Styled.AuthSpan> : <Styled.AuthSpan onClick={signinHandler}>로그인</Styled.AuthSpan>}
+      </Styled.Wrapper>
+
+      <Styled.SwitchBox>
+        <Switch checked={switchChecked} onChange={setSwitchChecked} left={'탐색'} right={'MY'} />
+      </Styled.SwitchBox>
+
+      <Styled.Wrapper>
+        {isSearchListOpened ? (
+          <>
+            <Styled.Circle onClick={closeSearchList}>
+              <BsXLg size={'16px'} />
+            </Styled.Circle>
+            <Styled.SearchInput placeholder="검색" type="text" name="keyword" onChange={handleChangeKeyword} onKeyPress={handleOnEnterPress} maxLength={20} />
+            <Styled.SearchButton type="button" onClick={handleToSearch}>
+              <BsSearch size={'16px'} />
+            </Styled.SearchButton>
+          </>
+        ) : (
+          <>
+            <Styled.Circle onClick={openSearchList}>
+              <BsSearch size={'16px'} />
+            </Styled.Circle>
+            {isLikeListOpened ? (
+              <>
+                <Styled.Circle onClick={closeLikesList}>
+                  <BsXLg size={'16px'} />
+                </Styled.Circle>
+              </>
+            ) : (
+              <>
+                <Styled.Circle onClick={session ? openLikesList : signinHandler}>
+                  <BsHeart size={'16px'} />
+                </Styled.Circle>
+              </>
+            )}
+          </>
+        )}
+
+        {}
       </Styled.Wrapper>
     </Styled.HeaderWrapper>
   );
