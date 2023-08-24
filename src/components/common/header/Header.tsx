@@ -74,7 +74,7 @@ const Header = () => {
 
   const signoutHandler = async () => {
     try {
-      signout();
+      await signout();
       setUser(undefined);
       navigate('/');
       window.location.reload();

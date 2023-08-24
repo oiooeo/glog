@@ -22,7 +22,7 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
 
   useEffect(() => {
     if (data) {
-      const filteredData = data?.filter(item => item.countryId?.includes(key) || item.regionId?.includes(key));
+      const filteredData = data?.filter(item => item.countryId?.includes(key) || item.regionId?.includes(key) || item.address?.includes(key));
       setSearchResult(filteredData);
     }
   }, [data, key]);
