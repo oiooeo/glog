@@ -23,19 +23,21 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postData }) => {
         const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${location.lng},${location.lat}.json?access_token=${mapboxgl.accessToken}&language=ko`);
         const data = await response.json();
         const dataFeatures = data.features;
-        const placeName = dataFeatures[dataFeatures.length - 2].place_name_ko;
+        const placeName = dataFeatures[dataFeatures.length - 2].place_name_ko ? dataFeatures[dataFeatures.length - 2].place_name_ko : dataFeatures[dataFeatures.length - 2].place_name;
         const placeComponents = placeName.split(', ');
         const city = placeComponents[placeComponents.length - 2];
         const country = placeComponents[placeComponents.length - 1];
-
-        const popupContent = `${country}, ${city}`; // 팝업 내용을 장소 정보로 설정
+        const address = dataFeatures[0].place_name_ko !== undefined ? dataFeatures[0].place_name_ko : dataFeatures[0].place_name;
 
         const clickedLocation = {
           latitude: location.lat,
           longitude: location.lng,
           regionId: city,
           countryId: country,
+          address: address,
         };
+
+        const popupContent = `${country}, ${city}`; // 팝업 내용을 장소 정보로 설정
 
         useLocationStore.getState().setClickedLocation(clickedLocation);
         const textMarker = document.createElement('div');

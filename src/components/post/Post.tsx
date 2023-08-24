@@ -32,6 +32,7 @@ const Post: React.FC<PostProps> = ({ unmount }) => {
         regionId: clickedLocation?.regionId,
         latitude: clickedLocation?.latitude,
         longitude: clickedLocation?.longitude,
+        address: clickedLocation?.address,
         private: switchChecked,
         userId: session?.user.id,
       });
