@@ -23,7 +23,9 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
   useEffect(() => {
     if (data) {
       const filteredData = data?.filter(item => item.countryId?.includes(key) || item.regionId?.includes(key) || item.address?.includes(key));
-      setSearchResult(filteredData);
+      const sortedData = [...filteredData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+
+      setSearchResult(sortedData);
     }
   }, [data, key]);
 
@@ -31,7 +33,7 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
   return (
     <>
       {searchResult?.map(item => (
-        <PostItem images={item.images} countryId={item.countryId} regionId={item.regionId} />
+        <PostItem key={item.id} data={item} />
       ))}
     </>
   );
