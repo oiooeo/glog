@@ -7,10 +7,12 @@ export const getUser = async (email?: string) => {
   return data[0];
 };
 
-export const addNewUser = async (id: string, email: string) => {
+export const addNewUser = async (id: string, email: string, name: string, profileImg: string) => {
   const data = await getUser(email);
   if (!data) {
-    await supabase.from('users').insert({ id: id, email: email });
+    await supabase.from('users').insert({ id: id, email: email, name: name, profileImg: profileImg });
+  } else {
+    await supabase.from('users').update({ name: name, profileImg: profileImg }).eq('id', id);
   }
 };
 
