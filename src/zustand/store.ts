@@ -25,3 +25,13 @@ export const useLocationStore = create<LocationStore>(set => ({
   clickedLocation: null,
   setClickedLocation: location => set({ clickedLocation: location }),
 }));
+
+interface useMapProps {
+  mapLocation: any | null;
+  setMapLocation: (newMapLocation: any | null) => void;
+}
+
+export const useMapLocationStore = create<useMapProps>(set => ({
+  mapLocation: null,
+  setMapLocation: newMapLocation => set({ mapLocation: newMapLocation }),
+}));

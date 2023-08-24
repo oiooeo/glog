@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
 import * as Styled from './style';
-import { useLocationStore } from '../../zustand/store';
+import { useLocationStore, useMapLocationStore } from '../../zustand/store';
 import { getPosts } from '../../api/supabaseDatabase';
 import { useQuery } from '@tanstack/react-query';
 
@@ -15,9 +15,10 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom }) => {
 
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const map = useRef<mapboxgl.Map | null>(null);
+  const mapLocation = useMapLocationStore(state => state.mapLocation);
 
   mapboxgl.accessToken = process.env.REACT_APP_ACCESS_TOKEN ? process.env.REACT_APP_ACCESS_TOKEN : '';
-
+  let marker: any;
   useEffect(() => {
     const placeLocation = async (location: { lng: number; lat: number }) => {
       const zoomSized = map.current?.getZoom();
@@ -48,18 +49,22 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom }) => {
           textMarker.style.width = `40px`;
           textMarker.style.height = `40px`;
           textMarker.style.backgroundSize = '100%';
-          const marker = new mapboxgl.Marker(textMarker)
+          marker = new mapboxgl.Marker(textMarker)
             .setLngLat([location.lng, location.lat])
             .setPopup(popup) // 마커에 팝업 연결
             .addTo(map.current!);
+
           if (!popup.isOpen()) {
             marker.togglePopup();
+          } else {
+            marker.remove();
           }
-        } else {
-          // 이미 생성된 마커가 있는 경우 팝업만 업데이트
-          const oldMarker = document.querySelector('formMarker');
-          oldMarker?.remove();
         }
+        // } else {
+        //   // 이미 생성된 마커가 있는 경우 팝업만 업데이트
+        //   const oldMarker = document.querySelector('formMarker');
+        //   oldMarker?.remove();
+        // }
       } catch (error) {
         console.error('error', error);
       }
@@ -147,7 +152,15 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom }) => {
         }
       }
     }
+    if (map) {
+      useMapLocationStore.getState().setMapLocation(map.current);
+    }
   }, [initialCenter, zoom, postData]);
+
+  useEffect(() => {
+    if (mapLocation) {
+    }
+  }, [mapLocation]);
 
   return <Styled.GlobeLayout ref={mapContainerRef} />;
 };
