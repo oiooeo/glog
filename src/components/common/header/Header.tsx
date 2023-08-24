@@ -47,7 +47,7 @@ const Header = () => {
       }
     } else {
       console.log('탐색 탭 활성화');
-      navigate('/');
+      // navigate('/');
     }
   }, [switchChecked]);
 

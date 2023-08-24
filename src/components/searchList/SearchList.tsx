@@ -3,6 +3,8 @@ import PostItem from '../common/postItem/PostItem';
 import { useQuery } from '@tanstack/react-query';
 import { getPosts } from '../../api/supabaseDatabase';
 import { Tables } from '../../types/supabase';
+import { useSessionStore } from '../../zustand/store';
+import { signin } from '../../api/supabaseAuth';
 
 type SearchListProps = {
   keyword: string;
@@ -12,6 +14,7 @@ type SearchListProps = {
 const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) => {
   const [key, setKey] = useState('');
   const [searchResult, setSearchResult] = useState<Tables<'posts'>[]>();
+  const session = useSessionStore(state => state.session);
   const { data } = useQuery(['getPosts'], getPosts);
 
   useEffect(() => {
@@ -30,11 +33,23 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
   }, [data, key]);
 
   console.log(searchResult);
+  console.log(session);
   return (
     <>
-      {searchResult?.map(item => (
-        <PostItem key={item.id} data={item} />
-      ))}
+      {session ? (
+        <>
+          {searchResult?.map(item => (
+            <PostItem key={item.id} data={item} />
+          ))}
+        </>
+      ) : (
+        <>
+          {searchResult?.slice(0, 5).map(item => (
+            <PostItem key={item.id} data={item} />
+          ))}
+          <button onClick={signin}>로그인하세요</button>
+        </>
+      )}
     </>
   );
 };

@@ -1,30 +1,44 @@
 import React from 'react';
 import * as Styled from './style';
-import { getPosts } from '../../api/supabaseDatabase';
-import { useQuery } from '@tanstack/react-query';
+import { Tables } from '../../types/supabase';
+import { BsHeart } from 'react-icons/bs';
 
-const Detail = () => {
-  const { data } = useQuery(['getPosts'], getPosts);
+type DetailProps = {
+  data: Tables<'posts'>;
+};
 
+const Detail: React.FC<DetailProps> = ({ data }) => {
   return (
-    <Styled.Layout>
+    <Styled.TalkBubble>
       <div>
-        {data &&
-          data.map(post => (
-            <Styled.TalkBubble>
-              <Styled.ImageContainer key={post.id}>
-                <Styled.Image>
-                  <Styled.ImageContent src={post.images!} alt={`Image for ${post.contents}`} />
-                </Styled.Image>
-                <h2>{post.contents}</h2>
-                <p>{post.countryId}</p>
-                <p>{post.regionId}</p>
-                <p>{post.createdAt}</p>
-              </Styled.ImageContainer>
-            </Styled.TalkBubble>
-          ))}
+        <Styled.TopdataBubble>
+          <div>
+            {data.countryId},{data.regionId}
+          </div>
+          <BsHeart />
+        </Styled.TopdataBubble>
+        <Styled.TopdataLikes>{data.likes}</Styled.TopdataLikes>
       </div>
-    </Styled.Layout>
+      <Styled.ImageContainer key={data.id}>
+        <Styled.Image>
+          <Styled.ImageContent src={data.images!} alt={`Image for ${data.contents}`} />
+        </Styled.Image>
+      </Styled.ImageContainer>
+      <div>
+        <p>아이디</p>
+        <p>{data.contents}</p>
+        <p>
+          {new Intl.DateTimeFormat('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+          }).format(new Date(data.createdAt))}
+        </p>
+      </div>
+    </Styled.TalkBubble>
   );
 };
 

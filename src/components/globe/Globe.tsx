@@ -1,9 +1,10 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import * as Styled from './style';
 import { useLocationStore, useMapLocationStore } from '../../zustand/store';
-import { getPosts } from '../../api/supabaseDatabase';
-import { useQuery } from '@tanstack/react-query';
+import Preview from './preview/Preview';
+import { useModal } from '../common/overlay/modal/Modal.hooks';
+import Detail from '../detail/Detail';
 
 interface MapProps {
   initialCenter: [number, number];
@@ -12,6 +13,9 @@ interface MapProps {
 }
 
 const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postData }) => {
+  const [isModalOpened, setIsModalOpened] = useState(false);
+  const { mount, unmount } = useModal();
+
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const mapLocation = useMapLocationStore(state => state.mapLocation);
@@ -59,8 +63,6 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postData }) => {
           } else {
             marker = new mapboxgl.Marker(textMarker).setLngLat([location.lng, location.lat]).addTo(map.current!);
           }
-
-          // 새로운 팝업 설정
           const popup = new mapboxgl.Popup({ offset: 25 }).setText(popupContent);
           marker.setPopup(popup).togglePopup();
         }
@@ -114,30 +116,39 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postData }) => {
       });
     }
 
-    // db 불러와서 이미지 데이터 미리보기 둥둥 띄우는 거
     if (postData) {
       for (let i = 0; i < postData.length; i++) {
         const marker = postData[i];
-        const el = document.createElement('div');
-        el.className = 'marker';
+        console.log(marker);
+        const markerElement = document.createElement('div');
+        // const previewComponent = <Preview image={marker.images} />;
+        // ReactDOM.createRoot(previewComponent, markerElement);
 
         if (marker.latitude !== null && marker.longitude !== null) {
-          el.style.backgroundImage = `url(${marker.images})`;
-          el.style.width = `50px`;
-          el.style.height = `50px`;
-          el.style.backgroundSize = '100%';
-          el.style.borderRadius = `15px`;
+          markerElement.style.backgroundImage = `url(${marker.images})`;
+          markerElement.style.width = `70px`;
+          markerElement.style.height = `70px`;
+          markerElement.style.backgroundSize = '100%';
+          markerElement.style.borderRadius = `15px`;
+
+          markerElement.addEventListener('click', async () => {
+            if (markerInfo.lng !== null && markerInfo.lat !== null) {
+              console.log('클릭');
+              mount('detail', <Detail data={marker} />);
+              setIsModalOpened(true);
+            }
+          });
 
           const markerInfo = {
             lng: marker.longitude,
             lat: marker.latitude,
           };
 
-          el.addEventListener('click', async () => {
+          markerElement.addEventListener('click', async () => {
             if (markerInfo.lng !== null && markerInfo.lat !== null) {
               map.current?.flyTo({
                 center: [markerInfo.lng, markerInfo.lat],
-                zoom: 10,
+                zoom: 2,
                 speed: 0.8,
               });
 
@@ -146,16 +157,21 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postData }) => {
               });
             }
           });
+          new mapboxgl.Marker(markerElement).setLngLat([markerInfo.lng, markerInfo.lat]).addTo(map.current!);
 
-          new mapboxgl.Marker(el).setLngLat([markerInfo.lng, markerInfo.lat]).addTo(map.current!);
+          // const markerInstance = new mapboxgl.Marker(markerElement);
+          // markerInstance.setLngLat([markerInfo.lng, markerInfo.lat]);
+          // markerInstance.addTo(map.current!);
         }
       }
     }
+
     if (map) {
       useMapLocationStore.getState().setMapLocation(map.current);
     }
   }, [initialCenter, zoom, postData]);
 
+  // 지역 검색에 필요한 코드
   useEffect(() => {
     if (mapLocation) {
     }
