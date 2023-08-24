@@ -64,6 +64,7 @@ export interface Database {
       };
       posts: {
         Row: {
+          address: string | null;
           contents: string | null;
           countryId: string | null;
           createdAt: string;
@@ -77,6 +78,7 @@ export interface Database {
           userId: string | null;
         };
         Insert: {
+          address?: string | null;
           contents?: string | null;
           countryId?: string | null;
           createdAt?: string;
@@ -90,6 +92,7 @@ export interface Database {
           userId?: string | null;
         };
         Update: {
+          address?: string | null;
           contents?: string | null;
           countryId?: string | null;
           createdAt?: string;
