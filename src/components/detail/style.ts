@@ -1,56 +1,54 @@
 import { styled } from 'styled-components';
 
-export const ImageContainer = styled.div`
-  /* margin-bottom: 20px; */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-export const Image = styled.div`
-  width: 200px;
-  height: 200px;
-`;
-
-export const ImageContent = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 30px;
-`;
-
-export const TalkBubble = styled.div`
-  display: grid;
-  grid-template-rows: 0fr 1fr 0.4fr;
-  align-content: space-around;
-  z-index: 100;
+export const DetailLayout = styled.div`
   position: relative;
-  width: 200px;
-  height: 300px;
-  background: linear-gradient(to bottom, #484848 70%, gray 30%);
-  color: white;
+  width: 300px;
+  height: 430px;
+  background: #ffffff;
   border-radius: 20px;
-  padding: 12px 12.8px;
-  margin-bottom: 60px; /* example 간격을 위해 넣음  */
+  padding: 10px;
+  margin-bottom: 20px;
+  z-index: 100;
 
   &:after {
-    border-top: 60px solid gray;
+    position: absolute;
+    left: 10%;
+    top: 430px;
+    border-top: 50px solid gray;
     border-left: 0px solid transparent;
-    border-right: 20px solid transparent;
+    border-right: 10px solid transparent;
     border-bottom: 0px solid transparent;
     content: '';
-    position: absolute;
-    top: 290px;
-    left: 50%;
-    border-radius: 20px;
   }
 `;
-export const TopdataBubble = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 5px;
+
+export const DetailImageContainer = styled.div`
+  position: absolute;
+  width: 300px;
+  height: 290px;
 `;
-export const TopdataLikes = styled.div`
-  text-align: right;
-  margin-right: 3px;
+
+export const DetailImage = styled.img`
+  position: absolute;
+  width: 300px;
+  height: 290px;
+  object-fit: cover;
 `;
+
+export const LocationParagraph = styled.p`
+  position: absolute;
+  top: 20px;
+  left: 15px;
+  background: #00000047;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+`;
+
+export const PostItemLikeBox = styled.div`
+  position: absolute;
+  top: 20px;
+  right: 15px;
+`;
+
+export const DetailContainer = styled.div``;
