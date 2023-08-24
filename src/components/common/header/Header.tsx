@@ -11,12 +11,15 @@ import { User } from '@supabase/supabase-js';
 import { addNewUser } from '../../../api/supabaseDatabase';
 import Post from '../../post/Post';
 import { useSessionStore } from '../../../zustand/store';
+import useInput from '../../../hooks/useInput';
 
 const Header = () => {
   const [user, setUser] = useState<User>();
   const [switchChecked, setSwitchChecked] = useState(false);
+  const [isPostOpened, setIsPostOpened] = useState(false);
   const [isLikeListOpened, setIsLikeListOpened] = useState(false);
   const [isSearchListOpened, setIsSearchListOpened] = useState(false);
+  const [keyword, handleChangeKeyword] = useInput();
   const { leftMount, rightMount, unmount } = useModal();
   const session = useSessionStore(state => state.session);
   const setSession = useSessionStore(state => state.setSession);
@@ -71,8 +74,9 @@ const Header = () => {
     }
   };
 
-  const openPost = () => {
-    leftMount('post', <Post unmount={unmount} />);
+  const closePost = () => {
+    unmount('post');
+    setIsPostOpened(false);
   };
 
   const closeSearchList = () => {
@@ -85,30 +89,49 @@ const Header = () => {
     setIsLikeListOpened(false);
   };
 
-  const openSearchList = () => {
-    rightMount('searchList', <SearchList />);
-    setIsSearchListOpened(true);
+  const openPost = () => {
+    leftMount('post', <Post unmount={unmount} />);
+    setIsPostOpened(true);
     closeLikesList();
-  };
-
-  const openLikesList = () => {
-    rightMount('likesList', <LikesList />);
-    setIsLikeListOpened(true);
     closeSearchList();
   };
 
   const handleToSearch = () => {
-    // 검색 결과를 SearchList 컴포넌트로 보내주기?
-    // input 값만 SearchList 컴포넌트로 보내주기? < 이게 나을듯?
+    rightMount('searchList', <SearchList keyword={keyword} isSearchListOpened={isSearchListOpened} />);
+  };
+
+  const handleOnEnterPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleToSearch();
+    }
+  };
+
+  const openSearchList = () => {
+    closeLikesList();
+    setIsSearchListOpened(true);
+    handleToSearch();
+  };
+
+  const openLikesList = () => {
+    closeSearchList();
+    setIsLikeListOpened(true);
+    rightMount('likesList', <LikesList />);
   };
 
   return (
     <Styled.HeaderWrapper>
       <Styled.Wrapper>
         <Styled.Circle>로고</Styled.Circle>
-        <Styled.Circle onClick={session ? openPost : signinHandler}>
-          <BsPlusLg size={'16px'} />
-        </Styled.Circle>
+        {isPostOpened ? (
+          <Styled.Circle onClick={closePost}>
+            <BsXLg size={'16px'} />
+          </Styled.Circle>
+        ) : (
+          <Styled.Circle onClick={session ? openPost : signinHandler}>
+            <BsPlusLg size={'16px'} />
+          </Styled.Circle>
+        )}
+
         {session ? <Styled.AuthSpan onClick={signoutHandler}>로그아웃</Styled.AuthSpan> : <Styled.AuthSpan onClick={signinHandler}>로그인</Styled.AuthSpan>}
       </Styled.Wrapper>
 
@@ -122,23 +145,33 @@ const Header = () => {
             <Styled.Circle onClick={closeSearchList}>
               <BsXLg size={'16px'} />
             </Styled.Circle>
-            <Styled.SearchInput />
+            <Styled.SearchInput placeholder="검색" type="text" name="keyword" onChange={handleChangeKeyword} onKeyPress={handleOnEnterPress} maxLength={20} />
+            <Styled.SearchButton type="button" onClick={handleToSearch}>
+              <BsSearch size={'16px'} />
+            </Styled.SearchButton>
           </>
-        ) : null}
-
-        <Styled.Circle onClick={isSearchListOpened ? handleToSearch : openSearchList}>
-          <BsSearch size={'16px'} />
-        </Styled.Circle>
-
-        {isLikeListOpened ? (
-          <Styled.Circle onClick={closeLikesList}>
-            <BsXLg size={'16px'} />
-          </Styled.Circle>
         ) : (
-          <Styled.Circle onClick={session ? openLikesList : signinHandler}>
-            <BsHeart size={'16px'} />
-          </Styled.Circle>
+          <>
+            <Styled.Circle onClick={openSearchList}>
+              <BsSearch size={'16px'} />
+            </Styled.Circle>
+            {isLikeListOpened ? (
+              <>
+                <Styled.Circle onClick={closeLikesList}>
+                  <BsXLg size={'16px'} />
+                </Styled.Circle>
+              </>
+            ) : (
+              <>
+                <Styled.Circle onClick={session ? openLikesList : signinHandler}>
+                  <BsHeart size={'16px'} />
+                </Styled.Circle>
+              </>
+            )}
+          </>
         )}
+
+        {}
       </Styled.Wrapper>
     </Styled.HeaderWrapper>
   );
