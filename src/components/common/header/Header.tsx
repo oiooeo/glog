@@ -27,7 +27,7 @@ const Header = () => {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      if (session && session.user && session.user.email) addNewUser(session.user.id, session.user.email);
+      if (session && session.user && session.user.email) addNewUser(session.user.id, session.user.email, session.user.user_metadata.name, session.user.user_metadata.avatar_url);
     });
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
