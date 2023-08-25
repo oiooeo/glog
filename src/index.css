@@ -7,3 +7,19 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+.login-alert {
+  padding: 15px 20px;
+  border-radius: 18px;
+  background-color: rgba(114, 128, 142, 0.6);
+  color: #f4f4f5;
+  transform: translate(10px, 30px);
+}
+
+.posted-alert {
+  padding: 15px 18px;
+  border-radius: 18px;
+  background-color: rgba(114, 128, 142, 0.6);
+  color: #f4f4f5;
+  transform: translate(0, 150px);
+}
