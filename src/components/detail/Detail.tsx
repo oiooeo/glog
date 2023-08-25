@@ -1,10 +1,10 @@
 import React from 'react';
 import * as Styled from './style';
 import { Tables } from '../../types/supabase';
-import { CiEdit } from 'react-icons/ci';
-import { RiDeleteBin4Line } from 'react-icons/ri';
+import { RiDeleteBin4Fill, RiEdit2Fill } from 'react-icons/ri';
 import Like from '../like/Like';
 import { useSessionStore } from '../../zustand/store';
+import { deleteButton } from '../../api/supabaseDatabase';
 
 type DetailProps = {
   data: Tables<'posts'>;
@@ -19,20 +19,20 @@ const Detail: React.FC<DetailProps> = ({ data }) => {
         <Styled.LocationParagraph>
           {data.countryId}, {data.regionId}
         </Styled.LocationParagraph>
-        <Styled.PostItemLikeBox>
+        <Styled.LikeBox>
           <Like data={data} />
-        </Styled.PostItemLikeBox>
+        </Styled.LikeBox>
+        {session?.user.id === data.userId && (
+          <Styled.EditButton>
+            <RiEdit2Fill color="#ffffff80" />
+            <RiDeleteBin4Fill color="#ffffff80" onClick={() => deleteButton(data.id)} />
+          </Styled.EditButton>
+        )}
         <Styled.DetailImage src={data.images!} alt={`Image for ${data.contents}`} />
       </Styled.DetailImageContainer>
 
       <Styled.DetailContainer>
         <Styled.NameParagraph>{(data as any).user.name}</Styled.NameParagraph>
-        {/* {session?.user.id === data.userId && (
-          <div>
-            <CiEdit />
-            <RiDeleteBin4Line />
-          </div>
-        )} */}
         <Styled.ContentsParagraph>{data.contents}</Styled.ContentsParagraph>
         <Styled.TimeParagraph>
           {new Intl.DateTimeFormat('ko-KR', {

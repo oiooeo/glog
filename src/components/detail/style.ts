@@ -34,10 +34,18 @@ export const LocationParagraph = styled.p`
   font-weight: 600;
 `;
 
-export const PostItemLikeBox = styled.div`
+export const LikeBox = styled.div`
   position: absolute;
   top: 20px;
   right: 15px;
+`;
+
+export const EditButton = styled.div`
+  position: absolute;
+  bottom: 125px;
+  left: 15px;
+  cursor: pointer;
+  /* border: 1px solid; */
 `;
 
 export const DetailContainer = styled.div`

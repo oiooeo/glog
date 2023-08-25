@@ -1,5 +1,6 @@
 import { Tables } from '../types/supabase';
 import { supabase } from './supabaseClient';
+import toast from 'react-simple-toasts';
 
 export const getUser = async (email?: string) => {
   const { data, error } = await supabase.from('users').select('*').eq('email', email);
@@ -36,4 +37,14 @@ export const getLikes = async (userId: string) => {
   const { data, error } = await supabase.from('likes').select('*').eq('userId', userId);
   if (error) throw new Error(`에러!! ${error.message}`);
   return data;
+};
+
+export const deleteButton = async (postId: string) => {
+  try {
+    await supabase.from('likes').delete().eq('postId', postId);
+    await supabase.from('posts').delete().eq('id', postId);
+    toast('삭제 완료!', { className: 'delete-alert', position: 'center' });
+  } catch (error) {
+    console.error('Error deleting post and likes:', error);
+  }
 };
