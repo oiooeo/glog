@@ -7,12 +7,14 @@ import Switch from '../common/switch/Switch';
 import Button from '../common/button/Button';
 import useInput from '../../hooks/useInput';
 import { useLocationStore, useSessionStore } from '../../zustand/store';
+import toast from 'react-simple-toasts';
 
 type PostProps = {
   unmount: (name: string) => void;
+  setIsPostOpened: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Post: React.FC<PostProps> = ({ unmount }) => {
+const Post: React.FC<PostProps> = ({ unmount, setIsPostOpened }) => {
   const queryClient = useQueryClient();
   const [imgFile, setImgFile] = useState<string>();
   const [imgUrl, setImgUrl] = useState<string>('');
@@ -69,9 +71,10 @@ const Post: React.FC<PostProps> = ({ unmount }) => {
 
   const handleToSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('찍은곳', clickedLocation);
     mutate();
     unmount('post');
+    setIsPostOpened(false);
+    toast('업로드 완료! 다른 게시물들도 확인해보세요 :)', { className: 'posted-alert', position: 'top-center' });
   };
 
   return (
