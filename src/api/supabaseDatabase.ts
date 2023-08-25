@@ -37,3 +37,13 @@ export const getLikes = async (userId: string) => {
   if (error) throw new Error(`에러!! ${error.message}`);
   return data;
 };
+
+export const deleteButton = async (postId: string) => {
+  try {
+    await supabase.from('likes').delete().eq('postId', postId);
+    await supabase.from('posts').delete().eq('id', postId);
+    alert('삭제 완료');
+  } catch (error) {
+    console.error('Error deleting post and likes:', error);
+  }
+};

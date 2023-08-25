@@ -40,6 +40,14 @@ export const PostItemLikeBox = styled.div`
   right: 15px;
 `;
 
+export const EditButton = styled.div`
+  position: absolute;
+  bottom: 125px;
+  left: 15px;
+  cursor: pointer;
+  /* border: 1px solid; */
+`;
+
 export const DetailContainer = styled.div`
   display: flex;
   flex-direction: column;
