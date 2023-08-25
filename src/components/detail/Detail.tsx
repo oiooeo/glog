@@ -1,8 +1,6 @@
 import React from 'react';
 import * as Styled from './style';
 import { Tables } from '../../types/supabase';
-import { CiEdit } from 'react-icons/ci';
-import { RiDeleteBin4Line } from 'react-icons/ri';
 import Like from '../like/Like';
 import { useSessionStore } from '../../zustand/store';
 
@@ -19,9 +17,9 @@ const Detail: React.FC<DetailProps> = ({ data }) => {
         <Styled.LocationParagraph>
           {data.countryId}, {data.regionId}
         </Styled.LocationParagraph>
-        <Styled.PostItemLikeBox>
+        <Styled.LikeBox>
           <Like data={data} />
-        </Styled.PostItemLikeBox>
+        </Styled.LikeBox>
         <Styled.DetailImage src={data.images!} alt={`Image for ${data.contents}`} />
       </Styled.DetailImageContainer>
 

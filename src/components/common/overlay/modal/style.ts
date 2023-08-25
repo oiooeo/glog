@@ -55,7 +55,7 @@ export const RightModalInner = styled.div`
   position: absolute;
   overflow-y: auto;
   right: 0;
-  width: fit-content;
+  width: 370px;
   height: calc(100vh - 65px);
   margin-top: 65px;
   padding-right: 20px;
