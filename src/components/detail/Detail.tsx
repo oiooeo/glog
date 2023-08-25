@@ -19,9 +19,9 @@ const Detail: React.FC<DetailProps> = ({ data }) => {
         <Styled.LocationParagraph>
           {data.countryId}, {data.regionId}
         </Styled.LocationParagraph>
-        <Styled.PostItemLikeBox>
+        <Styled.LikeBox>
           <Like data={data} />
-        </Styled.PostItemLikeBox>
+        </Styled.LikeBox>
         {session?.user.id === data.userId && (
           <Styled.EditButton>
             <RiEdit2Fill color="#ffffff80" />
