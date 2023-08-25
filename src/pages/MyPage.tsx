@@ -12,7 +12,7 @@ const MyPage = () => {
   const userId = session?.user.id;
   const userData = postData?.filter(item => item.userId === userId);
 
-  return <Globe initialCenter={initialCenter} zoom={zoom} postData={userData} />;
+  return <Globe initialCenter={initialCenter} zoom={zoom} postsData={userData} />;
 };
 
 export default MyPage;
