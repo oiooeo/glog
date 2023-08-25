@@ -13,6 +13,7 @@ import Post from '../../post/Post';
 import { useSessionStore } from '../../../zustand/store';
 import useInput from '../../../hooks/useInput';
 import { useNavigate } from 'react-router-dom';
+import logo from '../../../assets/logo.svg';
 
 const Header = () => {
   const [user, setUser] = useState<User>();
@@ -132,7 +133,7 @@ const Header = () => {
   return (
     <Styled.HeaderWrapper>
       <Styled.Wrapper>
-        <Styled.Circle>로고</Styled.Circle>
+        <img src={logo} alt="" />
         {isPostOpened ? (
           <Styled.Circle onClick={closePost}>
             <BsXLg size={'16px'} />
