@@ -6,7 +6,7 @@ export const ModalOuter = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #00000000;
+  background-color: #00000082;
   z-index: 99;
 `;
 
@@ -38,7 +38,8 @@ export const ModalInner = styled.div`
   height: fit-content;
   margin: 0 auto;
   padding: 20px;
-  transform: translate(-40%, -100%);
+  transform: translate(-50%, -70%);
+  transition: all 2s ease-in;
 `;
 
 export const LeftModalInner = styled.div`

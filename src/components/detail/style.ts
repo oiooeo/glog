@@ -9,17 +9,6 @@ export const DetailLayout = styled.div`
   background: #ffffff;
   border-radius: 20px;
   z-index: 100;
-
-  &:after {
-    position: absolute;
-    left: 18%;
-    top: 410px;
-    border-top: 40px solid #ffffff;
-    border-left: 0px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 0px solid transparent;
-    content: '';
-  }
 `;
 
 export const DetailImageContainer = styled.div`
