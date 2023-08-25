@@ -7,7 +7,7 @@ const Home = () => {
   const initialCenter: [number, number] = [-74.006, 40.7128];
   const zoom = 1;
   const { data: postData } = useQuery(['getPosts'], getPosts);
-  return <Globe initialCenter={initialCenter} zoom={zoom} postData={postData} />;
+  return <Globe initialCenter={initialCenter} zoom={zoom} postsData={postData} />;
 };
 
 export default Home;
