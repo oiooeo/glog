@@ -14,6 +14,7 @@ import { useSessionStore } from '../../../zustand/store';
 import useInput from '../../../hooks/useInput';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../../assets/logo.svg';
+import toast from 'react-simple-toasts';
 
 const Header = () => {
   const [user, setUser] = useState<User>();
@@ -102,7 +103,7 @@ const Header = () => {
   };
 
   const openPost = () => {
-    leftMount('post', <Post unmount={unmount} />);
+    leftMount('post', <Post unmount={unmount} setIsPostOpened={setIsPostOpened} />);
     setIsPostOpened(true);
     closeLikesList();
     closeSearchList();
@@ -128,6 +129,10 @@ const Header = () => {
     closeSearchList();
     setIsLikeListOpened(true);
     rightMount('likesList', <LikesList />);
+  };
+
+  const openLoginToast = () => {
+    toast('로그인 해주세요!', { className: 'login-alert', position: 'top-right' });
   };
 
   return (
@@ -175,7 +180,7 @@ const Header = () => {
               </>
             ) : (
               <>
-                <Styled.Circle onClick={session ? openLikesList : signinHandler}>
+                <Styled.Circle onClick={session ? openLikesList : openLoginToast}>
                   <BsHeart size={'16px'} />
                 </Styled.Circle>
               </>
