@@ -27,8 +27,8 @@ export const getPosts = async () => {
   return data;
 };
 
-export const getLikes = async (postId: string) => {
-  const { data, error } = await supabase.from('likes').select('*').eq('postId', postId);
+export const getLikes = async (userId: string) => {
+  const { data, error } = await supabase.from('likes').select('*').eq('userId', userId);
   if (error) throw new Error(`에러!! ${error.message}`);
   return data;
 };
