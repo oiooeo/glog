@@ -103,7 +103,7 @@ const Header = () => {
   };
 
   const openPost = () => {
-    leftMount('post', <Post unmount={unmount} setIsPostOpened={setIsPostOpened} />);
+    leftMount('post', <Post leftMount={leftMount} unmount={unmount} setIsPostOpened={setIsPostOpened} />);
     setIsPostOpened(true);
     closeLikesList();
     closeSearchList();
