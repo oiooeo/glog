@@ -28,10 +28,10 @@ export const LocationParagraph = styled.p`
   position: absolute;
   top: 20px;
   left: 15px;
-  background: #00000047;
   color: #ffffff;
   font-size: 15px;
   font-weight: 600;
+  text-shadow: 0px 0px 8px rgb(0, 0, 0);
 `;
 
 export const LikeBox = styled.div`
@@ -56,13 +56,17 @@ export const DetailContainer = styled.div`
 `;
 
 export const NameParagraph = styled.p`
+  color: #72808e;
   font-size: 15px;
 `;
 
 export const ContentsParagraph = styled.p`
-  font-size: 18px;
+  font-size: 17px;
 `;
 
 export const TimeParagraph = styled.p`
-  font-size: 15px;
+  color: #353c49;
+  font-size: 14px;
+  letter-spacing: 0px;
+  word-spacing: -2px;
 `;

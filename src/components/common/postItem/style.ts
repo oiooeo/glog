@@ -26,10 +26,10 @@ export const LocationParagraph = styled.p`
   position: absolute;
   top: 20px;
   left: 15px;
-  background: #00000047;
   color: #ffffff;
   font-size: 15px;
   font-weight: 600;
+  text-shadow: 0px 0px 8px rgb(0, 0, 0);
 `;
 
 export const LikeBox = styled.div`
