@@ -15,7 +15,7 @@ interface MapProps {
 
 const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
   mapboxgl.accessToken = process.env.REACT_APP_ACCESS_TOKEN ? process.env.REACT_APP_ACCESS_TOKEN : '';
-  const { mount } = useModal();
+  const { mount, unmount } = useModal();
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const mapLocation = useMapLocationStore(state => state.mapLocation);

@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import * as Styled from './style';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 import { Tables } from '../../types/supabase';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../api/supabaseClient';
 import { useSessionStore } from '../../zustand/store';
-import { getLikes } from '../../api/supabaseDatabase';
+import { getIsLike } from '../../api/supabaseDatabase';
 
 type LikeProps = { data: Tables<'posts'> };
 
@@ -13,7 +13,7 @@ const Like: React.FC<LikeProps> = ({ data }) => {
   const queryClient = useQueryClient();
   const session = useSessionStore(state => state.session);
 
-  const { data: likesData } = useQuery(['getLikes', data.id], () => getLikes(data.id));
+  const { data: likesData } = useQuery(['getIsLike', data.id], () => getIsLike(data.id));
   const isLiked = likesData?.some(like => like.userId === session?.user.id);
   const myLikedData = likesData?.filter(like => like.userId === session?.user.id)[0];
 
@@ -25,7 +25,7 @@ const Like: React.FC<LikeProps> = ({ data }) => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['getLikes']);
+      queryClient.invalidateQueries(['getIsLike']);
     },
   });
 
@@ -48,7 +48,7 @@ const Like: React.FC<LikeProps> = ({ data }) => {
       await supabase.from('likes').delete().eq('id', myLikedData?.id);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['getLikes']);
+      queryClient.invalidateQueries(['getIsLike']);
     },
   });
 
