@@ -4,11 +4,13 @@ import * as Styled from './style';
 import { useLocationStore, useMapLocationStore } from '../../zustand/store';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Detail from '../detail/Detail';
+import { Tables } from '../../types/supabase';
+import pinSmall from '../../assets/pin/pinSmall.svg';
 
 interface MapProps {
   initialCenter: [number, number];
   zoom: number;
-  postsData: any;
+  postsData: Tables<'posts'>[] | undefined;
 }
 
 const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
@@ -18,7 +20,7 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
   const map = useRef<mapboxgl.Map | null>(null);
   const mapLocation = useMapLocationStore(state => state.mapLocation);
   let marker: any;
-  let zoomSize: number | undefined;
+  let zoomSize: number | undefined = map.current?.getZoom();
 
   useEffect(() => {
     const placeLocation = async (location: { lng: number; lat: number }) => {
@@ -110,16 +112,17 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
     }
 
     if (postsData) {
+      zoomSize = map.current?.getZoom();
+      console.log(zoomSize);
+      const sortedData = [...postsData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
       for (let i = 0; i < 6; i++) {
-        const postData = postsData[i];
+        const postData = sortedData[i];
         if (postData.latitude !== null && postData.longitude !== null) {
           const imageMarker = document.createElement('div');
           imageMarker.className = 'image-marker';
           imageMarker.style.backgroundImage = `url(${postData.images})`;
           imageMarker.style.width = `70px`;
           imageMarker.style.height = `70px`;
-          imageMarker.style.backgroundSize = '100%';
-          imageMarker.style.borderRadius = `15px`;
 
           const markerInstance = new mapboxgl.Marker(imageMarker).setLngLat([postData.longitude, postData.latitude]);
           markerInstance.addTo(map.current!);
@@ -131,7 +134,21 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
       }
 
       for (let i = 6; i < postsData.length; i++) {
-        // 핀 찍기
+        const postData = sortedData[i];
+        if (postData.latitude !== null && postData.longitude !== null) {
+          const imageMarker = document.createElement('div');
+          imageMarker.className = 'pin-marker';
+          imageMarker.style.backgroundImage = `url(${pinSmall})`;
+          imageMarker.style.width = `30px`;
+          imageMarker.style.height = `30px`;
+
+          const markerInstance = new mapboxgl.Marker(imageMarker).setLngLat([postData.longitude, postData.latitude]);
+          markerInstance.addTo(map.current!);
+
+          imageMarker.addEventListener('click', async () => {
+            mount('detail', <Detail data={postData} />);
+          });
+        }
       }
     }
 
