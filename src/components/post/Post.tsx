@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import * as Styled from './style';
 import { supabase } from '../../api/supabaseClient';
@@ -8,19 +8,23 @@ import Button from '../common/button/Button';
 import useInput from '../../hooks/useInput';
 import { useLocationStore, useSessionStore } from '../../zustand/store';
 import toast from 'react-simple-toasts';
+import pin from './pin.png';
 
 type PostProps = {
   unmount: (name: string) => void;
+  leftMount: (name: string, element: React.ReactNode) => void;
   setIsPostOpened: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Post: React.FC<PostProps> = ({ unmount, setIsPostOpened }) => {
+const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
   const queryClient = useQueryClient();
   const [imgFile, setImgFile] = useState<string>();
   const [imgUrl, setImgUrl] = useState<string>('');
   const [switchChecked, setSwitchChecked] = useState(false);
   const [contents, handleChangeContents] = useInput();
-  const imgRef = useRef<any>();
+  const [isModalOpened, setIsModalOpened] = useState(false);
+  const imgRef = useRef<HTMLInputElement>(null);
+  const regionRef = useRef<any>(null);
   const session = useSessionStore(state => state.session);
   const clickedLocation = useLocationStore(state => state.clickedLocation);
   const userId = session?.user.id;
@@ -45,18 +49,20 @@ const Post: React.FC<PostProps> = ({ unmount, setIsPostOpened }) => {
   });
 
   const uploadImg = async () => {
-    const file = imgRef.current.files[0];
-    const { data: storageData } = await supabase.storage.from('images').upload(`${userId}/${uuid()}`, file, {
-      cacheControl: '3600',
-      upsert: false,
-    });
+    const file = imgRef?.current?.files?.[0];
+    if (file) {
+      const { data: storageData } = await supabase.storage.from('images').upload(`${userId}/${uuid()}`, file, {
+        cacheControl: '3600',
+        upsert: false,
+      });
 
-    const { data: publicUrlData } = supabase.storage.from('images').getPublicUrl(storageData?.path || '');
-    setImgUrl(publicUrlData.publicUrl);
+      const { data: publicUrlData } = supabase.storage.from('images').getPublicUrl(storageData?.path || '');
+      setImgUrl(publicUrlData.publicUrl);
+    }
   };
 
   const uploadImgFile = async () => {
-    const file = imgRef.current.files[0];
+    const file = imgRef.current?.files?.[0];
     const reader = new FileReader();
     reader.onloadend = () => {
       if (reader.result instanceof ArrayBuffer) {
@@ -76,6 +82,36 @@ const Post: React.FC<PostProps> = ({ unmount, setIsPostOpened }) => {
     setIsPostOpened(false);
     toast('업로드 완료! 다른 게시물들도 확인해보세요 :)', { className: 'posted-alert', position: 'top-center' });
   };
+  useEffect(() => {
+    if (regionRef.current) {
+      regionRef.current.value = `${clickedLocation?.countryId}, ${clickedLocation?.regionId}`;
+    }
+  }, [clickedLocation]);
+
+  const showDetail = () => {
+    console.log('클릭');
+    leftMount(
+      'postModal',
+      <Styled.Overlay>
+        <Styled.InputModalWrap>
+          <div>
+            <p>핀을 이동해서</p> <br />
+            <p>정확한 여행지를 알려주세요!</p>
+          </div>
+          <img src={pin} alt="별빛핀" onClick={closePost} />
+          <Button size="large" color="primary" onClick={closePost}>
+            여기에요!
+          </Button>
+        </Styled.InputModalWrap>
+      </Styled.Overlay>,
+    );
+    setIsModalOpened(true);
+  };
+  const closePost = () => {
+    console.log('닫음');
+    unmount('postModal');
+    setIsModalOpened(false);
+  };
 
   return (
     <div>
@@ -84,25 +120,30 @@ const Post: React.FC<PostProps> = ({ unmount, setIsPostOpened }) => {
           <div>
             <Styled.UploadBox>
               <label htmlFor="inputImg">{imgFile ? <Styled.UploadImgFile src={imgFile} alt="이미지 업로드" /> : <Styled.ImgBox>사진 선택</Styled.ImgBox>}</label>
-              <input id="inputImg" type="file" accept="image/png, image/jpeg, image/jpg" name="images" onChange={uploadImgFile} ref={imgRef} />
+              <input id="inputImg" type="file" accept="image/png, image/jpeg, image/jpg" onChange={uploadImgFile} ref={imgRef} />
             </Styled.UploadBox>
           </div>
-          {imgFile && (
-            <>
-              <Styled.SearchInput placeholder="지역 탐색 임시 input & 핀 찍으세요 !" />
-              <p>
-                {clickedLocation?.countryId}, {clickedLocation?.regionId}
-              </p>
-              <Styled.ContentsInputBox>
-                <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" type="text" name="contents" onChange={handleChangeContents} maxLength={50} />
-              </Styled.ContentsInputBox>
-              <Switch checked={switchChecked} onChange={setSwitchChecked} left={'전체공유'} right={'나만보기'} />
-            </>
+          {imgFile && 
+            <Styled.SearchInput
+              placeholder="핀 찍으세요 !"
+              ref={regionRef}
+              onClick={() => {
+                !regionRef.current?.value ? showDetail() : closePost();
+              }}
+            />
+          }
+          {regionRef.current?.value && (
+            <Styled.ContentsInputBox>
+              <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" type="text" onChange={handleChangeContents} maxLength={50} />
+            </Styled.ContentsInputBox>
           )}
-          {imgFile && contents && (
-            <Button size="large" type="submit">
-              작성하기
-            </Button>
+          {contents && (
+            <>
+              <Switch checked={switchChecked} onChange={setSwitchChecked} left={'전체공유'} right={'나만보기'} />
+              <Button size="large" type="submit">
+                작성하기
+              </Button>
+            </>
           )}
         </Styled.Grid>
       </form>

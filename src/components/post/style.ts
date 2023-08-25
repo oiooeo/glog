@@ -1,4 +1,15 @@
-import { styled } from 'styled-components';
+import { styled, createGlobalStyle } from 'styled-components';
+
+const GlobalOverlayStyle = createGlobalStyle`
+  body.modal-open {
+    overflow: hidden;
+  }
+
+  body.modal-open .overlay {
+    /* background-color: rgba(0, 0, 0, 0.5); */
+    /* background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(0,0,0,0.5) 100%); */
+  }
+`;
 
 export const Grid = styled.div`
   display: grid;
@@ -61,4 +72,24 @@ export const ContentsInput = styled.input`
     outline: none;
     border-bottom: 1px solid #616161;
   }
+`;
+
+export const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle, transparent 100px, rgba(204, 207, 211, 0.3) 115px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+export const InputModalWrap = styled.div`
+  display: grid;
+  justify-items: center;
+  color: white;
+  grid-gap: 50px;
+  text-align: center;
 `;
