@@ -5,20 +5,20 @@ export const FooterWrapper = styled.footer`
   bottom: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
   background-color: transparent;
   width: 100%;
-  height: 30px;
+  height: 100px;
   z-index: 98;
 `;
 
 export const FooterText = styled.p`
+  margin-right: 6px;
   font-size: 12px;
-  color: #ffffff;
+  color: #cccfd3;
 `;
 
 export const GitHubLink = styled.a`
-  color: #ffffff;
+  color: #cccfd3;
   font-size: 12px;
   text-decoration: none;
 `;
