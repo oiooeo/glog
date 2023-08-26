@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { AuthError, signin, signout } from '../../../api/supabaseAuth';
 import { supabase } from '../../../api/supabaseClient';
 import * as Styled from './style';
-import { BsSearch, BsHeart, BsPlusCircle, BsXCircle, BsXLg } from 'react-icons/bs';
+import { BsPlusCircle, BsXCircle } from 'react-icons/bs';
+import { BiSearch, BiHeart } from 'react-icons/bi';
 import Switch from '../switch/Switch';
 import { useModal } from '../overlay/modal/Modal.hooks';
 import LikesList from '../../likesList/LikesList';
@@ -141,11 +142,11 @@ const Header = () => {
         <Styled.HeaderLogo src={logo} alt="" />
         {isPostOpened ? (
           <Styled.ClosePostButton onClick={closePost}>
-            <BsXCircle size={'24px'} />
+            <BsXCircle size={'22px'} />
           </Styled.ClosePostButton>
         ) : (
           <Styled.OpenPostButton onClick={session ? openPost : signinHandler}>
-            <BsPlusCircle size={'24px'} className="plus" />
+            <BsPlusCircle size={'22px'} className="plus" />
           </Styled.OpenPostButton>
         )}
 
@@ -159,30 +160,32 @@ const Header = () => {
       <Styled.Wrapper>
         {isSearchListOpened ? (
           <>
-            <Styled.Circle onClick={closeSearchList}>
-              <BsXLg size={'16px'} />
-            </Styled.Circle>
-            <Styled.SearchInput placeholder="검색" type="text" name="keyword" onChange={handleChangeKeyword} onKeyPress={handleOnEnterPress} maxLength={20} />
-            <Styled.SearchButton type="button" onClick={handleToSearch}>
-              <BsSearch size={'16px'} />
-            </Styled.SearchButton>
+            <Styled.CircleButton onClick={closeSearchList}>
+              <BsXCircle size={'22px'} />
+            </Styled.CircleButton>
+            <Styled.SearchBox>
+              <Styled.SearchInput placeholder="가고 싶은 여행지를 입력하세요" type="text" name="keyword" onChange={handleChangeKeyword} onKeyPress={handleOnEnterPress} maxLength={20} autoComplete="off" />
+              <Styled.SearchButton type="button" onClick={handleToSearch}>
+                <BiSearch size={'22px'} />
+              </Styled.SearchButton>
+            </Styled.SearchBox>
           </>
         ) : (
           <>
-            <Styled.Circle onClick={openSearchList}>
-              <BsSearch size={'16px'} />
-            </Styled.Circle>
+            <Styled.CircleButton onClick={openSearchList}>
+              <BiSearch size={'22px'} />
+            </Styled.CircleButton>
             {isLikeListOpened ? (
               <>
-                <Styled.Circle onClick={closeLikesList}>
-                  <BsXLg size={'16px'} />
-                </Styled.Circle>
+                <Styled.CircleButton onClick={closeLikesList}>
+                  <BsXCircle size={'22px'} />
+                </Styled.CircleButton>
               </>
             ) : (
               <>
-                <Styled.Circle onClick={session ? openLikesList : openLoginToast}>
-                  <BsHeart size={'16px'} />
-                </Styled.Circle>
+                <Styled.CircleButton onClick={session ? openLikesList : openLoginToast}>
+                  <BiHeart size={'22px'} />
+                </Styled.CircleButton>
               </>
             )}
           </>
