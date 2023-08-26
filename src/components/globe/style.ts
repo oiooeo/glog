@@ -7,6 +7,7 @@ export const GlobeLayout = styled.div`
   & > .mapboxgl-canvas-container .image-marker {
     border-radius: 10px;
     background-size: cover;
+    background-position: center center;
     z-index: 10;
 
     &:hover {

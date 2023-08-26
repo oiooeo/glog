@@ -4,12 +4,12 @@ export const PostItemLayout = styled.div`
   position: relative;
   overflow: hidden;
   width: 300px;
-  height: 295px;
-  margin: 15px 0;
+  height: 300px;
+  margin: 10px 0 10px auto;
   border-radius: 16px;
-  float: right;
   transition-property: margin-right;
   transition-duration: 0.3s;
+  box-shadow: 3px 3px 20px rgba(251, 232, 189, 0.4);
 
   &:hover {
     margin-right: 50px;
@@ -25,11 +25,11 @@ export const PostItemImg = styled.img`
 export const LocationParagraph = styled.p`
   position: absolute;
   top: 20px;
-  left: 15px;
-  background: #00000047;
+  left: 20px;
   color: #ffffff;
   font-size: 15px;
   font-weight: 600;
+  text-shadow: 0px 0px 8px rgb(0, 0, 0);
 `;
 
 export const LikeBox = styled.div`

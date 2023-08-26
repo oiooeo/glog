@@ -9,9 +9,14 @@ type PostItemProps = { data: Tables<'posts'> };
 
 const PostItem: React.FC<PostItemProps> = ({ data }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const itemRef = useRef<HTMLDivElement>(null);
   const [isClicked, setIsClicked] = useState(false);
-
-  const showDetail = () => setIsClicked(!isClicked);
+  const showDetail = () => {
+    setIsClicked(!isClicked);
+    if (itemRef.current) {
+      itemRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
 
   useOnClickOutside(ref, showDetail);
 
@@ -22,7 +27,7 @@ const PostItem: React.FC<PostItemProps> = ({ data }) => {
           <Detail data={data} />
         </Styled.DetailLayout>
       ) : (
-        <Styled.PostItemLayout onClick={showDetail}>
+        <Styled.PostItemLayout ref={itemRef} onClick={showDetail}>
           {data.images !== null ? <Styled.PostItemImg src={data.images} alt="" /> : null}
           <Styled.LocationParagraph>
             {data.countryId}, {data.regionId}
