@@ -5,13 +5,24 @@ import { RiDeleteBin4Fill, RiEdit2Fill } from 'react-icons/ri';
 import Like from '../like/Like';
 import { useSessionStore } from '../../zustand/store';
 import { deleteButton } from '../../api/supabaseDatabase';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type DetailProps = {
   data: Tables<'posts'>;
 };
 
 const Detail: React.FC<DetailProps> = ({ data }) => {
+  const queryClient = useQueryClient();
   const session = useSessionStore(state => state.session);
+  const deletePostMutation = useMutation((postId: string) => deleteButton(postId), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['getPosts']);
+    },
+  });
+
+  const handleDelete = () => {
+    deletePostMutation.mutate(data.id);
+  };
 
   return (
     <Styled.DetailLayout>
@@ -25,7 +36,7 @@ const Detail: React.FC<DetailProps> = ({ data }) => {
         {session?.user.id === data.userId && (
           <Styled.EditButton>
             <RiEdit2Fill color="#ffffff80" />
-            <RiDeleteBin4Fill color="#ffffff80" onClick={() => deleteButton(data.id)} />
+            <RiDeleteBin4Fill color="#ffffff80" onClick={handleDelete} />
           </Styled.EditButton>
         )}
         <Styled.DetailImage src={data.images!} alt={`Image for ${data.contents}`} />
