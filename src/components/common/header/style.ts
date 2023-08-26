@@ -13,16 +13,21 @@ export const HeaderWrapper = styled.header`
   z-index: 100;
 `;
 
+export const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const HeaderLogo = styled.img`
+  width: fit-content;
+  height: 40px;
+`;
+
 export const SwitchBox = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-`;
-
-export const Wrapper = styled.div`
-  display: flex;
-  align-items: center;
 `;
 
 export const SearchInput = styled.input`
@@ -48,6 +53,28 @@ export const SearchButton = styled.button`
   cursor: pointer;
 `;
 
+export const OpenPostButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: 0 15px;
+  background-color: rgba(221, 82, 1, 0.4);
+  border: 1px solid rgba(221, 82, 1, 0.2);
+  border-radius: 50%;
+  color: #d5cbc7;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(221, 82, 1, 0.7);
+  }
+`;
+
+export const ClosePostButton = styled(OpenPostButton)`
+  background-color: rgba(221, 82, 1, 0.7);
+`;
+
 export const Circle = styled.button`
   display: flex;
   align-items: center;
@@ -59,7 +86,6 @@ export const Circle = styled.button`
   border-radius: 50%;
   color: #333;
   margin: 5px;
-  font-size: 12px;
   cursor: pointer;
 `;
 

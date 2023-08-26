@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AuthError, signin, signout } from '../../../api/supabaseAuth';
 import { supabase } from '../../../api/supabaseClient';
 import * as Styled from './style';
-import { BsSearch, BsHeart, BsPlusLg, BsXLg } from 'react-icons/bs';
+import { BsSearch, BsHeart, BsPlusCircle, BsXCircle, BsXLg } from 'react-icons/bs';
 import Switch from '../switch/Switch';
 import { useModal } from '../overlay/modal/Modal.hooks';
 import LikesList from '../../likesList/LikesList';
@@ -138,15 +138,15 @@ const Header = () => {
   return (
     <Styled.HeaderWrapper>
       <Styled.Wrapper>
-        <img src={logo} alt="" />
+        <Styled.HeaderLogo src={logo} alt="" />
         {isPostOpened ? (
-          <Styled.Circle onClick={closePost}>
-            <BsXLg size={'16px'} />
-          </Styled.Circle>
+          <Styled.ClosePostButton onClick={closePost}>
+            <BsXCircle size={'24px'} />
+          </Styled.ClosePostButton>
         ) : (
-          <Styled.Circle onClick={session ? openPost : signinHandler}>
-            <BsPlusLg size={'16px'} />
-          </Styled.Circle>
+          <Styled.OpenPostButton onClick={session ? openPost : signinHandler}>
+            <BsPlusCircle size={'24px'} className="plus" />
+          </Styled.OpenPostButton>
         )}
 
         {session ? <Styled.AuthSpan onClick={signoutHandler}>로그아웃</Styled.AuthSpan> : <Styled.AuthSpan onClick={signinHandler}>로그인</Styled.AuthSpan>}

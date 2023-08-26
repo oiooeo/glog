@@ -111,7 +111,8 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
       });
     }
 
-    if (postsData) {
+    if (postsData && postsData.length !== 0) {
+      console.log(postsData.length);
       zoomSize = map.current?.getZoom();
       const sortedData = [...postsData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
       for (let i = 0; i < 6; i++) {
