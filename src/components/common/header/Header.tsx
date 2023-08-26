@@ -154,7 +154,17 @@ const Header = () => {
       </Styled.Wrapper>
 
       <Styled.SwitchBox>
-        <Switch checked={switchChecked} onChange={setSwitchChecked} left={'탐색'} right={'MY'} />
+        <Switch
+          checked={switchChecked}
+          onChange={setSwitchChecked}
+          leftText={'탐색'}
+          rightText={'MY'}
+          width={'230px'}
+          checkedTextColor={'#FFFFFF'}
+          textColor={'#CCCFD3'}
+          checkedBackground={'rgba(221, 82, 1, 0.4)'}
+          background={'rgba(18, 18, 18, 0.6)'}
+        />
       </Styled.SwitchBox>
 
       <Styled.Wrapper>
