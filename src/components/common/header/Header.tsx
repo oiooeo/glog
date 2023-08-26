@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import logo from '../../../assets/logo.svg';
 import toast from 'react-simple-toasts';
 import SearchBox from '../../globe/SearchBox';
+
 const Header = () => {
   const [user, setUser] = useState<User>();
   const [switchChecked, setSwitchChecked] = useState(false);
@@ -114,6 +115,7 @@ const Header = () => {
       'searchList',
       <>
         <SearchBox />
+        <SearchList keyword={keyword} isSearchListOpened={isSearchListOpened} />
       </>,
     );
   };

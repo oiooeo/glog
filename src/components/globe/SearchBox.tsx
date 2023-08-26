@@ -36,7 +36,7 @@ const SearchBox = () => {
     if (searchData) {
       console.log(searchData);
       const coordinates: [number, number] = [searchData[0].lon, searchData[0].lat];
-      mapLocation.flyTo({ center: [coordinates], zoom: 10 });
+      mapLocation.flyTo({ center: coordinates, zoom: 7 });
     }
   }, [searchData]);
   return (
