@@ -33,7 +33,7 @@ export const CircleButton = styled.button`
   border: 1px solid rgba(53, 60, 73, 1);
   border-radius: 50%;
   color: #cccfd3;
-  margin: 0 10px;
+  margin-left: 10px;
   cursor: pointer;
 `;
 
@@ -72,6 +72,7 @@ export const SearchBox = styled.div`
   display: flex;
   width: 300px;
   height: fit-content;
+  margin-left: 10px;
   background-color: rgba(53, 60, 73, 0.9);
   border-radius: 20px;
   border: 1px solid rgba(77, 87, 101, 1);

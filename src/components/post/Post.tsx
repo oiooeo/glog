@@ -75,8 +75,7 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
     await uploadImg();
   };
 
-  const handleToSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleToSubmit = async () => {
     mutate();
     unmount('post');
     setIsPostOpened(false);
@@ -115,7 +114,7 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
 
   return (
     <div>
-      <form onSubmit={handleToSubmit}>
+      <div>
         <Styled.Grid>
           <div>
             <Styled.UploadBox>
@@ -150,13 +149,13 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
                 checkedBackground={'#72808E'}
                 background={'rgba(18, 18, 18, 0.6)'}
               />
-              <Button size="large" type="submit">
+              <Button size="large" onClick={handleToSubmit}>
                 작성하기
               </Button>
             </>
           )}
         </Styled.Grid>
-      </form>
+      </div>
     </div>
   );
 };

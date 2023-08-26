@@ -5,29 +5,31 @@ export const DetailLayout = styled.div`
   display: flex;
   flex-direction: column;
   width: 300px;
-  height: 410px;
+  height: fit-content;
+  margin: 10px 0;
   background: #ffffff;
   border-radius: 20px;
   z-index: 100;
+  box-shadow: 10px 0px 20px rgba(251, 232, 189, 0.4);
 `;
 
 export const DetailImageContainer = styled.div`
   overflow: hidden;
   width: 300px;
-  height: 290px;
+  height: 300px;
   border-radius: 20px 20px 0 0;
 `;
 
 export const DetailImage = styled.img`
   width: 300px;
-  height: 295px;
+  height: 300px;
   object-fit: cover;
 `;
 
 export const LocationParagraph = styled.p`
   position: absolute;
   top: 20px;
-  left: 15px;
+  left: 20px;
   color: #ffffff;
   font-size: 15px;
   font-weight: 600;
@@ -58,10 +60,12 @@ export const DetailContainer = styled.div`
 export const NameParagraph = styled.p`
   color: #72808e;
   font-size: 15px;
+  font-weight: 600;
 `;
 
 export const ContentsParagraph = styled.p`
   font-size: 17px;
+  line-height: 19px;
 `;
 
 export const TimeParagraph = styled.p`
