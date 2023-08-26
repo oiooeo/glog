@@ -32,8 +32,6 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
     }
   }, [data, key]);
 
-  console.log(searchResult);
-  console.log(session);
   return (
     <>
       {session ? (

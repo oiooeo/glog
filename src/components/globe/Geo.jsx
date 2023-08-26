@@ -14,7 +14,7 @@ const Geo = () => {
       console.log(e.detail);
       const { coordinates } = e.detail.features[0].geometry;
       console.log(coordinates);
-      mapLocation.flyTo({ center: coordinates, zoom: 10 });
+      // mapLocation.flyTo({ center: coordinates, zoom: 10 });
     });
   }, []);
 
