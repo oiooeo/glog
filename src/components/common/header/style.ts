@@ -23,13 +23,6 @@ export const HeaderLogo = styled.img`
   height: 40px;
 `;
 
-export const SwitchBox = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-`;
-
 export const SearchInput = styled.input`
   width: 285px;
   height: 35px;
@@ -75,6 +68,21 @@ export const ClosePostButton = styled(OpenPostButton)`
   background-color: rgba(221, 82, 1, 0.7);
 `;
 
+export const AuthSpan = styled.span`
+  margin-left: 10px;
+  color: #72808e;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+`;
+
+export const SwitchBox = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
 export const Circle = styled.button`
   display: flex;
   align-items: center;
@@ -86,13 +94,5 @@ export const Circle = styled.button`
   border-radius: 50%;
   color: #333;
   margin: 5px;
-  cursor: pointer;
-`;
-
-export const AuthSpan = styled.span`
-  margin: 5px;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: bold;
   cursor: pointer;
 `;
