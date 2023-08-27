@@ -1,32 +1,36 @@
-import { styled, createGlobalStyle } from 'styled-components';
+import { styled } from 'styled-components';
+import Button from '../common/button/Button';
 
-const GlobalOverlayStyle = createGlobalStyle`
-  body.modal-open {
-    overflow: hidden;
-  }
-
-  body.modal-open .overlay {
-    /* background-color: rgba(0, 0, 0, 0.5); */
-    /* background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(0,0,0,0.5) 100%); */
-  }
-`;
-
-export const Grid = styled.div`
-  display: grid;
-  justify-items: center;
-  height: auto;
-  grid-row-gap: 12px;
+export const PostLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `;
 
 export const ImgBox = styled.div`
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
   width: 300px;
   height: 300px;
-  background-color: #616161;
-  color: #ffffff;
-  justify-content: center;
+  background-color: #72808e;
+  border: 1px solid rgba(204, 207, 211, 0.6);
   border-radius: 20px;
+  box-shadow: 3px 3px 20px rgba(251, 232, 189, 0.4);
+
+  & > .image {
+    color: rgba(204, 207, 211, 0.8);
+    margin-bottom: 8px;
+  }
+
+  & > p {
+    color: #ffffff;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 22px;
+  }
 `;
 
 export const UploadImgFile = styled.img`
@@ -34,11 +38,10 @@ export const UploadImgFile = styled.img`
   height: 300px;
   object-fit: cover;
   border-radius: 20px;
+  box-shadow: 3px 3px 20px rgba(251, 232, 189, 0.4);
 `;
 
 export const UploadBox = styled.div`
-  font-weight: bolder;
-
   & > input {
     display: none;
   }
@@ -51,21 +54,19 @@ export const SearchInput = styled.input`
   border-radius: 99px;
 `;
 
-export const ContentsInputBox = styled.div`
-  width: 300px;
-  height: 103px;
+export const ContentsInput = styled.textarea`
+  padding: 20px 15px;
+  background-color: #f4f4f5;
+  border-radius: 20px;
   border: none;
-  border-radius: 99px;
-  background-color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+  color: #4d5765;
+  font-size: 17px;
+  resize: none;
 
-export const ContentsInput = styled.input`
-  background-color: transparent;
-  border: none;
-  border-bottom: 1px solid #616161;
+  &::placeholder {
+    color: #b3bac1;
+    font-size: 17px;
+  }
 
   &:focus {
     border: none;
@@ -74,22 +75,30 @@ export const ContentsInput = styled.input`
   }
 `;
 
-export const Overlay = styled.div`
+export const PinParagraph = styled.p`
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: radial-gradient(circle, transparent 100px, rgba(204, 207, 211, 0.3) 115px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-`;
-export const InputModalWrap = styled.div`
-  display: grid;
-  justify-items: center;
-  color: white;
-  grid-gap: 50px;
+  top: 33%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
   text-align: center;
+  font-size: 21px;
+  line-height: 28px;
+  text-shadow: 3px 3px 10px rgba(251, 232, 189, 0.4);
+`;
+
+export const Pin = styled.img`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 70px;
+  height: 70px;
+  transform: translate(-50%, -50%);
+`;
+
+export const PinButton = styled(Button)`
+  position: fixed;
+  top: 65%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
