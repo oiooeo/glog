@@ -11,7 +11,6 @@ export interface ButtonProps {
 }
 
 export const Button = styled.button<ButtonProps>`
-  /* 와이어프레임을 바탕으로 임의로 넣은 스타일입니다. */
   font-size: 12px;
   color: #000000;
   padding: 0.4rem 1.2rem;
@@ -21,10 +20,33 @@ export const Button = styled.button<ButtonProps>`
   cursor: pointer;
 
   ${props =>
+    props.variant === 'gray' &&
+    css`
+      background-color: #72808e;
+      color: #b3bac1;
+    `}
+
+  ${props =>
+    props.variant === 'orange' &&
+    css`
+      background-color: #fc5522;
+      color: #f4f4f5;
+      box-shadow: 3px 3px 20px rgba(251, 232, 189, 0.4);
+    `}
+
+  ${props =>
+    props.variant === 'black' &&
+    css`
+      background-color: #121212;
+      color: #ffffff;
+    `}
+
+  ${props =>
     props.color === 'primary' &&
     css`
       color: #ffffff;
     `}
+
   ${props =>
     props.color === 'secondary' &&
     css`
@@ -37,12 +59,7 @@ export const Button = styled.button<ButtonProps>`
     css`
       background-color: transparent;
     `}
-  ${props =>
-    props.variant === 'disable' &&
-    css`
-      background-color:#D9D9D9;
-      color: #828282;
-    `}
+
   ${props =>
     props.variant === 'outlined' &&
     css`
@@ -56,6 +73,7 @@ export const Button = styled.button<ButtonProps>`
       width: 88px;
       height: 38px;
     `}
+
   ${props =>
     props.size === 'medium' &&
     css`
@@ -67,7 +85,7 @@ export const Button = styled.button<ButtonProps>`
     props.size === 'large' &&
     css`
       font-size: 18px;
-      width: 290px;
+      width: 300px;
       height: 50px;
       border-radius: 10px;
     `}

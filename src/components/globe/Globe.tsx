@@ -112,7 +112,6 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
     }
 
     if (postsData && postsData.length !== 0) {
-      console.log(postsData.length);
       zoomSize = map.current?.getZoom();
       const sortedData = [...postsData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
       if (sortedData.length > 7) {
@@ -120,10 +119,13 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
           const postData = sortedData[i];
           if (postData.latitude !== null && postData.longitude !== null) {
             const imageMarker = document.createElement('div');
+            imageMarker.className = 'image-marker-div';
+
+            const imgElement = document.createElement('img');
             imageMarker.className = 'image-marker';
-            imageMarker.style.backgroundImage = `url(${postData.images})`;
-            imageMarker.style.width = `70px`;
-            imageMarker.style.height = `70px`;
+            if (postData.images) imgElement.src = postData.images;
+            imgElement.alt = '이미지';
+            imageMarker.appendChild(imgElement);
 
             const markerInstance = new mapboxgl.Marker(imageMarker).setLngLat([postData.longitude, postData.latitude]);
             markerInstance.addTo(map.current!);
@@ -156,10 +158,13 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
           const postData = sortedData[i];
           if (postData.latitude !== null && postData.longitude !== null) {
             const imageMarker = document.createElement('div');
+            imageMarker.className = 'image-marker-div';
+
+            const imgElement = document.createElement('img');
             imageMarker.className = 'image-marker';
-            imageMarker.style.backgroundImage = `url(${postData.images})`;
-            imageMarker.style.width = `70px`;
-            imageMarker.style.height = `70px`;
+            if (postData.images) imgElement.src = postData.images;
+            imgElement.alt = '이미지';
+            imageMarker.appendChild(imgElement);
 
             const markerInstance = new mapboxgl.Marker(imageMarker).setLngLat([postData.longitude, postData.latitude]);
             markerInstance.addTo(map.current!);

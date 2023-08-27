@@ -3,9 +3,9 @@ import { styled } from 'styled-components';
 interface StyledProps {
   checked: boolean;
   width: string;
-  checkedTextColor: string;
-  textColor: string;
-  checkedBackground: string;
+  checkedtextcolor: string;
+  textcolor: string;
+  checkedbackground: string;
   background: string;
 }
 
@@ -38,21 +38,21 @@ export const SwitchBox = styled.div<StyledProps>`
 
 export const SwitchLeftText = styled(SwitchBox)<StyledProps>`
   background-color: ${props => (props.checked ? props.background : 'transparent')};
-  color: ${props => (props.checked ? props.textColor : props.checkedTextColor)};
+  color: ${props => (props.checked ? props.textcolor : props.checkedtextcolor)};
   font-weight: ${props => (props.checked ? '400' : '700')};
   z-index: 12;
 `;
 
 export const SwitchRightText = styled(SwitchBox)<StyledProps>`
   background-color: ${props => (props.checked ? 'transparent' : props.background)};
-  color: ${props => (props.checked ? props.checkedTextColor : props.textColor)};
+  color: ${props => (props.checked ? props.checkedtextcolor : props.textcolor)};
   font-weight: ${props => (props.checked ? '700' : '400')};
   z-index: 12;
 `;
 
 export const SwitchSpan = styled(SwitchBox)<StyledProps>`
   position: absolute;
-  background-color: ${props => props.checkedBackground};
+  background-color: ${props => props.checkedbackground};
   color: transparent;
   border-radius: 40px;
   font-size: 14px;

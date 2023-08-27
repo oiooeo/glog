@@ -27,6 +27,12 @@ export const getPosts = async () => {
   return data;
 };
 
+export const getPost = async (userId: string) => {
+  const { data, error } = await supabase.from('posts').select('*, user:userId(*)').eq('userId', userId).order('createdAt', { ascending: false }).limit(1);
+  if (error) throw new Error(`에러!! ${error.message}`);
+  return data[0];
+};
+
 export const getIsLike = async (postId: string) => {
   const { data, error } = await supabase.from('likes').select('*').eq('postId', postId);
   if (error) throw new Error(`에러!! ${error.message}`);
