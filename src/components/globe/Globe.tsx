@@ -6,11 +6,21 @@ import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Detail from '../detail/Detail';
 import { Tables } from '../../types/supabase';
 import pinSmall from '../../assets/pin/pinSmall.svg';
+import Supercluster from 'supercluster';
 
 interface MapProps {
   initialCenter: [number, number];
   zoom: number;
   postsData: Tables<'posts'>[] | undefined;
+}
+
+interface PointFeature<T> {
+  type: 'Feature';
+  properties: T;
+  geometry: {
+    type: 'Point';
+    coordinates: [number, number];
+  };
 }
 
 const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
@@ -114,6 +124,32 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
 
     if (postsData && postsData.length !== 0 && !isPostModalOpened) {
       zoomSize = map.current?.getZoom();
+      const cluster = new Supercluster({
+        radius: 40,
+        maxZoom: 15,
+      });
+
+      const points: PointFeature<{}>[] =
+        postsData?.map(post => ({
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Point',
+            coordinates: [post.longitude || 0, post.latitude || 0],
+          },
+        })) || [];
+      cluster.load(points);
+
+      const clusters = cluster.getClusters([-180, -85, 180, 85], Math.floor(mapLocation.getZoom()));
+
+      clusters.forEach(cluster => {
+        if (cluster.properties?.cluster) {
+          const marker = new mapboxgl.Marker().setLngLat(cluster.geometry.coordinates as [number, number]).addTo(mapLocation!);
+        } else {
+          const marker = new mapboxgl.Marker().setLngLat(cluster.geometry.coordinates as [number, number]).addTo(mapLocation!);
+        }
+      });
+
       const sortedData = [...postsData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
       if (sortedData.length > 7) {
         for (let i = 0; i < 6; i++) {
