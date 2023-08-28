@@ -14,6 +14,7 @@ import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Detail from '../detail/Detail';
 import { getPost } from '../../api/supabaseDatabase';
 import SearchBox from '../globe/SearchBox';
+import imageCompression from 'browser-image-compression';
 
 type PostProps = {
   unmount: (name: string) => void;
@@ -89,7 +90,23 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
   const handleImageInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      await uploadImgFile(file);
+      try {
+        const originalSize = file.size; //콘솔용이라 콘솔지우면 삭제해도됨
+
+        const options = {
+          maxSizeMB: 3,
+          useWebWorker: true,
+        };
+
+        const compressedFile = await imageCompression(file, options);
+        const compressedSize = compressedFile.size; //콘솔용이라 콘솔지우면 삭제해도됨
+
+        console.log(`Original size: ${originalSize} bytes`);
+        console.log(`Compressed size: ${compressedSize} bytes`);
+        await uploadImgFile(compressedFile);
+      } catch (error) {
+        console.error('Image compression error:', error);
+      }
     }
   };
 
