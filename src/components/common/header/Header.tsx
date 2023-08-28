@@ -111,7 +111,12 @@ const Header = () => {
   };
 
   const handleToSearch = () => {
-    rightMount('searchList', <SearchList keyword={keyword} isSearchListOpened={isSearchListOpened} />);
+    rightMount(
+      'searchList',
+      <>
+        <SearchList keyword={keyword} isSearchListOpened={isSearchListOpened} />
+      </>,
+    );
   };
 
   const handleOnEnterPress = (e: React.KeyboardEvent) => {

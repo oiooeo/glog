@@ -1,15 +1,17 @@
 import { styled } from 'styled-components';
 
-export const PostItemLayout = styled.div`
+export const PostItemLayout = styled.div<{ lastItem?: boolean }>`
   position: relative;
   overflow: hidden;
   width: 300px;
-  height: 300px;
-  margin: 10px 0 10px auto;
-  border-radius: 16px;
+  height: ${props => (props.lastItem ? '200px' : '300px')};
+  margin: ${props => (props.lastItem ? '0' : '15px 0')};
+  border-radius: ${props => (props.lastItem ? '16px 16px 0 0' : '16px')};
+  filter: ${props => (props.lastItem ? 'blur(5px)' : 'none')};
+  transition: filter 0.3s ease;
+  float: right;
   transition-property: margin-right;
   transition-duration: 0.3s;
-  box-shadow: 3px 3px 20px rgba(251, 232, 189, 0.4);
 
   &:hover {
     margin-right: 50px;
