@@ -18,6 +18,7 @@ export const FooterText = styled.p`
 `;
 
 export const GitHubLink = styled.a`
+  height: fit-content;
   color: #cccfd3;
   font-size: 12px;
   text-decoration: none;

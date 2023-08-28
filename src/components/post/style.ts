@@ -55,7 +55,7 @@ export const SearchInput = styled.input`
 `;
 
 export const ContentsInput = styled.textarea`
-  padding: 20px 15px;
+  padding: 20px;
   background-color: #f4f4f5;
   border-radius: 20px;
   border: none;
@@ -72,6 +72,10 @@ export const ContentsInput = styled.textarea`
     border: none;
     outline: none;
     border-bottom: 1px solid #616161;
+  }
+
+  &::-webkit-scrollbar {
+    display: none;
   }
 `;
 
