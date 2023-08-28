@@ -42,17 +42,15 @@ const Header = () => {
   useEffect(() => {
     if (switchChecked) {
       if (session) {
-        console.log('MY 탭 활성화');
         navigate('/my');
       }
       if (!session) {
         signinHandler();
       }
     } else {
-      console.log('탐색 탭 활성화');
-      // navigate('/');
+      navigate('/');
     }
-  }, [switchChecked]);
+  }, [switchChecked, navigate, session]);
 
   useEffect(() => {
     async function getUserData() {
