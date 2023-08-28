@@ -6,7 +6,7 @@ import { uuid } from '@supabase/gotrue-js/dist/module/lib/helpers';
 import Switch from '../common/switch/Switch';
 import Button from '../common/button/Button';
 import useInput from '../../hooks/useInput';
-import { useLocationStore, useSessionStore } from '../../zustand/store';
+import { useLocationStore, usePostStore, useSessionStore } from '../../zustand/store';
 import toast from 'react-simple-toasts';
 import { PiImageSquareFill } from 'react-icons/pi';
 import Geo from '../globe/Geo';
@@ -101,6 +101,7 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
     mutate();
     unmount('post');
     setIsPostOpened(false);
+    usePostStore.getState().setIsPosting(false);
     toast('업로드 완료! 다른 게시물들도 확인해보세요 :)', { className: 'post-alert', position: 'top-center' });
 
     const post = userId ? await getPost(userId) : null;
