@@ -69,7 +69,7 @@ export interface Database {
           countryId: string | null;
           createdAt: string;
           id: string;
-          images: string | null;
+          images: string;
           latitude: number;
           likes: number;
           longitude: number;
@@ -83,7 +83,7 @@ export interface Database {
           countryId?: string | null;
           createdAt?: string;
           id?: string;
-          images?: string | null;
+          images?: string;
           latitude: number;
           likes?: number;
           longitude: number;
@@ -97,7 +97,7 @@ export interface Database {
           countryId?: string | null;
           createdAt?: string;
           id?: string;
-          images?: string | null;
+          images?: string;
           latitude?: number;
           likes?: number;
           longitude?: number;
