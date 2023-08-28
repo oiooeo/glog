@@ -18,12 +18,18 @@ interface LocationStore {
     regionId: string;
     countryId: string;
     address: string;
-  } | null;
+  };
   setClickedLocation: (location: LocationStore['clickedLocation']) => void;
 }
 
 export const useLocationStore = create<LocationStore>(set => ({
-  clickedLocation: null,
+  clickedLocation: {
+    latitude: 0,
+    longitude: 0,
+    regionId: '',
+    countryId: '',
+    address: '',
+  },
   setClickedLocation: location => set({ clickedLocation: location }),
 }));
 
@@ -49,8 +55,8 @@ export const usePostStore = create<usePostProps>(set => ({
 
 interface clickedPostLocationStore {
   clickedPostLocation: {
-    latitude: number | null;
-    longitude: number | null;
+    latitude: number;
+    longitude: number;
   } | null;
   setClickedPostLocation: (location: clickedPostLocationStore['clickedPostLocation']) => void;
 }

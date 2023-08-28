@@ -7,6 +7,7 @@ import Detail from '../detail/Detail';
 import { Tables } from '../../types/supabase';
 import pinSmall from '../../assets/pin/pinSmall.svg';
 import pinFocus from '../../assets/pin/pinFocus.svg';
+import { CustomMarker, getHTMLElement } from './globe.util';
 
 interface MapProps {
   initialCenter: [number, number];
@@ -194,22 +195,35 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
     }
   }, [initialCenter, zoom, postsData, isPostModalOpened]);
 
-  useEffect(() => {
+  const isNull = (
+    clickedPostLocation: {
+      latitude: number;
+      longitude: number;
+    } | null,
+  ) => {
+    return !clickedPostLocation;
+  };
+
+  const pickLocationWithMarker = (clickedPostLocation: { latitude: number; longitude: number }) => {
     const OrangePinMarker = document.querySelector('.orange-pin-marker');
     if (OrangePinMarker) OrangePinMarker.remove();
 
-    if (clickedPostLocation && clickedPostLocation?.latitude !== null && clickedPostLocation?.longitude !== null) {
-      const imageMarker = document.createElement('div');
-      imageMarker.className = 'orange-pin-marker';
-      imageMarker.style.backgroundImage = `url(${pinFocus})`;
+    const marker = getHTMLElement({ type: CustomMarker.Orange, imgSrc: pinFocus });
+    const markerInstance = new mapboxgl.Marker(marker).setLngLat([clickedPostLocation.longitude, clickedPostLocation.latitude]);
 
-      const markerInstance = new mapboxgl.Marker(imageMarker).setLngLat([clickedPostLocation.longitude, clickedPostLocation.latitude]);
-      markerInstance.addTo(map.current!);
-      map.current?.flyTo({
-        center: [clickedPostLocation.longitude, clickedPostLocation.latitude],
-        speed: 8,
-      });
+    markerInstance.addTo(map.current!);
+    map.current?.flyTo({
+      center: [clickedPostLocation.longitude, clickedPostLocation.latitude],
+      speed: 8,
+    });
+  };
+
+  useEffect(() => {
+    if (!clickedPostLocation) {
+      return;
     }
+
+    pickLocationWithMarker(clickedPostLocation);
   }, [clickedPostLocation]);
 
   // 지역 검색에 필요한 코드

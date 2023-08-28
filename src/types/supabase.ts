@@ -70,9 +70,9 @@ export interface Database {
           createdAt: string;
           id: string;
           images: string | null;
-          latitude: number | null;
+          latitude: number;
           likes: number;
-          longitude: number | null;
+          longitude: number;
           private: boolean | null;
           regionId: string | null;
           userId: string | null;
@@ -84,9 +84,9 @@ export interface Database {
           createdAt?: string;
           id?: string;
           images?: string | null;
-          latitude?: number | null;
+          latitude: number;
           likes?: number;
-          longitude?: number | null;
+          longitude: number;
           private?: boolean | null;
           regionId?: string | null;
           userId?: string | null;
@@ -98,9 +98,9 @@ export interface Database {
           createdAt?: string;
           id?: string;
           images?: string | null;
-          latitude?: number | null;
+          latitude?: number;
           likes?: number;
-          longitude?: number | null;
+          longitude?: number;
           private?: boolean | null;
           regionId?: string | null;
           userId?: string | null;

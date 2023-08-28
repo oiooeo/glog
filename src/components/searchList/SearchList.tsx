@@ -69,12 +69,12 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
     <>
       {session ? (
         <>
-          <Styled.scrollDiv className="scrollSearch">
+          <Styled.ScrollDiv className="scrollSearch">
             {searchResult?.map(item => (
               <PostItem key={item.id} data={item} />
             ))}
-          </Styled.scrollDiv>
-          {loading && <Styled.loadingDiv>Loading..</Styled.loadingDiv>}
+          </Styled.ScrollDiv>
+          {loading && <Styled.LoadingDiv>Loading..</Styled.LoadingDiv>}
         </>
       ) : (
         <>
