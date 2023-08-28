@@ -1,11 +1,12 @@
 import React, { useRef, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
 import * as Styled from './style';
-import { useLocationStore, useMapLocationStore, usePostStore } from '../../zustand/store';
+import { useClickedPostStore, useLocationStore, useMapLocationStore, usePostStore } from '../../zustand/store';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Detail from '../detail/Detail';
 import { Tables } from '../../types/supabase';
 import pinSmall from '../../assets/pin/pinSmall.svg';
+import pinFocus from '../../assets/pin/pinFocus.svg';
 
 interface MapProps {
   initialCenter: [number, number];
@@ -22,6 +23,7 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
   let marker: any;
   let zoomSize: number | undefined = map.current?.getZoom();
   const isPostModalOpened = usePostStore(state => state.isPosting);
+  const clickedPostLocation = useClickedPostStore(state => state.clickedPostLocation);
 
   useEffect(() => {
     const placeLocation = async (location: { lng: number; lat: number }) => {
@@ -116,6 +118,8 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
       zoomSize = map.current?.getZoom();
       const sortedData = [...postsData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
       if (sortedData.length > 7) {
+        const imageMarkers = document.querySelectorAll('.image-marker');
+        imageMarkers.forEach(marker => marker.remove());
         for (let i = 0; i < 6; i++) {
           const postData = sortedData[i];
           if (postData.latitude !== null && postData.longitude !== null) {
@@ -136,6 +140,8 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
             });
           }
         }
+        const pinMarkers = document.querySelectorAll('.pin-marker');
+        pinMarkers.forEach(marker => marker.remove());
 
         for (let i = 6; i < postsData.length; i++) {
           const postData = sortedData[i];
@@ -143,8 +149,6 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
             const imageMarker = document.createElement('div');
             imageMarker.className = 'pin-marker';
             imageMarker.style.backgroundImage = `url(${pinSmall})`;
-            imageMarker.style.width = `30px`;
-            imageMarker.style.height = `30px`;
 
             const markerInstance = new mapboxgl.Marker(imageMarker).setLngLat([postData.longitude, postData.latitude]);
             markerInstance.addTo(map.current!);
@@ -155,6 +159,8 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
           }
         }
       } else {
+        const imageMarkers = document.querySelectorAll('.image-marker');
+        imageMarkers.forEach(marker => marker.remove());
         for (let i = 0; i < sortedData.length; i++) {
           const postData = sortedData[i];
           if (postData.latitude !== null && postData.longitude !== null) {
@@ -178,9 +184,8 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
       }
     } else if (isPostModalOpened) {
       const imageMarkers = document.querySelectorAll('.image-marker');
-      const pinMarkers = document.querySelectorAll('.pin-marker');
-
       imageMarkers.forEach(marker => marker.remove());
+      const pinMarkers = document.querySelectorAll('.pin-marker');
       pinMarkers.forEach(marker => marker.remove());
     }
 
@@ -188,6 +193,24 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
       useMapLocationStore.getState().setMapLocation(map.current);
     }
   }, [initialCenter, zoom, postsData, isPostModalOpened]);
+
+  useEffect(() => {
+    const OrangePinMarker = document.querySelector('.orange-pin-marker');
+    if (OrangePinMarker) OrangePinMarker.remove();
+
+    if (clickedPostLocation && clickedPostLocation?.latitude !== null && clickedPostLocation?.longitude !== null) {
+      const imageMarker = document.createElement('div');
+      imageMarker.className = 'orange-pin-marker';
+      imageMarker.style.backgroundImage = `url(${pinFocus})`;
+
+      const markerInstance = new mapboxgl.Marker(imageMarker).setLngLat([clickedPostLocation.longitude, clickedPostLocation.latitude]);
+      markerInstance.addTo(map.current!);
+      map.current?.flyTo({
+        center: [clickedPostLocation.longitude, clickedPostLocation.latitude],
+        speed: 8,
+      });
+    }
+  }, [clickedPostLocation]);
 
   // 지역 검색에 필요한 코드
   useEffect(() => {

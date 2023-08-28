@@ -11,7 +11,7 @@ import SearchList from '../../searchList/SearchList';
 import { User } from '@supabase/supabase-js';
 import { addNewUser } from '../../../api/supabaseDatabase';
 import Post from '../../post/Post';
-import { usePostStore, useSessionStore } from '../../../zustand/store';
+import { usePostStore, useSessionStore, useTabStore } from '../../../zustand/store';
 import useInput from '../../../hooks/useInput';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../../assets/logo.svg';
@@ -42,13 +42,13 @@ const Header = () => {
   useEffect(() => {
     if (switchChecked) {
       if (session) {
-        navigate('/my');
+        useTabStore.getState().setTab('my');
       }
       if (!session) {
         signinHandler();
       }
     } else {
-      navigate('/');
+      useTabStore.getState().setTab('explore');
     }
   }, [switchChecked, navigate, session]);
 
@@ -93,11 +93,13 @@ const Header = () => {
   };
 
   const closeSearchList = () => {
+    // useTabStore.getState().setTab('explore');
     unmount('searchList');
     setIsSearchListOpened(false);
   };
 
   const closeLikesList = () => {
+    // useTabStore.getState().setTab('explore');
     unmount('likesList');
     setIsLikeListOpened(false);
   };
@@ -129,12 +131,14 @@ const Header = () => {
     closeLikesList();
     setIsSearchListOpened(true);
     handleToSearch();
+    useTabStore.getState().setTab('search');
   };
 
   const openLikesList = () => {
     closeSearchList();
     setIsLikeListOpened(true);
     rightMount('likesList', <LikesList />);
+    useTabStore.getState().setTab('like');
   };
 
   const openLoginToast = () => {

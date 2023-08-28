@@ -5,6 +5,7 @@ import { Tables } from '../../../types/supabase';
 import useOnClickOutside from '../../../hooks/useOnClickOutSide';
 import Detail from '../../detail/Detail';
 import { signin } from '../../../api/supabaseAuth';
+import { useClickedPostStore } from '../../../zustand/store';
 
 type PostItemProps = { data: Tables<'posts'>; lastItem?: boolean };
 
@@ -12,11 +13,19 @@ const PostItem: React.FC<PostItemProps> = ({ data, lastItem }) => {
   const ref = useRef<HTMLDivElement>(null);
   const itemRef = useRef<HTMLDivElement>(null);
   const [isClicked, setIsClicked] = useState(false);
+
+  const clickedPostLocation = {
+    latitude: data.latitude,
+    longitude: data.longitude,
+  };
+
   const showDetail = () => {
     setIsClicked(!isClicked);
     if (itemRef.current) {
       itemRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+
+    useClickedPostStore.getState().setClickedPostLocation(clickedPostLocation);
   };
 
   useOnClickOutside(ref, showDetail);
