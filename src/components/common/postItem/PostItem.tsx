@@ -24,6 +24,9 @@ const PostItem: React.FC<PostItemProps> = ({ data, lastItem }) => {
     if (itemRef.current) {
       itemRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+    if (!clickedPostLocation) {
+      return;
+    }
 
     useClickedPostStore.getState().setClickedPostLocation(clickedPostLocation);
   };
