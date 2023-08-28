@@ -5,9 +5,10 @@ import { Tables } from '../../../types/supabase';
 import useOnClickOutside from '../../../hooks/useOnClickOutSide';
 import Detail from '../../detail/Detail';
 
-type PostItemProps = { data: Tables<'posts'> };
+type PostItemProps = { data: Tables<'posts'>; lastItem?: boolean };
 
-const PostItem: React.FC<PostItemProps> = ({ data }) => {
+const PostItem: React.FC<PostItemProps> = ({ data, lastItem }) => {
+  console.log(lastItem);
   const ref = useRef<HTMLDivElement>(null);
   const itemRef = useRef<HTMLDivElement>(null);
   const [isClicked, setIsClicked] = useState(false);
@@ -27,7 +28,7 @@ const PostItem: React.FC<PostItemProps> = ({ data }) => {
           <Detail data={data} />
         </Styled.DetailLayout>
       ) : (
-        <Styled.PostItemLayout ref={itemRef} onClick={showDetail}>
+        <Styled.PostItemLayout ref={itemRef} onClick={showDetail} lastItem={lastItem}>
           {data.images !== null ? <Styled.PostItemImg src={data.images} alt="" /> : null}
           <Styled.LocationParagraph>
             {data.countryId}, {data.regionId}

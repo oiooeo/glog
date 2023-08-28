@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PostItem from '../common/postItem/PostItem';
+import * as Styled from './style';
 import { useQuery } from '@tanstack/react-query';
 import { getPosts } from '../../api/supabaseDatabase';
 import { Tables } from '../../types/supabase';
@@ -42,10 +43,13 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
         </>
       ) : (
         <>
-          {searchResult?.slice(0, 5).map(item => (
+          {searchResult?.slice(0, 4).map(item => (
             <PostItem key={item.id} data={item} />
           ))}
-          <button onClick={signin}>로그인하세요</button>
+          <Styled.LoginGuideButton onClick={signin}>더 많은 정보를 보고 싶으시다면 로그인 해주세요!</Styled.LoginGuideButton>
+          {searchResult?.slice(4, 5).map(item => (
+            <PostItem key={item.id} data={item} lastItem={true} />
+          ))}
         </>
       )}
     </>

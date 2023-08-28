@@ -9,11 +9,11 @@ import useInput from '../../hooks/useInput';
 import { useLocationStore, useSessionStore } from '../../zustand/store';
 import toast from 'react-simple-toasts';
 import { PiImageSquareFill } from 'react-icons/pi';
-import Geo from '../globe/Geo';
 import pin from '../../assets/pin/pinLarge.svg';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Detail from '../detail/Detail';
 import { getPost } from '../../api/supabaseDatabase';
+import SearchBox from '../globe/SearchBox';
 
 type PostProps = {
   unmount: (name: string) => void;
@@ -135,7 +135,7 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
 
       {imgFile && (
         <>
-          <Geo />
+          <SearchBox />
           {here ? (
             <>
               <Styled.Pin src={pin} alt="위치" />
