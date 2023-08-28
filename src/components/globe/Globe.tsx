@@ -190,8 +190,6 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
   }, [initialCenter, zoom, postsData, isPostModalOpened]);
 
   useEffect(() => {
-    console.log('clickedPostLocation', clickedPostLocation);
-
     const OrangePinMarker = document.querySelector('.orange-pin-marker');
     if (OrangePinMarker) OrangePinMarker.remove();
 
