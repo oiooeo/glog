@@ -118,6 +118,8 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
       zoomSize = map.current?.getZoom();
       const sortedData = [...postsData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
       if (sortedData.length > 7) {
+        const imageMarkers = document.querySelectorAll('.image-marker');
+        imageMarkers.forEach(marker => marker.remove());
         for (let i = 0; i < 6; i++) {
           const postData = sortedData[i];
           if (postData.latitude !== null && postData.longitude !== null) {
@@ -138,6 +140,8 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
             });
           }
         }
+        const pinMarkers = document.querySelectorAll('.pin-marker');
+        pinMarkers.forEach(marker => marker.remove());
 
         for (let i = 6; i < postsData.length; i++) {
           const postData = sortedData[i];
@@ -155,6 +159,8 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
           }
         }
       } else {
+        const imageMarkers = document.querySelectorAll('.image-marker');
+        imageMarkers.forEach(marker => marker.remove());
         for (let i = 0; i < sortedData.length; i++) {
           const postData = sortedData[i];
           if (postData.latitude !== null && postData.longitude !== null) {
@@ -178,9 +184,8 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
       }
     } else if (isPostModalOpened) {
       const imageMarkers = document.querySelectorAll('.image-marker');
-      const pinMarkers = document.querySelectorAll('.pin-marker');
-
       imageMarkers.forEach(marker => marker.remove());
+      const pinMarkers = document.querySelectorAll('.pin-marker');
       pinMarkers.forEach(marker => marker.remove());
     }
 

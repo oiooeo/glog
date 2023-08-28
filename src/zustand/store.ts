@@ -59,3 +59,13 @@ export const useClickedPostStore = create<clickedPostLocationStore>(set => ({
   clickedPostLocation: null,
   setClickedPostLocation: location => set({ clickedPostLocation: location }),
 }));
+
+interface useTabProps {
+  tab: string;
+  setTab: (nowTab: string) => void;
+}
+
+export const useTabStore = create<useTabProps>(set => ({
+  tab: 'explore',
+  setTab: now => set({ tab: now }),
+}));
