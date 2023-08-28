@@ -12,7 +12,7 @@ export const GlobeLayout = styled.div`
   }
 
   & > .mapboxgl-canvas-container .image-marker {
-    z-index: 11;
+    z-index: 12;
 
     & > img {
       width: 70px;
@@ -29,7 +29,13 @@ export const GlobeLayout = styled.div`
 
   & > .mapboxgl-canvas-container .pin-marker {
     width: 30px;
-    height: 100%;
+    height: 30px;
+    background-size: cover;
+  }
+
+  & > .mapboxgl-canvas-container .orange-pin-marker {
+    width: 30px;
+    height: 30px;
     background-size: cover;
   }
 
