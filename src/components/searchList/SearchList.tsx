@@ -15,7 +15,9 @@ type SearchListProps = {
 const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) => {
   const [key, setKey] = useState('');
   const [searchResult, setSearchResult] = useState<Tables<'posts'>[]>();
+  const [page, setPage] = useState<number>(1);
   const session = useSessionStore(state => state.session);
+  const [loading, setLoading] = useState<boolean>(false);
   const { data } = useQuery(['getPosts'], getPosts);
 
   useEffect(() => {
@@ -33,13 +35,46 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
     }
   }, [data, key]);
 
+  useEffect(() => {
+    if (data) {
+      const filterData = data.slice(0, page * 5);
+      setSearchResult(filterData);
+    }
+  }, [page]);
+
+  const handleScroll = () => {
+    setLoading(true);
+    const scrollDiv = document.querySelector('.scrollDiv');
+    if (scrollDiv) {
+      const isAtBottom = scrollDiv.scrollHeight - scrollDiv.scrollTop === scrollDiv.clientHeight;
+      if (isAtBottom) {
+        setTimeout(() => {
+          setPage(prev => prev + 1);
+          setLoading(false);
+        }, 1000); // 1초 후에 페이지 번호 증가 및 로딩 종료
+      } else {
+        setLoading(false); // 맨 아래로 스크롤하지 않았을 때는 로딩 종료
+      }
+    }
+  };
+
+  useEffect(() => {
+    const scrollDiv = document.querySelector('.scrollDiv');
+    scrollDiv?.addEventListener('scroll', handleScroll);
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <>
       {session ? (
         <>
-          {searchResult?.map(item => (
-            <PostItem key={item.id} data={item} />
-          ))}
+          <Styled.scrollDiv className="scrollDiv">
+            {searchResult?.map(item => (
+              <PostItem key={item.id} data={item} />
+            ))}
+          </Styled.scrollDiv>
+          {loading && <Styled.loadingDiv>Loading..</Styled.loadingDiv>}
         </>
       ) : (
         <>

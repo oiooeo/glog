@@ -1,8 +1,8 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useMapLocationStore } from '../../zustand/store';
 import { getSearchData } from '../../api/mapbox';
 import { useQuery } from '@tanstack/react-query';
+import * as Styled from './style';
 
 interface SearchResult {
   boundingbox: string[];
@@ -43,7 +43,7 @@ const SearchBox = () => {
   }, [searchData, mapLocation]);
   return (
     <form onSubmit={doSearch}>
-      <input value={value} onChange={e => setValue(e.target.value)} />
+      <Styled.SearchInput value={value} onChange={e => setValue(e.target.value)} />
     </form>
   );
 };

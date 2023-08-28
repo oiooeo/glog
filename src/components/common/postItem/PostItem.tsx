@@ -4,11 +4,11 @@ import Like from '../../like/Like';
 import { Tables } from '../../../types/supabase';
 import useOnClickOutside from '../../../hooks/useOnClickOutSide';
 import Detail from '../../detail/Detail';
+import { signin } from '../../../api/supabaseAuth';
 
 type PostItemProps = { data: Tables<'posts'>; lastItem?: boolean };
 
 const PostItem: React.FC<PostItemProps> = ({ data, lastItem }) => {
-  console.log(lastItem);
   const ref = useRef<HTMLDivElement>(null);
   const itemRef = useRef<HTMLDivElement>(null);
   const [isClicked, setIsClicked] = useState(false);
@@ -28,7 +28,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, lastItem }) => {
           <Detail data={data} />
         </Styled.DetailLayout>
       ) : (
-        <Styled.PostItemLayout ref={itemRef} onClick={showDetail} lastItem={lastItem}>
+        <Styled.PostItemLayout ref={itemRef} onClick={lastItem ? signin : showDetail} lastItem={lastItem}>
           {data.images !== null ? <Styled.PostItemImg src={data.images} alt="" /> : null}
           <Styled.LocationParagraph>
             {data.countryId}, {data.regionId}
