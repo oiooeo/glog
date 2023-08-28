@@ -49,7 +49,7 @@ export const deleteButton = async (postId: string) => {
   try {
     await supabase.from('likes').delete().eq('postId', postId);
     await supabase.from('posts').delete().eq('id', postId);
-    toast('삭제 완료!', { className: 'delete-alert', position: 'center' });
+    toast('삭제 완료!', { className: 'post-alert', position: 'top-center' });
   } catch (error) {
     console.error('Error deleting post and likes:', error);
   }

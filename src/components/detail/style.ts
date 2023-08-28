@@ -10,7 +10,7 @@ export const DetailLayout = styled.div`
   background: #ffffff;
   border-radius: 20px;
   z-index: 100;
-  box-shadow: 10px 0px 20px rgba(251, 232, 189, 0.4);
+  box-shadow: 3px 3px 20px rgba(251, 232, 189, 0.4);
 `;
 
 export const DetailImageContainer = styled.div`
@@ -42,12 +42,20 @@ export const LikeBox = styled.div`
   right: 15px;
 `;
 
-export const EditButton = styled.div`
+export const EditButton = styled.button`
   position: absolute;
-  bottom: 125px;
-  left: 15px;
+  top: 250px;
+  left: 20px;
+  width: 40px;
+  height: 40px;
+  background: rgba(53, 60, 73, 0.6);
+  border: 1px solid rgba(53, 60, 73, 1);
+  border-radius: 50%;
   cursor: pointer;
-  /* border: 1px solid; */
+
+  & > .edit {
+    color: rgba(204, 207, 211, 0.8);
+  }
 `;
 
 export const DetailContainer = styled.div`
@@ -66,6 +74,7 @@ export const NameParagraph = styled.p`
 export const ContentsParagraph = styled.p`
   font-size: 17px;
   line-height: 19px;
+  white-space: pre-line;
 `;
 
 export const TimeParagraph = styled.p`
