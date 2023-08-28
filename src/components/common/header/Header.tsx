@@ -11,7 +11,7 @@ import SearchList from '../../searchList/SearchList';
 import { User } from '@supabase/supabase-js';
 import { addNewUser } from '../../../api/supabaseDatabase';
 import Post from '../../post/Post';
-import { useSessionStore } from '../../../zustand/store';
+import { usePostStore, useSessionStore } from '../../../zustand/store';
 import useInput from '../../../hooks/useInput';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../../assets/logo.svg';
@@ -42,17 +42,15 @@ const Header = () => {
   useEffect(() => {
     if (switchChecked) {
       if (session) {
-        console.log('MY 탭 활성화');
         navigate('/my');
       }
       if (!session) {
         signinHandler();
       }
     } else {
-      console.log('탐색 탭 활성화');
-      // navigate('/');
+      navigate('/');
     }
-  }, [switchChecked]);
+  }, [switchChecked, navigate, session]);
 
   useEffect(() => {
     async function getUserData() {
@@ -89,6 +87,7 @@ const Header = () => {
   };
 
   const closePost = () => {
+    usePostStore.getState().setIsPosting(false);
     unmount('post');
     setIsPostOpened(false);
   };
@@ -104,6 +103,7 @@ const Header = () => {
   };
 
   const openPost = () => {
+    usePostStore.getState().setIsPosting(true);
     leftMount('post', <Post leftMount={leftMount} unmount={unmount} setIsPostOpened={setIsPostOpened} />);
     setIsPostOpened(true);
     closeLikesList();

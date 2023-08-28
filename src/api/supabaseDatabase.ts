@@ -21,8 +21,14 @@ export const addPost = async (newPost: Tables<'posts'>) => {
   await supabase.from('posts').insert(newPost);
 };
 
+export const getMyPosts = async (userId: string) => {
+  const { data, error } = await supabase.from('posts').select('*, user:userId(*)').eq('userId', userId);
+  if (error) throw new Error(`에러!! ${error.message}`);
+  return data;
+};
+
 export const getPosts = async () => {
-  const { data, error } = await supabase.from('posts').select('*, user:userId(*)');
+  const { data, error } = await supabase.from('posts').select('*, user:userId(*)').eq('private', false);
   if (error) throw new Error(`에러!! ${error.message}`);
   return data;
 };
@@ -49,7 +55,7 @@ export const deleteButton = async (postId: string) => {
   try {
     await supabase.from('likes').delete().eq('postId', postId);
     await supabase.from('posts').delete().eq('id', postId);
-    toast('삭제 완료!', { className: 'delete-alert', position: 'center' });
+    toast('삭제 완료!', { className: 'post-alert', position: 'top-center' });
   } catch (error) {
     console.error('Error deleting post and likes:', error);
   }

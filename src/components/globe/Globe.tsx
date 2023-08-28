@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
 import * as Styled from './style';
-import { useLocationStore, useMapLocationStore } from '../../zustand/store';
+import { useLocationStore, useMapLocationStore, usePostStore } from '../../zustand/store';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Detail from '../detail/Detail';
 import { Tables } from '../../types/supabase';
@@ -21,6 +21,7 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
   const mapLocation = useMapLocationStore(state => state.mapLocation);
   let marker: any;
   let zoomSize: number | undefined = map.current?.getZoom();
+  const isPostModalOpened = usePostStore(state => state.isPosting);
 
   useEffect(() => {
     const placeLocation = async (location: { lng: number; lat: number }) => {
@@ -111,7 +112,7 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
       });
     }
 
-    if (postsData && postsData.length !== 0) {
+    if (postsData && postsData.length !== 0 && !isPostModalOpened) {
       zoomSize = map.current?.getZoom();
       const sortedData = [...postsData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
       if (sortedData.length > 7) {
@@ -175,12 +176,18 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
           }
         }
       }
+    } else if (isPostModalOpened) {
+      const imageMarkers = document.querySelectorAll('.image-marker');
+      const pinMarkers = document.querySelectorAll('.pin-marker');
+
+      imageMarkers.forEach(marker => marker.remove());
+      pinMarkers.forEach(marker => marker.remove());
     }
 
     if (map) {
       useMapLocationStore.getState().setMapLocation(map.current);
     }
-  }, [initialCenter, zoom, postsData]);
+  }, [initialCenter, zoom, postsData, isPostModalOpened]);
 
   // 지역 검색에 필요한 코드
   useEffect(() => {

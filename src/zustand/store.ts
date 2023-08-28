@@ -37,12 +37,12 @@ export const useMapLocationStore = create<useMapProps>(set => ({
   setMapLocation: newMapLocation => set({ mapLocation: newMapLocation }),
 }));
 
-interface usePostProps1 {
+interface usePostProps {
   isPosting: boolean | null;
-  setIsPosting: (newMapLocation: any | null) => void;
+  setIsPosting: (nowIsPosting: boolean) => void;
 }
 
-export const useMapLocationStore1 = create<usePostProps1>(set => ({
+export const usePostStore = create<usePostProps>(set => ({
   isPosting: null,
-  setIsPosting: newMapLocation => set({ isPosting: newMapLocation }),
+  setIsPosting: nowIsPosting => set({ isPosting: nowIsPosting }),
 }));
