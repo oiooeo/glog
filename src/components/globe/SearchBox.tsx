@@ -1,6 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useMapLocationStore } from '../../zustand/store';
+import { getSearchData } from '../../api/mapbox';
+import { useQuery } from '@tanstack/react-query';
 
 interface SearchResult {
   boundingbox: string[];
@@ -17,28 +19,28 @@ interface SearchResult {
 }
 
 const SearchBox = () => {
-  const SEARCHURL = `https://us1.locationiq.com/v1/search.php?format=json&`;
-  const Token = 'pk.8a7b3dab828f3f4cc07447c577ee59a2';
   const [value, setValue] = useState('');
-  const [searchData, setSearchData] = useState<SearchResult[] | undefined>();
   const mapLocation = useMapLocationStore(state => state.mapLocation);
 
-  const doSearch = async (e: any) => {
+  const { data: searchData, refetch } = useQuery<SearchResult[] | undefined>(
+    ['searchData', value], // QueryKey로 ['searchData', value]를 사용
+    () => getSearchData(value), // 데이터를 가져오는 비동기 함수
+    {
+      enabled: false, // 최초에는 refetch를 비활성화
+    },
+  );
+  const doSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!value) return false;
-    let url = `${SEARCHURL}key=${Token}&q=${value}`;
-    const response = await axios.get(url);
-    const { data } = response;
-    setSearchData(data.slice(0, 1));
+    refetch();
   };
 
   useEffect(() => {
-    if (searchData) {
+    if (searchData && searchData.length > 0) {
       console.log(searchData);
       const coordinates: [number, number] = [searchData[0].lon, searchData[0].lat];
       mapLocation.flyTo({ center: coordinates, zoom: 7 });
     }
-  }, [searchData]);
+  }, [searchData, mapLocation]);
   return (
     <form onSubmit={doSearch}>
       <input value={value} onChange={e => setValue(e.target.value)} />
