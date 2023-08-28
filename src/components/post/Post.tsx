@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import * as Styled from './style';
 import { supabase } from '../../api/supabaseClient';
 import { uuid } from '@supabase/gotrue-js/dist/module/lib/helpers';
@@ -8,7 +8,12 @@ import Button from '../common/button/Button';
 import useInput from '../../hooks/useInput';
 import { useLocationStore, useSessionStore } from '../../zustand/store';
 import toast from 'react-simple-toasts';
-import pin from './pin.png';
+import { PiImageSquareFill } from 'react-icons/pi';
+import Geo from '../globe/Geo';
+import pin from '../../assets/pin/pinLarge.svg';
+import { useModal } from '../common/overlay/modal/Modal.hooks';
+import Detail from '../detail/Detail';
+import { getPost } from '../../api/supabaseDatabase';
 
 type PostProps = {
   unmount: (name: string) => void;
@@ -21,13 +26,14 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
   const [imgFile, setImgFile] = useState<string>();
   const [imgUrl, setImgUrl] = useState<string>('');
   const [switchChecked, setSwitchChecked] = useState(false);
+  const [here, setHere] = useState(false);
   const [contents, handleChangeContents] = useInput();
-  const [isModalOpened, setIsModalOpened] = useState(false);
   const imgRef = useRef<HTMLInputElement>(null);
   const regionRef = useRef<any>(null);
   const session = useSessionStore(state => state.session);
   const clickedLocation = useLocationStore(state => state.clickedLocation);
   const userId = session?.user.id;
+  const { mount } = useModal();
 
   const { mutate } = useMutation({
     mutationFn: async () => {
@@ -48,106 +54,135 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
     },
   });
 
-  const uploadImg = async () => {
-    const file = imgRef?.current?.files?.[0];
-    if (file) {
-      const { data: storageData } = await supabase.storage.from('images').upload(`${userId}/${uuid()}`, file, {
-        cacheControl: '3600',
-        upsert: false,
-      });
+  const uploadImg = async (file: File) => {
+    const { data: storageData } = await supabase.storage.from('images').upload(`${userId}/${uuid()}`, file, {
+      cacheControl: '3600',
+      upsert: false,
+    });
 
-      const { data: publicUrlData } = supabase.storage.from('images').getPublicUrl(storageData?.path || '');
-      setImgUrl(publicUrlData.publicUrl);
-    }
+    const { data: publicUrlData } = supabase.storage.from('images').getPublicUrl(storageData?.path || '');
+    setImgUrl(publicUrlData.publicUrl);
   };
 
-  const uploadImgFile = async () => {
-    const file = imgRef.current?.files?.[0];
+  const uploadImgFile = async (file: File) => {
     const reader = new FileReader();
     reader.onloadend = () => {
       if (reader.result instanceof ArrayBuffer) {
-        const blob = new Blob([reader.result], { type: 'image/png' });
+        const blob = new Blob([reader.result], { type: file.type });
         const blobUrl = URL.createObjectURL(blob);
         setImgFile(blobUrl);
       }
     };
-    if (file) reader.readAsArrayBuffer(file);
-    await uploadImg();
+    reader.readAsArrayBuffer(file);
+    await uploadImg(file);
   };
 
-  const handleToSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+
+    const file = event.dataTransfer.files[0];
+    if (file) {
+      await uploadImgFile(file);
+    }
+  };
+
+  const handleImageInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      await uploadImgFile(file);
+    }
+  };
+
+  const handleToSetLocation = () => {
+    setHere(true);
+  };
+
+  const handleToSubmit = async () => {
     mutate();
     unmount('post');
     setIsPostOpened(false);
+    const post = userId ? await getPost(userId) : null;
+
     toast('업로드 완료! 다른 게시물들도 확인해보세요 :)', { className: 'posted-alert', position: 'top-center' });
+    if (post) mount('detail', <Detail data={post} />);
   };
+
   useEffect(() => {
     if (regionRef.current) {
       regionRef.current.value = `${clickedLocation?.countryId}, ${clickedLocation?.regionId}`;
     }
   }, [clickedLocation]);
 
-  const showDetail = () => {
-    console.log('클릭');
-    leftMount(
-      'postModal',
-      <Styled.Overlay>
-        <Styled.InputModalWrap>
-          <div>
-            <p>핀을 이동해서</p> <br />
-            <p>정확한 여행지를 알려주세요!</p>
-          </div>
-          <img src={pin} alt="별빛핀" onClick={closePost} />
-          <Button size="large" color="primary" onClick={closePost}>
-            여기에요!
-          </Button>
-        </Styled.InputModalWrap>
-      </Styled.Overlay>,
-    );
-    setIsModalOpened(true);
-  };
-  const closePost = () => {
-    console.log('닫음');
-    unmount('postModal');
-    setIsModalOpened(false);
-  };
-
   return (
-    <div>
-      <form onSubmit={handleToSubmit}>
-        <Styled.Grid>
-          <div>
-            <Styled.UploadBox>
-              <label htmlFor="inputImg">{imgFile ? <Styled.UploadImgFile src={imgFile} alt="이미지 업로드" /> : <Styled.ImgBox>사진 선택</Styled.ImgBox>}</label>
-              <input id="inputImg" type="file" accept="image/png, image/jpeg, image/jpg" onChange={uploadImgFile} ref={imgRef} />
-            </Styled.UploadBox>
-          </div>
-          {imgFile && 
-            <Styled.SearchInput
-              placeholder="핀 찍으세요 !"
-              ref={regionRef}
-              onClick={() => {
-                !regionRef.current?.value ? showDetail() : closePost();
-              }}
-            />
-          }
-          {regionRef.current?.value && (
-            <Styled.ContentsInputBox>
-              <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" type="text" onChange={handleChangeContents} maxLength={50} />
-            </Styled.ContentsInputBox>
+    <Styled.PostLayout>
+      <Styled.UploadBox onDragEnter={event => event.preventDefault()} onDragOver={event => event.preventDefault()} onDragLeave={event => event.preventDefault()} onDrop={handleDrop}>
+        <label htmlFor="inputImg">
+          {imgFile ? (
+            <Styled.UploadImgFile src={imgFile} alt="이미지 업로드" />
+          ) : (
+            <Styled.ImgBox>
+              <PiImageSquareFill size={'26px'} className="image" />
+              <p>
+                여기에 사진을
+                <br />
+                업로드 해주세요
+              </p>
+            </Styled.ImgBox>
           )}
-          {contents && (
+        </label>
+        <input id="inputImg" type="file" accept="image/png, image/jpeg, image/jpg" onChange={handleImageInputChange} ref={imgRef} />
+      </Styled.UploadBox>
+
+      {imgFile && (
+        <>
+          <Geo />
+          {here ? (
             <>
-              <Switch checked={switchChecked} onChange={setSwitchChecked} left={'전체공유'} right={'나만보기'} />
-              <Button size="large" type="submit">
-                작성하기
-              </Button>
+              <Styled.Pin src={pin} alt="위치" />
+              <Styled.PinButton size="large" variant="black">
+                수정하기
+              </Styled.PinButton>
+            </>
+          ) : (
+            <>
+              <Styled.PinParagraph>
+                핀을 이동해서 <br /> 정확한 여행지를 알려주세요!
+              </Styled.PinParagraph>
+              <Styled.Pin src={pin} alt="위치" />
+              <Styled.PinButton size="large" variant="black" onClick={handleToSetLocation}>
+                여기예요!
+              </Styled.PinButton>
             </>
           )}
-        </Styled.Grid>
-      </form>
-    </div>
+        </>
+      )}
+
+      {clickedLocation && here && (
+        <>
+          <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" onChange={handleChangeContents} maxLength={30} rows={2} />
+          <Switch
+            checked={switchChecked}
+            onChange={setSwitchChecked}
+            leftText={'전체공유'}
+            rightText={'나만보기'}
+            width={'300px'}
+            checkedtextcolor={'#353C49'}
+            textcolor={'#72808E'}
+            checkedbackground={'#72808E'}
+            background={'rgba(18, 18, 18, 0.6)'}
+          />
+          {contents === '' ? (
+            <Button size="large" variant="gray">
+              작성하기
+            </Button>
+          ) : (
+            <Button size="large" variant="orange" onClick={handleToSubmit}>
+              작성하기
+            </Button>
+          )}
+        </>
+      )}
+    </Styled.PostLayout>
   );
 };
 

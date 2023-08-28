@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { AuthError, signin, signout } from '../../../api/supabaseAuth';
 import { supabase } from '../../../api/supabaseClient';
 import * as Styled from './style';
-import { BsSearch, BsHeart, BsPlusLg, BsXLg } from 'react-icons/bs';
+import { BsPlusCircle, BsXCircle } from 'react-icons/bs';
+import { BiSearch, BiHeart } from 'react-icons/bi';
 import Switch from '../switch/Switch';
 import { useModal } from '../overlay/modal/Modal.hooks';
 import LikesList from '../../likesList/LikesList';
@@ -145,51 +146,63 @@ const Header = () => {
   return (
     <Styled.HeaderWrapper>
       <Styled.Wrapper>
-        <img src={logo} alt="" />
+        <Styled.HeaderLogo src={logo} alt="" />
         {isPostOpened ? (
-          <Styled.Circle onClick={closePost}>
-            <BsXLg size={'16px'} />
-          </Styled.Circle>
+          <Styled.ClosePostButton onClick={closePost}>
+            <BsXCircle size={'22px'} />
+          </Styled.ClosePostButton>
         ) : (
-          <Styled.Circle onClick={session ? openPost : signinHandler}>
-            <BsPlusLg size={'16px'} />
-          </Styled.Circle>
+          <Styled.OpenPostButton onClick={session ? openPost : signinHandler}>
+            <BsPlusCircle size={'22px'} className="plus" />
+          </Styled.OpenPostButton>
         )}
 
         {session ? <Styled.AuthSpan onClick={signoutHandler}>로그아웃</Styled.AuthSpan> : <Styled.AuthSpan onClick={signinHandler}>로그인</Styled.AuthSpan>}
       </Styled.Wrapper>
 
       <Styled.SwitchBox>
-        <Switch checked={switchChecked} onChange={setSwitchChecked} left={'탐색'} right={'MY'} />
+        <Switch
+          checked={switchChecked}
+          onChange={setSwitchChecked}
+          leftText={'탐색'}
+          rightText={'MY'}
+          width={'230px'}
+          checkedtextcolor={'#FFFFFF'}
+          textcolor={'#CCCFD3'}
+          checkedbackground={'rgba(221, 82, 1, 0.4)'}
+          background={'rgba(18, 18, 18, 0.6)'}
+        />
       </Styled.SwitchBox>
 
       <Styled.Wrapper>
         {isSearchListOpened ? (
           <>
-            <Styled.Circle onClick={closeSearchList}>
-              <BsXLg size={'16px'} />
-            </Styled.Circle>
-            <Styled.SearchInput placeholder="검색" type="text" name="keyword" onChange={handleChangeKeyword} onKeyPress={handleOnEnterPress} maxLength={20} />
-            <Styled.SearchButton type="button" onClick={handleToSearch}>
-              <BsSearch size={'16px'} />
-            </Styled.SearchButton>
+            <Styled.CircleButton onClick={closeSearchList}>
+              <BsXCircle size={'22px'} />
+            </Styled.CircleButton>
+            <Styled.SearchBox>
+              <Styled.SearchInput placeholder="가고 싶은 여행지를 입력하세요" type="text" name="keyword" onChange={handleChangeKeyword} onKeyPress={handleOnEnterPress} maxLength={20} autoComplete="off" />
+              <Styled.SearchButton type="button" onClick={handleToSearch}>
+                <BiSearch size={'22px'} />
+              </Styled.SearchButton>
+            </Styled.SearchBox>
           </>
         ) : (
           <>
-            <Styled.Circle onClick={openSearchList}>
-              <BsSearch size={'16px'} />
-            </Styled.Circle>
+            <Styled.CircleButton onClick={openSearchList}>
+              <BiSearch size={'22px'} />
+            </Styled.CircleButton>
             {isLikeListOpened ? (
               <>
-                <Styled.Circle onClick={closeLikesList}>
-                  <BsXLg size={'16px'} />
-                </Styled.Circle>
+                <Styled.CircleButton onClick={closeLikesList}>
+                  <BsXCircle size={'22px'} />
+                </Styled.CircleButton>
               </>
             ) : (
               <>
-                <Styled.Circle onClick={session ? openLikesList : openLoginToast}>
-                  <BsHeart size={'16px'} />
-                </Styled.Circle>
+                <Styled.CircleButton onClick={session ? openLikesList : openLoginToast}>
+                  <BiHeart size={'22px'} />
+                </Styled.CircleButton>
               </>
             )}
           </>

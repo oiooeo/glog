@@ -2,49 +2,61 @@ import { styled } from 'styled-components';
 
 interface StyledProps {
   checked: boolean;
+  width: string;
+  checkedtextcolor: string;
+  textcolor: string;
+  checkedbackground: string;
+  background: string;
 }
 
 export const SwitchLabel = styled.label<StyledProps>`
   position: relative;
   display: flex;
   justify-content: space-between;
-  align-items: center;
   gap: 10px;
-  width: fit-content;
-  height: fit-content;
+  align-items: center;
+  width: ${props => props.width};
+  height: 50px;
   padding: 3px 5px;
+  background-color: rgba(53, 60, 73, 0.6);
   border-radius: 30px;
-  background-color: #d9d9d9;
+  border: 1px solid rgba(53, 60, 73, 1);
   cursor: pointer;
 `;
 
-export const SwitchLeftText = styled.div<StyledProps>`
-  padding: 8px 25px;
+export const SwitchBox = styled.div<StyledProps>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc((${props => `calc(${props.width} - 20px)`}) / 2);
+  height: 38px;
   border-radius: 30px;
-  background-color: ${props => (props.checked ? '#11111110' : '#111111')};
-  color: ${props => (props.checked ? '#111111' : '#D9D9D9')};
   font-size: 14px;
   transition: all 0.2s ease-in;
   z-index: 10;
 `;
 
-export const SwitchRightText = styled.div<StyledProps>`
-  padding: 8px 25px;
-  border-radius: 30px;
-  background-color: ${props => (props.checked ? '#111111' : '#11111110')};
-  color: ${props => (props.checked ? '#D9D9D9' : '#111111')};
-  font-size: 14px;
-  transition: all 0.2s ease-in;
-  z-index: 10;
+export const SwitchLeftText = styled(SwitchBox)<StyledProps>`
+  background-color: ${props => (props.checked ? props.background : 'transparent')};
+  color: ${props => (props.checked ? props.textcolor : props.checkedtextcolor)};
+  font-weight: ${props => (props.checked ? '400' : '700')};
+  z-index: 12;
 `;
 
-export const SwitchSpan = styled.div<StyledProps>`
+export const SwitchRightText = styled(SwitchBox)<StyledProps>`
+  background-color: ${props => (props.checked ? 'transparent' : props.background)};
+  color: ${props => (props.checked ? props.checkedtextcolor : props.textcolor)};
+  font-weight: ${props => (props.checked ? '700' : '400')};
+  z-index: 12;
+`;
+
+export const SwitchSpan = styled(SwitchBox)<StyledProps>`
   position: absolute;
-  padding: 6px 20px;
-  background-color: #111111;
-  color: #111111;
+  background-color: ${props => props.checkedbackground};
+  color: transparent;
   border-radius: 40px;
   font-size: 14px;
   transition: transform 0.15s;
-  transform: translateX(${props => (props.checked ? 'calc(100% + 25px)' : '5px')});
+  transform: translateX(${props => (props.checked ? 'calc(100% + 7px)' : '0px')});
+  z-index: 11;
 `;

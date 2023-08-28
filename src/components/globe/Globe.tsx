@@ -111,42 +111,68 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
       });
     }
 
-    if (postsData) {
+    if (postsData && postsData.length !== 0) {
       zoomSize = map.current?.getZoom();
       const sortedData = [...postsData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-      for (let i = 0; i < 6; i++) {
-        const postData = sortedData[i];
-        if (postData.latitude !== null && postData.longitude !== null) {
-          const imageMarker = document.createElement('div');
-          imageMarker.className = 'image-marker';
-          imageMarker.style.backgroundImage = `url(${postData.images})`;
-          imageMarker.style.width = `70px`;
-          imageMarker.style.height = `70px`;
+      if (sortedData.length > 7) {
+        for (let i = 0; i < 6; i++) {
+          const postData = sortedData[i];
+          if (postData.latitude !== null && postData.longitude !== null) {
+            const imageMarker = document.createElement('div');
+            imageMarker.className = 'image-marker-div';
 
-          const markerInstance = new mapboxgl.Marker(imageMarker).setLngLat([postData.longitude, postData.latitude]);
-          markerInstance.addTo(map.current!);
+            const imgElement = document.createElement('img');
+            imageMarker.className = 'image-marker';
+            if (postData.images) imgElement.src = postData.images;
+            imgElement.alt = '이미지';
+            imageMarker.appendChild(imgElement);
 
-          imageMarker.addEventListener('click', async () => {
-            mount('detail', <Detail data={postData} />);
-          });
+            const markerInstance = new mapboxgl.Marker(imageMarker).setLngLat([postData.longitude, postData.latitude]);
+            markerInstance.addTo(map.current!);
+
+            imageMarker.addEventListener('click', async () => {
+              mount('detail', <Detail data={postData} />);
+            });
+          }
         }
-      }
 
-      for (let i = 6; i < postsData.length; i++) {
-        const postData = sortedData[i];
-        if (postData.latitude !== null && postData.longitude !== null) {
-          const imageMarker = document.createElement('div');
-          imageMarker.className = 'pin-marker';
-          imageMarker.style.backgroundImage = `url(${pinSmall})`;
-          imageMarker.style.width = `30px`;
-          imageMarker.style.height = `30px`;
+        for (let i = 6; i < postsData.length; i++) {
+          const postData = sortedData[i];
+          if (postData.latitude !== null && postData.longitude !== null) {
+            const imageMarker = document.createElement('div');
+            imageMarker.className = 'pin-marker';
+            imageMarker.style.backgroundImage = `url(${pinSmall})`;
+            imageMarker.style.width = `30px`;
+            imageMarker.style.height = `30px`;
 
-          const markerInstance = new mapboxgl.Marker(imageMarker).setLngLat([postData.longitude, postData.latitude]);
-          markerInstance.addTo(map.current!);
+            const markerInstance = new mapboxgl.Marker(imageMarker).setLngLat([postData.longitude, postData.latitude]);
+            markerInstance.addTo(map.current!);
 
-          imageMarker.addEventListener('click', async () => {
-            mount('detail', <Detail data={postData} />);
-          });
+            imageMarker.addEventListener('click', async () => {
+              mount('detail', <Detail data={postData} />);
+            });
+          }
+        }
+      } else {
+        for (let i = 0; i < sortedData.length; i++) {
+          const postData = sortedData[i];
+          if (postData.latitude !== null && postData.longitude !== null) {
+            const imageMarker = document.createElement('div');
+            imageMarker.className = 'image-marker-div';
+
+            const imgElement = document.createElement('img');
+            imageMarker.className = 'image-marker';
+            if (postData.images) imgElement.src = postData.images;
+            imgElement.alt = '이미지';
+            imageMarker.appendChild(imgElement);
+
+            const markerInstance = new mapboxgl.Marker(imageMarker).setLngLat([postData.longitude, postData.latitude]);
+            markerInstance.addTo(map.current!);
+
+            imageMarker.addEventListener('click', async () => {
+              mount('detail', <Detail data={postData} />);
+            });
+          }
         }
       }
     }

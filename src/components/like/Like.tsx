@@ -80,7 +80,7 @@ const Like: React.FC<LikeProps> = ({ data }) => {
 
   return (
     <Styled.LikeLayout>
-      <Styled.LikeButton onClick={pressLike}>{isLiked ? <BsHeartFill size={'18px'} /> : <BsHeart size={'18px'} />}</Styled.LikeButton>
+      <Styled.LikeButton onClick={pressLike}>{isLiked ? <BsHeartFill size={'18px'} className="like" /> : <BsHeart size={'18px'} className="like" />}</Styled.LikeButton>
       <Styled.LikeParagraph>{data.likes}</Styled.LikeParagraph>
     </Styled.LikeLayout>
   );

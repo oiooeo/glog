@@ -14,7 +14,6 @@ const LikesList = () => {
         if (session) {
           const likes = await getLikes(session.user.id);
           const likedPostIds = likes.map(like => like.postId);
-          console.log(likes);
 
           const posts = await getPosts();
           const filteredPosts = posts.filter(post => likedPostIds.includes(post.id));

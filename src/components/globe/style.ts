@@ -4,13 +4,25 @@ export const GlobeLayout = styled.div`
   width: 100vw;
   height: 100vh;
 
-  & > .mapboxgl-canvas-container .image-marker {
+  & > .mapboxgl-canvas-container .image-marker-div {
+    width: 70px;
+    height: 70px;
     border-radius: 10px;
-    background-size: cover;
     z-index: 10;
+  }
 
-    &:hover {
-      outline: 3px greenyellow solid;
+  & > .mapboxgl-canvas-container .image-marker {
+    z-index: 11;
+
+    & > img {
+      width: 70px;
+      height: 70px;
+      border-radius: 10px;
+      transition: transform 0.3s ease-in;
+
+      &:hover {
+        transform: translateY(-20px);
+      }
     }
   }
 
