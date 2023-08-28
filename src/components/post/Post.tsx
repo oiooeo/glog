@@ -15,6 +15,7 @@ import Detail from '../detail/Detail';
 import { getPost } from '../../api/supabaseDatabase';
 import SearchBox from '../globe/SearchBox';
 import imageCompression from 'browser-image-compression';
+import heic2any from 'heic2any';
 
 type PostProps = {
   unmount: (name: string) => void;
@@ -89,23 +90,41 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
 
   const handleImageInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+
     if (file) {
-      try {
-        const originalSize = file.size; //콘솔용이라 콘솔지우면 삭제해도됨
+      console.log('Uploaded File:', file);
 
-        const options = {
-          maxSizeMB: 3,
-          useWebWorker: true,
-        };
+      const options = {
+        maxSizeMB: 3,
+        useWebWorker: true,
+      };
 
-        const compressedFile = await imageCompression(file, options);
-        const compressedSize = compressedFile.size; //콘솔용이라 콘솔지우면 삭제해도됨
+      const resizeFile = async (fileToResize: File) => {
+        try {
+          console.log('Original File Size:', fileToResize.size);
 
-        console.log(`Original size: ${originalSize} bytes`);
-        console.log(`Compressed size: ${compressedSize} bytes`);
-        await uploadImgFile(compressedFile);
-      } catch (error) {
-        console.error('Image compression error:', error);
+          const compressedFile = await imageCompression(fileToResize, options);
+          console.log('Compressed File Size:', compressedFile.size);
+
+          await uploadImgFile(compressedFile);
+          console.log('Uploaded Compressed File:', compressedFile);
+        } catch (error) {
+          console.error('Image compression error:', error);
+        }
+      };
+
+      if (file.type === 'image/heic' || file.type === 'image/HEIC') {
+        heic2any({ blob: file, toType: 'image/jpeg' }).then(function (resultBlob: any) {
+          const jpgFile = new File([resultBlob], file.name.split('.')[0] + '.jpg', {
+            type: 'image/jpeg',
+            lastModified: new Date().getTime(),
+          });
+          console.log('Converted JPG File:', jpgFile);
+          resizeFile(jpgFile);
+        });
+      } else {
+        console.log('No conversion needed. Using original file.');
+        resizeFile(file);
       }
     }
   };
@@ -148,7 +167,7 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
             </Styled.ImgBox>
           )}
         </label>
-        <input id="inputImg" type="file" accept="image/png, image/jpeg, image/jpg" onChange={handleImageInputChange} ref={imgRef} />
+        <input id="inputImg" type="file" accept="image/png, image/jpeg, image/jpg, image/HEIC, image/heic " onChange={handleImageInputChange} ref={imgRef} />
       </Styled.UploadBox>
 
       {imgFile && (
