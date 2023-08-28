@@ -44,23 +44,23 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
 
   const handleScroll = () => {
     setLoading(true);
-    const scrollDiv = document.querySelector('.scrollDiv');
-    if (scrollDiv) {
-      const isAtBottom = scrollDiv.scrollHeight - scrollDiv.scrollTop === scrollDiv.clientHeight;
+    const scrollSearch = document.querySelector('.scrollSearch');
+    if (scrollSearch) {
+      const isAtBottom = scrollSearch.scrollHeight - scrollSearch.scrollTop === scrollSearch.clientHeight;
       if (isAtBottom) {
         setTimeout(() => {
           setPage(prev => prev + 1);
           setLoading(false);
-        }, 1000); // 1초 후에 페이지 번호 증가 및 로딩 종료
+        }, 1000);
       } else {
-        setLoading(false); // 맨 아래로 스크롤하지 않았을 때는 로딩 종료
+        setLoading(false);
       }
     }
   };
 
   useEffect(() => {
-    const scrollDiv = document.querySelector('.scrollDiv');
-    scrollDiv?.addEventListener('scroll', handleScroll);
+    const scrollSearch = document.querySelector('.scrollSearch');
+    scrollSearch?.addEventListener('scroll', handleScroll);
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -69,7 +69,7 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
     <>
       {session ? (
         <>
-          <Styled.scrollDiv className="scrollDiv">
+          <Styled.scrollDiv className="scrollSearch">
             {searchResult?.map(item => (
               <PostItem key={item.id} data={item} />
             ))}
