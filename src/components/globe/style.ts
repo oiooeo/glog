@@ -41,3 +41,20 @@ export const GlobeLayout = styled.div`
     visibility: hidden;
   }
 `;
+export const SearchInput = styled.input`
+  width: 260px;
+  height: 40px;
+  padding: 0 15px;
+  background: none;
+  border: none;
+  color: #cccfd3;
+  font-size: 16px;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    color: #72808e;
+  }
+`;
