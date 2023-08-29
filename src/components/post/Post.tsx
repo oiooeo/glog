@@ -244,7 +244,7 @@ const Post = ({ type, unmount, postId }: PostProps) => {
 
       {clickedLocation && here && (
         <>
-          <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" name="contents" onChange={handleChangeContents} maxLength={30} rows={2} />
+          <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" onChange={handleChangeContents} maxLength={30} rows={2} />
           <Switch
             checked={switchChecked}
             onChange={setSwitchChecked}
