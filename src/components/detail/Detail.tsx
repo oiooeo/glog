@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import * as Styled from './style';
 import { Tables } from '../../types/supabase';
 import { RiPencilLine } from 'react-icons/ri';
@@ -6,9 +6,12 @@ import Like from '../like/Like';
 import { useSessionStore } from '../../zustand/store';
 import { deleteButton } from '../../api/supabaseDatabase';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useModal } from '../common/overlay/modal/Modal.hooks';
+import Post from '../post/Post';
 
 type DetailProps = {
   data: Tables<'posts'>;
+  contents?: string;
 };
 
 const Detail: React.FC<DetailProps> = ({ data }) => {
@@ -19,10 +22,16 @@ const Detail: React.FC<DetailProps> = ({ data }) => {
       queryClient.invalidateQueries(['getPosts']);
     },
   });
-
+  const { leftMount, rightMount, unmount } = useModal();
+  const [isPostOpened, setIsPostOpened] = useState(false);
   const handleDelete = () => {
     deletePostMutation.mutate(data.id);
   };
+  const openUpdate = (id:string) => {
+    leftMount('detail', <Post location={'detail'} unmount={unmount} setIsPostOpened={setIsPostOpened} postId={id}/>);
+    setIsPostOpened(true);
+  };
+
 
   return (
     <Styled.DetailLayout>
@@ -35,7 +44,7 @@ const Detail: React.FC<DetailProps> = ({ data }) => {
         </Styled.LikeBox>
         {session?.user.id === data.userId && (
           <Styled.EditButton>
-            <RiPencilLine size={'24px'} className="edit" />
+            <RiPencilLine size={'24px'} className="edit" onClick={() => openUpdate(data.id)} />
             {/* <RiDeleteBin4Fill color="#ffffff80" onClick={handleDelete} /> */}
           </Styled.EditButton>
         )}
