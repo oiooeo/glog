@@ -3,6 +3,7 @@ import { useMapLocationStore } from '../../zustand/store';
 import { getSearchData } from '../../api/mapbox';
 import { useQuery } from '@tanstack/react-query';
 import * as Styled from './style';
+import { BiSearch } from 'react-icons/bi';
 
 interface SearchResult {
   boundingbox: string[];
@@ -18,17 +19,14 @@ interface SearchResult {
   type: string;
 }
 
-const SearchBox = () => {
+const GlobeSearch = () => {
   const [value, setValue] = useState('');
   const mapLocation = useMapLocationStore(state => state.mapLocation);
 
-  const { data: searchData, refetch } = useQuery<SearchResult[] | undefined>(
-    ['searchData', value], // QueryKey로 ['searchData', value]를 사용
-    () => getSearchData(value), // 데이터를 가져오는 비동기 함수
-    {
-      enabled: false, // 최초에는 refetch를 비활성화
-    },
-  );
+  const { data: searchData, refetch } = useQuery<SearchResult[] | undefined>(['searchData', value], () => getSearchData(value), {
+    enabled: false,
+  });
+
   const doSearch = (e: React.FormEvent) => {
     e.preventDefault();
     refetch();
@@ -41,11 +39,17 @@ const SearchBox = () => {
       mapLocation.flyTo({ center: coordinates, zoom: 7 });
     }
   }, [searchData, mapLocation]);
+
   return (
     <form onSubmit={doSearch}>
-      <Styled.SearchInput value={value} onChange={e => setValue(e.target.value)} />
+      <Styled.SearchBox>
+        <Styled.SearchInput value={value} onChange={e => setValue(e.target.value)} placeholder="여행지의 지역명을 검색해보세요" />
+        <Styled.SearchButton type="submit">
+          <BiSearch size={'22px'} />
+        </Styled.SearchButton>
+      </Styled.SearchBox>
     </form>
   );
 };
 
-export default SearchBox;
+export default GlobeSearch;
