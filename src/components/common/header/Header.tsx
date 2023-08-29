@@ -106,7 +106,7 @@ const Header = () => {
 
   const openPost = () => {
     usePostStore.getState().setIsPosting(true);
-    leftMount('post', <Post leftMount={leftMount} unmount={unmount} setIsPostOpened={setIsPostOpened} />);
+    leftMount('post', <Post location={'header'} unmount={unmount} setIsPostOpened={setIsPostOpened} />);
     setIsPostOpened(true);
     closeLikesList();
     closeSearchList();
