@@ -32,6 +32,7 @@ const Detail: React.FC<DetailProps> = ({ data }) => {
   const openUpdate = (id: string) => {
     usePostStore.getState().setIsPosting(true);
     leftMount('post', <Post type={'update'} unmount={unmount} postId={id} />);
+    unmount('detail');
   };
 
   return (

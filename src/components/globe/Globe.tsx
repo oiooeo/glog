@@ -130,6 +130,7 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
     }
     pickLocationWithMarker(clickedPostLocation);
   }, [clickedPostLocation]);
+
   useEffect(() => {
     GlobeCluster({ mapLocation, postsData, mount, flyToLocation });
   }, [postsData]);

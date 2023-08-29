@@ -111,6 +111,16 @@ export const PinButton = styled(Button)`
   transform: translate(-50%, -50%);
 `;
 
+export const PinBackground = styled.div`
+  position: absolute;
+  top: 0;
+  left: 350px;
+  width: calc(100vw - 350px);
+  height: 100vh;
+  background-color: transparent;
+  z-index: 100;
+`;
+
 export const PinWarning = styled.p`
   position: fixed;
   top: 65%;
