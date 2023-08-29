@@ -7,7 +7,7 @@ import Detail from '../detail/Detail';
 import { Tables } from '../../types/supabase';
 import pinFocus from '../../assets/pin/pinFocus.svg';
 import { CustomMarker, getHTMLElement } from './globe.util';
-import { globeCluster } from './globeCluster';
+import { globeCluster } from './GlobeCluster';
 
 interface MapProps {
   initialCenter: [number, number];

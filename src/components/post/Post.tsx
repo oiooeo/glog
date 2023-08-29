@@ -6,16 +6,17 @@ import { uuid } from '@supabase/gotrue-js/dist/module/lib/helpers';
 import Switch from '../common/switch/Switch';
 import Button from '../common/button/Button';
 import useInput from '../../hooks/useInput';
-import { useLocationStore, usePostStore, useSessionStore } from '../../zustand/store';
+import { useLocationStore, useMapLocationStore, usePostStore, useSessionStore } from '../../zustand/store';
 import toast from 'react-simple-toasts';
 import { PiImageSquareFill } from 'react-icons/pi';
 import pin from '../../assets/pin/pinLarge.svg';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Detail from '../detail/Detail';
-import { getPostByUserId, getPostByPostId } from '../../api/supabaseDatabase';
+import { getPostByUserId, getPostByPostId, deleteButton } from '../../api/supabaseDatabase';
 import imageCompression from 'browser-image-compression';
 import heic2any from 'heic2any';
 import GlobeSearch from '../globeSearch/GlobeSearch';
+import exifr from 'exifr';
 
 type PostProps = {
   unmount: (name: string) => void;
@@ -44,6 +45,7 @@ const Post = ({ type, unmount, postId }: PostProps) => {
   const [contents, handleChangeContents] = useInput(type === 'post' ? '' : data?.contents);
   const [location, setLocation] = useState({ longitude: 0, latitude: 0 });
   const [locationInfo, setLocationInfo] = useState<LocationInfoTypes>({ countryId: '', regionId: '', address: '' });
+  const imageLocation = useMapLocationStore(state => state.mapLocation);
 
   const { mutate } = useMutation({
     mutationFn: async () => {
@@ -126,16 +128,20 @@ const Post = ({ type, unmount, postId }: PostProps) => {
     const file = event.target.files?.[0];
 
     if (file) {
-      console.log('Uploaded File:', file);
+      const originalMetadata = await exifr.parse(file);
+      if (originalMetadata && originalMetadata.longitude && originalMetadata.latitude) {
+        imageLocation.flyTo({ center: [originalMetadata.longitude, originalMetadata.latitude], zoom: 5 });
+      }
 
       const options = {
-        maxSizeMB: 3,
+        maxSizeMB: 1,
         useWebWorker: true,
       };
 
       const resizeFile = async (fileToResize: File) => {
         try {
           console.log('Original File Size:', fileToResize.size);
+
           const compressedFile = await imageCompression(fileToResize, options);
           console.log('Compressed File Size:', compressedFile.size);
 
@@ -194,6 +200,19 @@ const Post = ({ type, unmount, postId }: PostProps) => {
     setLocation({ longitude: postData.longitude, latitude: postData.latitude });
     setSwitchChecked(postData.private);
     setLocationInfo({ countryId: postData.countryId!, regionId: postData.regionId!, address: postData.address! });
+  };
+
+  const deletePostMutation = useMutation((postId: string) => deleteButton(postId), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['getPosts']);
+    },
+  });
+
+  const handleDelete = () => {
+    if (!data) return;
+    deletePostMutation.mutate(data.id);
+    unmount('post');
+    unmount('detail');
   };
 
   useEffect(() => {
@@ -296,7 +315,7 @@ const Post = ({ type, unmount, postId }: PostProps) => {
             background={'rgba(18, 18, 18, 0.6)'}
           />
           <div style={{ display: 'flex', gap: '10px' }}>
-            <Button size="medium" variant="deep-gray" onClick={handleToSubmit}>
+            <Button size="medium" variant="deep-gray" onClick={handleDelete}>
               삭제하기
             </Button>
             {contents === '' ? (
