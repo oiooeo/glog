@@ -22,13 +22,9 @@ const SearchBox = () => {
   const [value, setValue] = useState('');
   const mapLocation = useMapLocationStore(state => state.mapLocation);
 
-  const { data: searchData, refetch } = useQuery<SearchResult[] | undefined>(
-    ['searchData', value], // QueryKey로 ['searchData', value]를 사용
-    () => getSearchData(value), // 데이터를 가져오는 비동기 함수
-    {
-      enabled: false, // 최초에는 refetch를 비활성화
-    },
-  );
+  const { data: searchData, refetch } = useQuery<SearchResult[] | undefined>(['searchData'], () => getSearchData(value), {
+    enabled: false, // 최초에는 refetch를 비활성화
+  });
   const doSearch = (e: React.FormEvent) => {
     e.preventDefault();
     refetch();

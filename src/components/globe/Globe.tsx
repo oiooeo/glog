@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import * as Styled from './style';
 import { useClickedPostStore, useLocationStore, useMapLocationStore, usePostStore } from '../../zustand/store';
@@ -8,6 +8,10 @@ import { Tables } from '../../types/supabase';
 import pinSmall from '../../assets/pin/pinSmall.svg';
 import Supercluster from 'supercluster';
 import pinFocus from '../../assets/pin/pinFocus.svg';
+import LargePin from '../../assets/pin/LargePin.png';
+import mediumPin from '../../assets/pin/mideumPin.png';
+import smallPin from '../../assets/pin/smallPin.png';
+import { GlobeCluster } from './GlobeCluster';
 
 interface MapProps {
   initialCenter: [number, number];
@@ -126,32 +130,6 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
 
     if (postsData && postsData.length !== 0 && !isPostModalOpened) {
       zoomSize = map.current?.getZoom();
-      const cluster = new Supercluster({
-        radius: 40,
-        maxZoom: 15,
-      });
-
-      const points: PointFeature<{}>[] =
-        postsData?.map(post => ({
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'Point',
-            coordinates: [post.longitude || 0, post.latitude || 0],
-          },
-        })) || [];
-      cluster.load(points);
-
-      const clusters = cluster.getClusters([-180, -85, 180, 85], Math.floor(mapLocation.getZoom()));
-
-      clusters.forEach(cluster => {
-        if (cluster.properties?.cluster) {
-          const marker = new mapboxgl.Marker().setLngLat(cluster.geometry.coordinates as [number, number]).addTo(mapLocation!);
-        } else {
-          const marker = new mapboxgl.Marker().setLngLat(cluster.geometry.coordinates as [number, number]).addTo(mapLocation!);
-        }
-      });
-
       const sortedData = [...postsData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
       if (sortedData.length > 7) {
         const imageMarkers = document.querySelectorAll('.image-marker');
@@ -179,21 +157,21 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
         const pinMarkers = document.querySelectorAll('.pin-marker');
         pinMarkers.forEach(marker => marker.remove());
 
-        for (let i = 6; i < postsData.length; i++) {
-          const postData = sortedData[i];
-          if (postData.latitude !== null && postData.longitude !== null) {
-            const imageMarker = document.createElement('div');
-            imageMarker.className = 'pin-marker';
-            imageMarker.style.backgroundImage = `url(${pinSmall})`;
+        // for (let i = 6; i < postsData.length; i++) {
+        //   const postData = sortedData[i];
+        //   if (postData.latitude !== null && postData.longitude !== null) {
+        //     const imageMarker = document.createElement('div');
+        //     imageMarker.className = 'pin-marker';
+        //     imageMarker.style.backgroundImage = `url(${pinSmall})`;
 
-            const markerInstance = new mapboxgl.Marker(imageMarker).setLngLat([postData.longitude, postData.latitude]);
-            markerInstance.addTo(map.current!);
+        //     const markerInstance = new mapboxgl.Marker(imageMarker).setLngLat([postData.longitude, postData.latitude]);
+        //     markerInstance.addTo(map.current!);
 
-            imageMarker.addEventListener('click', async () => {
-              mount('detail', <Detail data={postData} />);
-            });
-          }
-        }
+        //     imageMarker.addEventListener('click', async () => {
+        //       mount('detail', <Detail data={postData} />);
+        //     });
+        //   }
+        // }
       } else {
         const imageMarkers = document.querySelectorAll('.image-marker');
         imageMarkers.forEach(marker => marker.remove());
@@ -224,11 +202,15 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
       const pinMarkers = document.querySelectorAll('.pin-marker');
       pinMarkers.forEach(marker => marker.remove());
     }
-
     if (map) {
       useMapLocationStore.getState().setMapLocation(map.current);
     }
   }, [initialCenter, zoom, postsData, isPostModalOpened]);
+
+  //cluster 요소
+  useEffect(() => {
+    GlobeCluster({ mapLocation, postsData, mount });
+  }, [postsData]);
 
   useEffect(() => {
     const OrangePinMarker = document.querySelector('.orange-pin-marker');
@@ -254,7 +236,7 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
     }
   }, [mapLocation]);
 
-  return <Styled.GlobeLayout ref={mapContainerRef} />;
+  return <Styled.GlobeLayout ref={mapContainerRef} className="globeScroll" />;
 };
 
 export default Globe;
