@@ -8,8 +8,11 @@ export const scrollDiv = styled.div`
   }
 `;
 
-export const loadingDiv = styled.div`
-  color: white;
+export const LoadingDiv = styled.div`
   display: flex;
   justify-content: center;
+  width: 300px;
+  height: fit-content;
+  float: right;
+  margin: 20px 0;
 `;
