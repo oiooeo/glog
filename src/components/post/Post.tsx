@@ -30,8 +30,9 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
   const [switchChecked, setSwitchChecked] = useState(false);
   const [here, setHere] = useState(false);
   const [contents, handleChangeContents] = useInput();
+  const [location, setLocation] = useState({ longitude: 0, latitude: 0 });
+  const [locationInfo, setLocationInfo] = useState({ countryId: '', regionId: '', address: '' });
   const imgRef = useRef<HTMLInputElement>(null);
-  const regionRef = useRef<any>(null);
   const session = useSessionStore(state => state.session);
   const clickedLocation = useLocationStore(state => state.clickedLocation);
   const userId = session?.user.id;
@@ -42,11 +43,11 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
       await supabase.from('posts').insert({
         contents: contents,
         images: imgUrl,
-        countryId: clickedLocation?.countryId,
-        regionId: clickedLocation?.regionId,
-        latitude: clickedLocation.latitude,
-        longitude: clickedLocation.longitude,
-        address: clickedLocation?.address,
+        countryId: locationInfo.countryId,
+        regionId: locationInfo.regionId,
+        latitude: location.latitude,
+        longitude: location.longitude,
+        address: locationInfo.address,
         private: switchChecked,
         userId: session?.user.id,
       });
@@ -129,8 +130,23 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
     }
   };
 
+  const getLocationInformation = async () => {
+    const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${location.longitude},${location.latitude}.json?access_token=${process.env.REACT_APP_ACCESS_TOKEN}&language=ko`);
+    const data = await response.json();
+    const dataFeatures = data.features;
+    const placeName = dataFeatures[dataFeatures.length - 2].place_name_ko || dataFeatures[dataFeatures.length - 2].place_name;
+    const placeComponents = placeName.split(', ');
+    setLocationInfo({ countryId: placeComponents[placeComponents.length - 2], regionId: placeComponents[placeComponents.length - 1], address: dataFeatures[0].place_name_ko !== undefined ? dataFeatures[0].place_name_ko : dataFeatures[0].place_name });
+  };
+
+  useEffect(() => {
+    if (location.latitude === 0 || location.longitude === 0) return;
+    getLocationInformation();
+  }, [location]);
+
   const handleToSetLocation = () => {
     setHere(true);
+    setLocation({ longitude: clickedLocation.longitude, latitude: clickedLocation.latitude });
   };
 
   const handleToSubmit = async () => {
@@ -143,12 +159,6 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
     const post = userId ? await getPost(userId) : null;
     if (post) mount('detail', <Detail data={post} />);
   };
-
-  useEffect(() => {
-    if (regionRef.current) {
-      regionRef.current.value = `${clickedLocation?.countryId}, ${clickedLocation?.regionId}`;
-    }
-  }, [clickedLocation]);
 
   return (
     <Styled.PostLayout>
@@ -176,7 +186,7 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
           {here ? (
             <>
               <Styled.Pin src={pin} alt="위치" />
-              <Styled.PinButton size="large" variant="black">
+              <Styled.PinButton size="large" variant="black" onClick={handleToSetLocation}>
                 수정하기
               </Styled.PinButton>
             </>
@@ -186,9 +196,15 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
                 핀을 이동해서 <br /> 정확한 여행지를 알려주세요!
               </Styled.PinParagraph>
               <Styled.Pin src={pin} alt="위치" />
-              <Styled.PinButton size="large" variant="black" onClick={handleToSetLocation}>
-                여기예요!
-              </Styled.PinButton>
+              {clickedLocation.latitude === 0 || clickedLocation.longitude === 0 ? (
+                <Styled.PinButton size="large" variant="gray">
+                  여기예요!
+                </Styled.PinButton>
+              ) : (
+                <Styled.PinButton size="large" variant="black" onClick={handleToSetLocation}>
+                  여기예요!
+                </Styled.PinButton>
+              )}
             </>
           )}
         </>

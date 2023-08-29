@@ -17,39 +17,14 @@ interface MapProps {
 
 const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
   mapboxgl.accessToken = process.env.REACT_APP_ACCESS_TOKEN ? process.env.REACT_APP_ACCESS_TOKEN : '';
-  const { mount, unmount } = useModal();
+  const { mount } = useModal();
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const mapLocation = useMapLocationStore(state => state.mapLocation);
-  let marker: any;
-  let zoomSize: number | undefined = map.current?.getZoom();
   const isPostModalOpened = usePostStore(state => state.isPosting);
   const clickedPostLocation = useClickedPostStore(state => state.clickedPostLocation);
 
   useEffect(() => {
-    const placeLocation = async (location: { lng: number; lat: number }) => {
-      try {
-        const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${location.lng},${location.lat}.json?access_token=${mapboxgl.accessToken}&language=ko`);
-        const data = await response.json();
-        const dataFeatures = data.features;
-        const placeName = dataFeatures[dataFeatures.length - 2].place_name_ko || dataFeatures[dataFeatures.length - 2].place_name;
-        const placeComponents = placeName.split(', ');
-        const city = placeComponents[placeComponents.length - 2];
-        const country = placeComponents[placeComponents.length - 1];
-        const address = dataFeatures[0].place_name_ko !== undefined ? dataFeatures[0].place_name_ko : dataFeatures[0].place_name;
-
-        const clickedLocation = {
-          latitude: location.lat,
-          longitude: location.lng,
-          regionId: city,
-          countryId: country,
-          address: address,
-        };
-
-        useLocationStore.getState().setClickedLocation(clickedLocation);
-      } catch (error) {}
-    };
-
     if (!map.current && mapContainerRef.current) {
       map.current = new mapboxgl.Map({
         container: mapContainerRef.current,
@@ -57,54 +32,35 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
         center: initialCenter,
         zoom: zoom,
       });
-
-      // mapPost 기능때 사용
-      map.current.on('click', e => {
-        const coordinates = e.lngLat;
-        zoomSize = map.current?.getZoom();
-
-        map.current?.on('zoom', async () => {
-          if (zoomSize && zoomSize <= 9) {
-            const oldMarker = document.querySelector('.new-marker');
-            if (oldMarker) {
-              oldMarker.remove();
-            }
-          }
-
-          const oldMarker = document.querySelector('.new-marker');
-          if (oldMarker) {
-            oldMarker.remove();
-          }
-          const newMarker = document.createElement('div');
-          newMarker.className = 'new-marker';
-          newMarker.style.backgroundImage = `url(https://img.icons8.com/?size=512&id=21613&format=png)`;
-          newMarker.style.width = '30px';
-          newMarker.style.height = '30px';
-          newMarker.style.backgroundSize = '100%';
-          new mapboxgl.Marker(newMarker).setLngLat([coordinates.lng, coordinates.lat]).addTo(map.current!);
-
-          placeLocation(coordinates);
-        });
-
-        if (zoomSize && zoomSize <= 2.4) {
-          map.current?.flyTo({
-            center: [coordinates.lng, coordinates.lat],
-            zoom: 2.4,
-            speed: 8,
-          });
-        } else {
-          map.current?.flyTo({
-            center: [coordinates.lng, coordinates.lat],
-            speed: 8,
-          });
-        }
-      });
     }
+  }, [initialCenter, zoom]);
+
+  useEffect(() => {
+    map.current?.on('moveend', () => {
+      const watchingLat = map.current?.getCenter().lat;
+      const watchingLng = map.current?.getCenter().lng;
+
+      const clickedLocation = {
+        latitude: watchingLat || 0,
+        longitude: watchingLng || 0,
+      };
+
+      useLocationStore.getState().setClickedLocation(clickedLocation);
+    });
 
     if (map) {
       useMapLocationStore.getState().setMapLocation(map.current);
     }
-  }, [initialCenter, zoom]);
+  }, [map]);
+
+  const flyToLocation = (lng: number, lat: number) => {
+    const zoomSize = map.current?.getZoom();
+    map.current?.flyTo({
+      center: [lng, lat],
+      speed: 8,
+      zoom: zoomSize && zoomSize <= 2.4 ? 2.4 : zoomSize,
+    });
+  };
 
   const pickImageMarker = (postData: Tables<'posts'>) => {
     const marker = getHTMLElement({ type: CustomMarker.Image, imgSrc: postData.images });
@@ -113,6 +69,7 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
 
     marker.addEventListener('click', async () => {
       mount('detail', <Detail data={postData} />);
+      flyToLocation(postData.longitude, postData.latitude);
     });
   };
 
@@ -143,6 +100,7 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
 
           marker.addEventListener('click', async () => {
             mount('detail', <Detail data={postData} />);
+            flyToLocation(postData.longitude, postData.latitude);
           });
         }
       } else {
@@ -161,7 +119,7 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
       const pinMarkers = document.querySelectorAll('.pin-marker');
       pinMarkers.forEach(marker => marker.remove());
     }
-  }, [mount, postsData, isPostModalOpened, pickImageMarker]);
+  }, [mount, postsData, isPostModalOpened]);
 
   const pickLocationWithMarker = (clickedPostLocation: { latitude: number; longitude: number }) => {
     const OrangePinMarker = document.querySelector('.orange-pin-marker');
