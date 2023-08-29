@@ -27,7 +27,7 @@ export const GlobeLayout = styled.div`
     }
   }
 
-  & > .mapboxgl-canvas-container .pin-marker {
+  /* & > .mapboxgl-canvas-container .pin-marker {
     width: 30px;
     height: 30px;
     background-size: cover;
@@ -37,7 +37,7 @@ export const GlobeLayout = styled.div`
     width: 30px;
     height: 30px;
     background-size: cover;
-  }
+  } */
 
   & > .mapboxgl-control-container .mapboxgl-ctrl-bottom-left {
     visibility: hidden;
@@ -47,6 +47,7 @@ export const GlobeLayout = styled.div`
     visibility: hidden;
   }
 `;
+
 export const SearchInput = styled.input`
   width: 260px;
   height: 40px;
@@ -63,4 +64,14 @@ export const SearchInput = styled.input`
   &::placeholder {
     color: #72808e;
   }
+`;
+
+export const PinBox = styled.div`
+  width: 30px;
+  height: 30px;
+`;
+
+export const PinMarker = styled.img`
+  width: 30px;
+  height: 30px;
 `;
