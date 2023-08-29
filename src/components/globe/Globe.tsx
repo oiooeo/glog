@@ -5,14 +5,23 @@ import { useClickedPostStore, useLocationStore, useMapLocationStore, usePostStor
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Detail from '../detail/Detail';
 import { Tables } from '../../types/supabase';
-import pinSmall from '../../assets/pin/pinSmall.svg';
 import pinFocus from '../../assets/pin/pinFocus.svg';
 import { CustomMarker, getHTMLElement } from './globe.util';
+import { GlobeCluster } from './GlobeCluster';
 
 interface MapProps {
   initialCenter: [number, number];
   zoom: number;
   postsData: Tables<'posts'>[] | undefined;
+}
+
+interface PointFeature<T> {
+  type: 'Feature';
+  properties: T;
+  geometry: {
+    type: 'Point';
+    coordinates: [number, number];
+  };
 }
 
 const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
@@ -86,23 +95,6 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
           if (!postData) return;
           pickImageMarker(postData);
         }
-
-        const pinMarkers = document.querySelectorAll('.pin-marker');
-        pinMarkers.forEach(marker => marker.remove());
-
-        for (let i = 6; i < postsData.length; i++) {
-          const postData = sortedData[i];
-          if (!postData) return;
-
-          const marker = getHTMLElement({ type: CustomMarker.Default, imgSrc: pinSmall });
-          const markerInstance = new mapboxgl.Marker(marker).setLngLat([postData.longitude, postData.latitude]);
-          markerInstance.addTo(map.current!);
-
-          marker.addEventListener('click', async () => {
-            mount('detail', <Detail data={postData} />);
-            flyToLocation(postData.longitude, postData.latitude);
-          });
-        }
       } else {
         const imageMarkers = document.querySelectorAll('.image-marker');
         imageMarkers.forEach(marker => marker.remove());
@@ -116,8 +108,6 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
     } else if (isPostModalOpened) {
       const imageMarkers = document.querySelectorAll('.image-marker');
       imageMarkers.forEach(marker => marker.remove());
-      const pinMarkers = document.querySelectorAll('.pin-marker');
-      pinMarkers.forEach(marker => marker.remove());
     }
   }, [mount, postsData, isPostModalOpened]);
 
@@ -138,17 +128,13 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
     if (!clickedPostLocation) {
       return;
     }
-
     pickLocationWithMarker(clickedPostLocation);
   }, [clickedPostLocation]);
-
-  // 지역 검색에 필요한 코드
   useEffect(() => {
-    if (mapLocation) {
-    }
-  }, [mapLocation]);
+    GlobeCluster({ mapLocation, postsData, mount, flyToLocation });
+  }, [postsData]);
 
-  return <Styled.GlobeLayout ref={mapContainerRef} />;
+  return <Styled.GlobeLayout ref={mapContainerRef} className="globeScroll" />;
 };
 
 export default Globe;
