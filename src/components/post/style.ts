@@ -49,9 +49,13 @@ export const UploadBox = styled.div`
 
 export const SearchInput = styled.input`
   width: 300px;
-  height: 50px;
-  border: none;
-  border-radius: 99px;
+  height: 40px;
+  padding: 0 20px;
+  background: #cccfd3;
+  border-radius: 18px;
+  border: 1px solid #b3bac1;
+  color: #72808e;
+  font-size: 15px;
 `;
 
 export const ContentsInput = styled.textarea`
@@ -104,5 +108,16 @@ export const PinButton = styled(Button)`
   position: fixed;
   top: 65%;
   left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+export const PinWarning = styled.p`
+  position: fixed;
+  top: 65%;
+  left: 50%;
+  padding: 15px 20px;
+  background-color: rgba(114, 128, 142, 0.6);
+  border-radius: 18px;
+  color: #f4f4f5;
   transform: translate(-50%, -50%);
 `;

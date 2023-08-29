@@ -20,7 +20,6 @@ import toast from 'react-simple-toasts';
 const Header = () => {
   const [user, setUser] = useState<User>();
   const [switchChecked, setSwitchChecked] = useState(false);
-  const [isPostOpened, setIsPostOpened] = useState(false);
   const [isLikeListOpened, setIsLikeListOpened] = useState(false);
   const [isSearchListOpened, setIsSearchListOpened] = useState(false);
   const [keyword, handleChangeKeyword] = useInput();
@@ -28,6 +27,7 @@ const Header = () => {
   const session = useSessionStore(state => state.session);
   const setSession = useSessionStore(state => state.setSession);
   const navigate = useNavigate();
+  const isPostModalOpened = usePostStore(state => state.isPosting);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -89,7 +89,6 @@ const Header = () => {
   const closePost = () => {
     usePostStore.getState().setIsPosting(false);
     unmount('post');
-    setIsPostOpened(false);
   };
 
   const closeSearchList = () => {
@@ -106,8 +105,7 @@ const Header = () => {
 
   const openPost = () => {
     usePostStore.getState().setIsPosting(true);
-    leftMount('post', <Post leftMount={leftMount} unmount={unmount} setIsPostOpened={setIsPostOpened} />);
-    setIsPostOpened(true);
+    leftMount('post', <Post type={'post'} unmount={unmount} />);
     closeLikesList();
     closeSearchList();
   };
@@ -148,8 +146,8 @@ const Header = () => {
   return (
     <Styled.HeaderWrapper>
       <Styled.Wrapper>
-        <Styled.HeaderLogo src={logo} alt="" />
-        {isPostOpened ? (
+        <Styled.HeaderLogo src={logo} alt="" onClick={() => (window.location.href = '/')} />
+        {isPostModalOpened ? (
           <Styled.ClosePostButton onClick={closePost}>
             <BsXCircle size={'22px'} />
           </Styled.ClosePostButton>

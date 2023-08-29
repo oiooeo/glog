@@ -12,45 +12,62 @@ import { PiImageSquareFill } from 'react-icons/pi';
 import pin from '../../assets/pin/pinLarge.svg';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Detail from '../detail/Detail';
-import { getPost } from '../../api/supabaseDatabase';
+import { getPost, getPostToUpdate } from '../../api/supabaseDatabase';
 import imageCompression from 'browser-image-compression';
 import heic2any from 'heic2any';
 import GlobeSearch from '../globeSearch/GlobeSearch';
 
 type PostProps = {
   unmount: (name: string) => void;
-  leftMount: (name: string, element: React.ReactNode) => void;
-  setIsPostOpened: React.Dispatch<React.SetStateAction<boolean>>;
+  type: string;
+  postId?: string;
 };
 
-const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
-  const queryClient = useQueryClient();
-  const [imgFile, setImgFile] = useState<string>();
-  const [imgUrl, setImgUrl] = useState<string>('');
-  const [switchChecked, setSwitchChecked] = useState(false);
-  const [here, setHere] = useState(false);
-  const [contents, handleChangeContents] = useInput();
-  const [location, setLocation] = useState({ longitude: 0, latitude: 0 });
-  const [locationInfo, setLocationInfo] = useState({ countryId: '', regionId: '', address: '' });
-  const imgRef = useRef<HTMLInputElement>(null);
-  const session = useSessionStore(state => state.session);
-  const clickedLocation = useLocationStore(state => state.clickedLocation);
-  const userId = session?.user.id;
+type LocationInfoTypes = {
+  countryId: string | null;
+  regionId: string | null;
+  address: string | null;
+};
+
+const Post = ({ type, unmount, postId }: PostProps) => {
   const { mount } = useModal();
+  const queryClient = useQueryClient();
+  const clickedLocation = useLocationStore(state => state.clickedLocation);
+  const session = useSessionStore(state => state.session);
+  const userId = session?.user.id;
+  const imgRef = useRef<HTMLInputElement>(null);
+  const [data, setData] = useState<any>(null);
+  const [imgFile, setImgFile] = useState<string>();
+  const [here, setHere] = useState(false);
+  const [imgUrl, setImgUrl] = useState<string>(type === 'post' ? '' : data?.images);
+  const [switchChecked, setSwitchChecked] = useState(type === 'post' ? false : data?.private);
+  const [contents, handleChangeContents] = useInput(type === 'post' ? '' : data?.contents);
+  const [location, setLocation] = useState({ longitude: 0, latitude: 0 });
+  const [locationInfo, setLocationInfo] = useState<LocationInfoTypes>({ countryId: '', regionId: '', address: '' });
 
   const { mutate } = useMutation({
     mutationFn: async () => {
-      await supabase.from('posts').insert({
-        contents: contents,
-        images: imgUrl,
-        countryId: locationInfo.countryId,
-        regionId: locationInfo.regionId,
-        latitude: location.latitude,
-        longitude: location.longitude,
-        address: locationInfo.address,
-        private: switchChecked,
-        userId: session?.user.id,
-      });
+      type === 'post'
+        ? await supabase.from('posts').insert({
+            userId: session?.user.id,
+            contents: contents,
+            images: imgUrl,
+            countryId: locationInfo.countryId,
+            regionId: locationInfo.regionId,
+            latitude: location?.latitude,
+            longitude: location?.longitude,
+            address: locationInfo.address,
+            private: switchChecked,
+          })
+        : await supabase
+            .from('posts')
+            .update({
+              userId: session?.user.id,
+              contents: contents,
+              images: imgUrl,
+              private: switchChecked,
+            })
+            .eq('id', data?.id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['getPosts']);
@@ -103,7 +120,6 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
       const resizeFile = async (fileToResize: File) => {
         try {
           console.log('Original File Size:', fileToResize.size);
-
           const compressedFile = await imageCompression(fileToResize, options);
           console.log('Compressed File Size:', compressedFile.size);
 
@@ -152,13 +168,29 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
   const handleToSubmit = async () => {
     mutate();
     unmount('post');
-    setIsPostOpened(false);
     usePostStore.getState().setIsPosting(false);
     toast('업로드 완료! 다른 게시물들도 확인해보세요 :)', { className: 'post-alert', position: 'top-center' });
 
     const post = userId ? await getPost(userId) : null;
-    if (post) mount('detail', <Detail data={post} />);
+    if (post) {
+      mount('detail', <Detail data={post} />);
+    }
   };
+
+  const fetchData = async () => {
+    if (!postId) return;
+    const postData = await getPostToUpdate(postId);
+    if (!postData) return;
+    setData(postData);
+    setImgFile(postData.images);
+    setLocation({ longitude: postData.longitude, latitude: postData.latitude });
+    setSwitchChecked(postData.private);
+    setLocationInfo({ countryId: postData.countryId!, regionId: postData.regionId!, address: postData.address! });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [postId]);
 
   return (
     <Styled.PostLayout>
@@ -180,7 +212,7 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
         <input id="inputImg" type="file" accept="image/png, image/jpeg, image/jpg, image/HEIC, image/heic " onChange={handleImageInputChange} ref={imgRef} />
       </Styled.UploadBox>
 
-      {imgFile && (
+      {type === 'post' && imgFile && (
         <>
           <GlobeSearch />
           {here ? (
@@ -212,7 +244,7 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
 
       {clickedLocation && here && (
         <>
-          <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" onChange={handleChangeContents} maxLength={30} rows={2} />
+          <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" name="contents" onChange={handleChangeContents} maxLength={30} rows={2} />
           <Switch
             checked={switchChecked}
             onChange={setSwitchChecked}
@@ -233,6 +265,40 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
               작성하기
             </Button>
           )}
+        </>
+      )}
+
+      {type === 'update' && (
+        <>
+          <Styled.Pin src={pin} alt="위치" />
+          <Styled.PinWarning>위치는 수정이 안돼요!</Styled.PinWarning>
+          <Styled.SearchInput value={`${locationInfo.countryId}, ${locationInfo.regionId}`} disabled />
+          <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" defaultValue={data?.contents} onChange={handleChangeContents} maxLength={30} rows={2} />
+          <Switch
+            checked={switchChecked}
+            onChange={setSwitchChecked}
+            leftText={'전체공유'}
+            rightText={'나만보기'}
+            width={'300px'}
+            checkedtextcolor={'#353C49'}
+            textcolor={'#72808E'}
+            checkedbackground={'#72808E'}
+            background={'rgba(18, 18, 18, 0.6)'}
+          />
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <Button size="medium" variant="deep-gray" onClick={handleToSubmit}>
+              삭제하기
+            </Button>
+            {contents === '' ? (
+              <Button size="medium" variant="gray">
+                작성하기
+              </Button>
+            ) : (
+              <Button size="medium" variant="orange" onClick={handleToSubmit}>
+                작성하기
+              </Button>
+            )}
+          </div>
         </>
       )}
     </Styled.PostLayout>
