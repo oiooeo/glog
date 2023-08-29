@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import * as Styled from './style';
 import { useClickedPostStore, useLocationStore, useMapLocationStore, usePostStore } from '../../zustand/store';
@@ -6,13 +6,24 @@ import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Detail from '../detail/Detail';
 import { Tables } from '../../types/supabase';
 import pinSmall from '../../assets/pin/pinSmall.svg';
+import Supercluster from 'supercluster';
 import pinFocus from '../../assets/pin/pinFocus.svg';
 import { CustomMarker, getHTMLElement } from './globe.util';
+import { GlobeCluster } from './GlobeCluster';
 
 interface MapProps {
   initialCenter: [number, number];
   zoom: number;
   postsData: Tables<'posts'>[] | undefined;
+}
+
+interface PointFeature<T> {
+  type: 'Feature';
+  properties: T;
+  geometry: {
+    type: 'Point';
+    coordinates: [number, number];
+  };
 }
 
 const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
@@ -133,18 +144,31 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
         const pinMarkers = document.querySelectorAll('.pin-marker');
         pinMarkers.forEach(marker => marker.remove());
 
-        for (let i = 6; i < postsData.length; i++) {
-          const postData = sortedData[i];
-          if (!postData) return;
+        // for (let i = 6; i < postsData.length; i++) {
+        //   const postData = sortedData[i];
+        //   if (!postData) return;
 
-          const marker = getHTMLElement({ type: CustomMarker.Default, imgSrc: pinSmall });
-          const markerInstance = new mapboxgl.Marker(marker).setLngLat([postData.longitude, postData.latitude]);
-          markerInstance.addTo(map.current!);
+        //   const marker = getHTMLElement({ type: CustomMarker.Default, imgSrc: pinSmall });
+        //   const markerInstance = new mapboxgl.Marker(marker).setLngLat([postData.longitude, postData.latitude]);
+        //   markerInstance.addTo(map.current!);
 
-          marker.addEventListener('click', async () => {
-            mount('detail', <Detail data={postData} />);
-          });
-        }
+        //   marker.addEventListener('click', async () => {
+        //     mount('detail', <Detail data={postData} />);
+        //   });
+        // }
+        // for (let i = 6; i < postsData.length; i++) {
+        //   const postData = sortedData[i];
+        //   if (postData.latitude !== null && postData.longitude !== null) {
+        //     const imageMarker = document.createElement('div');
+        //     imageMarker.className = 'pin-marker';
+        //     imageMarker.style.backgroundImage = `url(${pinSmall})`;
+        //     const markerInstance = new mapboxgl.Marker(imageMarker).setLngLat([postData.longitude, postData.latitude]);
+        //     markerInstance.addTo(map.current!);
+        //     imageMarker.addEventListener('click', async () => {
+        //       mount('detail', <Detail data={postData} />);
+        //     });
+        //   }
+        // }
       } else {
         const imageMarkers = document.querySelectorAll('.image-marker');
         imageMarkers.forEach(marker => marker.remove());
@@ -180,17 +204,13 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
     if (!clickedPostLocation) {
       return;
     }
-
     pickLocationWithMarker(clickedPostLocation);
   }, [clickedPostLocation]);
-
-  // 지역 검색에 필요한 코드
   useEffect(() => {
-    if (mapLocation) {
-    }
-  }, [mapLocation]);
+    GlobeCluster({ mapLocation, postsData, mount });
+  }, [postsData]);
 
-  return <Styled.GlobeLayout ref={mapContainerRef} />;
+  return <Styled.GlobeLayout ref={mapContainerRef} className="globeScroll" />;
 };
 
 export default Globe;

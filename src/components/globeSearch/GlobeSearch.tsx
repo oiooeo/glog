@@ -23,10 +23,9 @@ const GlobeSearch = () => {
   const [value, setValue] = useState('');
   const mapLocation = useMapLocationStore(state => state.mapLocation);
 
-  const { data: searchData, refetch } = useQuery<SearchResult[] | undefined>(['searchData', value], () => getSearchData(value), {
-    enabled: false,
+  const { data: searchData, refetch } = useQuery<SearchResult[] | undefined>(['searchData'], () => getSearchData(value), {
+    enabled: false, // 최초에는 refetch를 비활성화
   });
-
   const doSearch = (e: React.FormEvent) => {
     e.preventDefault();
     refetch();
