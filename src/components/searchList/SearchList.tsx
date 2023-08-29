@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PostItem from '../common/postItem/PostItem';
 import * as Styled from './style';
 import { useQuery } from '@tanstack/react-query';
@@ -22,7 +22,7 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
   const [data, setData] = useState<Tables<'posts'>[]>();
   const [myData, setMyData] = useState<Tables<'posts'>[]>();
   const tab = useTabStore(state => state.tab);
-
+  const scrollRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     async function fetchMyPosts() {
       try {
@@ -39,10 +39,15 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
   }, [session]);
 
   useEffect(() => {
+    console.log(tab);
     if (tab === 'explore') {
       setData(postsData);
+      scrollToTop();
+      setPage(1);
     } else if (tab === 'my') {
       setData(myData);
+      scrollToTop();
+      setPage(1);
     }
   }, [tab, postsData, myData]);
 
@@ -52,17 +57,16 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
     } else setKey('');
   }, [keyword, isSearchListOpened]);
 
-  useEffect(() => {
-    if (data) {
-      const filteredData = data?.filter(item => item.countryId?.includes(key) || item.regionId?.includes(key) || item.address?.includes(key));
-      const sortedData = [...filteredData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  // useEffect(() => {
+  //   if (data) {
+  //     const filteredData = data?.filter(item => item.countryId?.includes(key) || item.regionId?.includes(key) || item.address?.includes(key));
+  //     const sortedData = [...filteredData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 
-      setSearchResult(sortedData);
-    }
-  }, [data, key]);
+  //     setSearchResult(sortedData);
+  //   }
+  // }, [data, key]);
 
   useEffect(() => {
-    console.log(data);
     const searchData = data?.filter(item => item.countryId?.includes(key) || item.regionId?.includes(key) || item.address?.includes(key));
     if (searchData) {
       const filterData = searchData?.slice(0, page * 5);
@@ -71,13 +75,18 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
       const scrollData = data?.slice(0, page * 5);
       setSearchResult(scrollData);
     }
-  }, [page, key]);
+  }, [data, page, key]);
+
+  const scrollToTop = () => {
+    scrollRef.current?.scrollTo({
+      top: 0,
+    });
+  };
 
   const handleScroll = () => {
     setLoading(true);
-    const scrollSearch = document.querySelector('.scrollSearch');
-    if (scrollSearch) {
-      const isAtBottom = scrollSearch.scrollHeight - scrollSearch.scrollTop === scrollSearch.clientHeight;
+    if (scrollRef.current) {
+      const isAtBottom = scrollRef.current.scrollHeight - scrollRef.current.scrollTop === scrollRef.current.clientHeight;
       if (isAtBottom) {
         setTimeout(() => {
           setPage(prev => prev + 1);
@@ -90,17 +99,22 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
   };
 
   useEffect(() => {
-    const scrollSearch = document.querySelector('.scrollSearch');
-    scrollSearch?.addEventListener('scroll', handleScroll);
+    if (scrollRef.current) {
+      scrollRef.current.addEventListener('scroll', handleScroll);
+    }
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      if (scrollRef.current) {
+        scrollRef.current.removeEventListener('scroll', handleScroll);
+      }
+    };
   }, []);
 
   return (
     <>
       {session ? (
         <>
-          <Styled.ScrollDiv className="scrollSearch">
+          <Styled.ScrollDiv ref={scrollRef}>
             {searchResult?.map(item => (
               <PostItem key={item.id} data={item} />
             ))}
