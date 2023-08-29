@@ -9,7 +9,7 @@ import pinSmall from '../../assets/pin/pinSmall.svg';
 import Supercluster from 'supercluster';
 import pinFocus from '../../assets/pin/pinFocus.svg';
 import { CustomMarker, getHTMLElement } from './globe.util';
-import { GlobeCluster } from './GlobeCluster';
+import { globeCluster } from './globeCluster';
 
 interface MapProps {
   initialCenter: [number, number];
@@ -197,8 +197,14 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
   }, [clickedPostLocation]);
 
   useEffect(() => {
-    GlobeCluster({ mapLocation, postsData, mount });
-  }, [postsData]);
+    if (!isPostModalOpened) {
+      const postModalOpen = false;
+      globeCluster({ mapLocation, postsData, mount, postModalOpen });
+    } else {
+      const postModalOpen = true;
+      globeCluster({ mapLocation, postsData, mount, postModalOpen });
+    }
+  }, [postsData, isPostModalOpened]);
 
   return <Styled.GlobeLayout ref={mapContainerRef} className="globeScroll" />;
 };
