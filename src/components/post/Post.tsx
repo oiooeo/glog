@@ -16,6 +16,7 @@ import { getPost, getPostToUpdate, deleteButton } from '../../api/supabaseDataba
 import imageCompression from 'browser-image-compression';
 import heic2any from 'heic2any';
 import GlobeSearch from '../globeSearch/GlobeSearch';
+import exifr from 'exifr';
 
 type PostProps = {
   unmount: (name: string) => void;
@@ -111,16 +112,20 @@ const Post = ({ type, unmount, postId }: PostProps) => {
     const file = event.target.files?.[0];
 
     if (file) {
-      console.log('Uploaded File:', file);
+      const originalMetadata = await exifr.parse(file);
+      if (originalMetadata && originalMetadata.longitude && originalMetadata.latitude) {
+        imageLocation.flyTo({ center: [originalMetadata.longitude, originalMetadata.latitude], zoom: 5 });
+      }
 
       const options = {
-        maxSizeMB: 3,
+        maxSizeMB: 1,
         useWebWorker: true,
       };
 
       const resizeFile = async (fileToResize: File) => {
         try {
           console.log('Original File Size:', fileToResize.size);
+
           const compressedFile = await imageCompression(fileToResize, options);
           console.log('Compressed File Size:', compressedFile.size);
 
