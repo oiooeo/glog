@@ -17,6 +17,7 @@ import imageCompression from 'browser-image-compression';
 import heic2any from 'heic2any';
 import GlobeSearch from '../globeSearch/GlobeSearch';
 import exifr from 'exifr';
+import ReactLoading from 'react-loading';
 
 type PostProps = {
   unmount: (name: string) => void;
@@ -46,6 +47,7 @@ const Post = ({ type, unmount, postId }: PostProps) => {
   const [location, setLocation] = useState({ longitude: 0, latitude: 0 });
   const [locationInfo, setLocationInfo] = useState<LocationInfoTypes>({ countryId: '', regionId: '', address: '' });
   const imageLocation = useMapLocationStore(state => state.mapLocation);
+  const [loading, setLoading] = useState(false);
 
   const { mutate } = useMutation({
     mutationFn: async () => {
@@ -128,6 +130,8 @@ const Post = ({ type, unmount, postId }: PostProps) => {
     const file = event.target.files?.[0];
 
     if (file) {
+      setLoading(true);
+
       const originalMetadata = await exifr.parse(file);
       if (originalMetadata && originalMetadata.longitude && originalMetadata.latitude) {
         imageLocation.flyTo({ center: [originalMetadata.longitude, originalMetadata.latitude], zoom: 5 });
@@ -140,13 +144,8 @@ const Post = ({ type, unmount, postId }: PostProps) => {
 
       const resizeFile = async (fileToResize: File) => {
         try {
-          console.log('Original File Size:', fileToResize.size);
-
           const compressedFile = await imageCompression(fileToResize, options);
-          console.log('Compressed File Size:', compressedFile.size);
-
           await uploadImgFile(compressedFile);
-          console.log('Uploaded Compressed File:', compressedFile);
         } catch (error) {
           console.error('Image compression error:', error);
         }
@@ -158,7 +157,6 @@ const Post = ({ type, unmount, postId }: PostProps) => {
             type: 'image/jpeg',
             lastModified: new Date().getTime(),
           });
-          console.log('Converted JPG File:', jpgFile);
           resizeFile(jpgFile);
         });
       } else {
@@ -227,12 +225,25 @@ const Post = ({ type, unmount, postId }: PostProps) => {
             <Styled.UploadImgFile src={imgFile} alt="이미지 업로드" />
           ) : (
             <Styled.ImgBox>
-              <PiImageSquareFill size={'26px'} className="image" />
-              <p>
-                여기에 사진을
-                <br />
-                업로드 해주세요
-              </p>
+              {loading ? (
+                <>
+                  <ReactLoading type="spin" color="#ffffff" width={'50px'} />
+                  <p>
+                    사진 업로드 중 ...
+                    <br />
+                    잠시만 기다려주세요!
+                  </p>
+                </>
+              ) : (
+                <Styled.ImgBox>
+                  <PiImageSquareFill size={'26px'} className="image" />
+                  <p>
+                    여기에 사진을
+                    <br />
+                    업로드 해주세요
+                  </p>
+                </Styled.ImgBox>
+              )}
             </Styled.ImgBox>
           )}
         </label>
