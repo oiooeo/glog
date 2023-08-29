@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import PostItem from '../common/postItem/PostItem';
 import * as Styled from './style';
 import { useQuery } from '@tanstack/react-query';
-import { getPosts } from '../../api/supabaseDatabase';
+import { getMyPosts, getPosts } from '../../api/supabaseDatabase';
 import { Tables } from '../../types/supabase';
-import { useSessionStore } from '../../zustand/store';
+import { useSessionStore, useTabStore } from '../../zustand/store';
 import { signin } from '../../api/supabaseAuth';
 
 type SearchListProps = {
@@ -18,7 +18,33 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
   const [page, setPage] = useState<number>(1);
   const session = useSessionStore(state => state.session);
   const [loading, setLoading] = useState<boolean>(false);
-  const { data } = useQuery(['getPosts'], getPosts);
+  const { data: postsData } = useQuery(['getPosts'], getPosts);
+  const [data, setData] = useState<Tables<'posts'>[]>();
+  const [myData, setMyData] = useState<Tables<'posts'>[]>();
+  const tab = useTabStore(state => state.tab);
+
+  useEffect(() => {
+    async function fetchMyPosts() {
+      try {
+        if (session) {
+          const data = await getMyPosts(session.user.id);
+          setMyData(data);
+        }
+      } catch (error) {
+        console.error('Error fetching liked posts:', error);
+      }
+    }
+
+    fetchMyPosts();
+  }, [session]);
+
+  useEffect(() => {
+    if (tab === 'explore') {
+      setData(postsData);
+    } else if (tab === 'my') {
+      setData(myData);
+    }
+  }, [tab, postsData, myData]);
 
   useEffect(() => {
     if (isSearchListOpened) {
@@ -36,11 +62,16 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
   }, [data, key]);
 
   useEffect(() => {
-    if (data) {
-      const filterData = data.slice(0, page * 5);
+    console.log(data);
+    const searchData = data?.filter(item => item.countryId?.includes(key) || item.regionId?.includes(key) || item.address?.includes(key));
+    if (searchData) {
+      const filterData = searchData?.slice(0, page * 5);
       setSearchResult(filterData);
+    } else {
+      const scrollData = data?.slice(0, page * 5);
+      setSearchResult(scrollData);
     }
-  }, [page]);
+  }, [page, key]);
 
   const handleScroll = () => {
     setLoading(true);
