@@ -73,14 +73,15 @@ const Post = ({ type, unmount, postId }: PostProps) => {
       queryClient.invalidateQueries(['getPosts']);
       unmount('post');
       usePostStore.getState().setIsPosting(false);
-      toast('업로드 완료! 다른 게시물들도 확인해보세요 :)', { className: 'post-alert', position: 'top-center' });
 
       if (type === 'post') {
+        toast('업로드 완료! 다른 게시물들도 확인해보세요 :)', { className: 'post-alert', position: 'top-center' });
         const post = userId ? await getPostByUserId(userId) : null;
         if (post) {
           mount('detail', <Detail data={post} />);
         }
       } else {
+        toast('수정 완료!', { className: 'post-alert', position: 'top-center' });
         const post = postId ? await getPostByPostId(postId) : null;
         if (post) {
           mount('detail', <Detail data={post} />);
