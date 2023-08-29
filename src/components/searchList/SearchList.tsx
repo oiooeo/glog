@@ -40,7 +40,6 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
   }, [session]);
 
   useEffect(() => {
-    console.log(tab);
     if (tab === 'explore') {
       setData(postsData);
       scrollToTop();

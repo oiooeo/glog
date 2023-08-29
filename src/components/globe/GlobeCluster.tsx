@@ -17,9 +17,7 @@ interface Error {
 }
 
 export const globeCluster = ({ mapLocation, postsData, mount, flyToLocation, postModalOpen }: Props) => {
-  console.log(postsData);
   const clusterData = postsData?.slice(5);
-  console.log(clusterData);
   if (clusterData) {
     const getValue = mapLocation.getSource('pinPoint');
     if (getValue) {
