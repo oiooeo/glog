@@ -7,21 +7,12 @@ import Detail from '../detail/Detail';
 import { Tables } from '../../types/supabase';
 import pinFocus from '../../assets/pin/pinFocus.svg';
 import { CustomMarker, getHTMLElement } from './globe.util';
-import { GlobeCluster } from './GlobeCluster';
+import { globeCluster } from './globeCluster';
 
 interface MapProps {
   initialCenter: [number, number];
   zoom: number;
   postsData: Tables<'posts'>[] | undefined;
-}
-
-interface PointFeature<T> {
-  type: 'Feature';
-  properties: T;
-  geometry: {
-    type: 'Point';
-    coordinates: [number, number];
-  };
 }
 
 const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
@@ -85,8 +76,7 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
   useEffect(() => {
     if (postsData && postsData.length !== 0 && !isPostModalOpened) {
       const sortedData = [...postsData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-
-      if (sortedData.length > 7) {
+      if (sortedData.length > 6) {
         const imageMarkers = document.querySelectorAll('.image-marker');
         imageMarkers.forEach(marker => marker.remove());
 
@@ -132,8 +122,14 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
   }, [clickedPostLocation]);
 
   useEffect(() => {
-    GlobeCluster({ mapLocation, postsData, mount, flyToLocation });
-  }, [postsData]);
+    if (!isPostModalOpened) {
+      const postModalOpen = false;
+      globeCluster({ mapLocation, postsData, mount, postModalOpen, flyToLocation });
+    } else {
+      const postModalOpen = true;
+      globeCluster({ mapLocation, postsData, mount, postModalOpen, flyToLocation });
+    }
+  }, [postsData, isPostModalOpened]);
 
   return <Styled.GlobeLayout ref={mapContainerRef} className="globeScroll" />;
 };
