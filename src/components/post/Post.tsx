@@ -12,7 +12,7 @@ import { PiImageSquareFill } from 'react-icons/pi';
 import pin from '../../assets/pin/pinLarge.svg';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Detail from '../detail/Detail';
-import { getPost, getPostToUpdate } from '../../api/supabaseDatabase';
+import { getPostByUserId, getPostByPostId } from '../../api/supabaseDatabase';
 import imageCompression from 'browser-image-compression';
 import heic2any from 'heic2any';
 import GlobeSearch from '../globeSearch/GlobeSearch';
@@ -69,8 +69,23 @@ const Post = ({ type, unmount, postId }: PostProps) => {
             })
             .eq('id', data?.id);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries(['getPosts']);
+      unmount('post');
+      usePostStore.getState().setIsPosting(false);
+      toast('업로드 완료! 다른 게시물들도 확인해보세요 :)', { className: 'post-alert', position: 'top-center' });
+
+      if (type === 'post') {
+        const post = userId ? await getPostByUserId(userId) : null;
+        if (post) {
+          mount('detail', <Detail data={post} />);
+        }
+      } else {
+        const post = postId ? await getPostByPostId(postId) : null;
+        if (post) {
+          mount('detail', <Detail data={post} />);
+        }
+      }
     },
   });
 
@@ -165,21 +180,13 @@ const Post = ({ type, unmount, postId }: PostProps) => {
     setLocation({ longitude: clickedLocation.longitude, latitude: clickedLocation.latitude });
   };
 
-  const handleToSubmit = async () => {
+  const handleToSubmit = () => {
     mutate();
-    unmount('post');
-    usePostStore.getState().setIsPosting(false);
-    toast('업로드 완료! 다른 게시물들도 확인해보세요 :)', { className: 'post-alert', position: 'top-center' });
-
-    const post = userId ? await getPost(userId) : null;
-    if (post) {
-      mount('detail', <Detail data={post} />);
-    }
   };
 
   const fetchData = async () => {
     if (!postId) return;
-    const postData = await getPostToUpdate(postId);
+    const postData = await getPostByPostId(postId);
     if (!postData) return;
     setData(postData);
     setImgFile(postData.images);
@@ -270,8 +277,10 @@ const Post = ({ type, unmount, postId }: PostProps) => {
 
       {type === 'update' && (
         <>
-          <Styled.Pin src={pin} alt="위치" />
-          <Styled.PinWarning>위치는 수정이 안돼요!</Styled.PinWarning>
+          <Styled.PinBackground>
+            <Styled.Pin src={pin} alt="위치" />
+            <Styled.PinWarning>위치는 수정이 안돼요!</Styled.PinWarning>
+          </Styled.PinBackground>
           <Styled.SearchInput value={`${locationInfo.countryId}, ${locationInfo.regionId}`} disabled />
           <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" defaultValue={data?.contents} onChange={handleChangeContents} maxLength={30} rows={2} />
           <Switch
