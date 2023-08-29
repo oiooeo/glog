@@ -9,12 +9,14 @@ interface Props {
   mapLocation: any;
   postsData: Tables<'posts'>[] | undefined;
   mount: (name: string, element: React.ReactNode) => void;
+  flyToLocation: (lng: number, lat: number) => void;
   postModalOpen: boolean;
 }
 interface Error {
   error: Error | undefined;
 }
-export const globeCluster = ({ mapLocation, postsData, mount, postModalOpen }: Props) => {
+
+export const globeCluster = ({ mapLocation, postsData, mount, flyToLocation, postModalOpen }: Props) => {
   console.log(postsData);
   const clusterData = postsData?.slice(5);
   console.log(clusterData);
@@ -86,8 +88,9 @@ export const globeCluster = ({ mapLocation, postsData, mount, postModalOpen }: P
     mapLocation.on('click', 'unclustered-point', async (e: any) => {
       if (postsData) {
         const postId = e.features[0].properties.cluster;
-        const unclusteredData = postsData.filter(itme => itme.id === postId);
+        const unclusteredData = postsData.filter(item => item.id === postId);
         mount('detail', <Detail data={unclusteredData[0]} />);
+        flyToLocation(unclusteredData[0].longitude, unclusteredData[0].latitude);
       }
     });
   }

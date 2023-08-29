@@ -12,44 +12,51 @@ import { PiImageSquareFill } from 'react-icons/pi';
 import pin from '../../assets/pin/pinLarge.svg';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Detail from '../detail/Detail';
-import { getPost, getPostToUpdate } from '../../api/supabaseDatabase';
+import { getPostByUserId, getPostByPostId } from '../../api/supabaseDatabase';
 import imageCompression from 'browser-image-compression';
 import heic2any from 'heic2any';
 import GlobeSearch from '../globeSearch/GlobeSearch';
 
 type PostProps = {
   unmount: (name: string) => void;
-  setIsPostOpened: React.Dispatch<React.SetStateAction<boolean>>;
-  location: string;
+  type: string;
   postId?: string;
 };
 
-const Post = ({ location, unmount, setIsPostOpened, postId }: PostProps) => {
+type LocationInfoTypes = {
+  countryId: string | null;
+  regionId: string | null;
+  address: string | null;
+};
+
+const Post = ({ type, unmount, postId }: PostProps) => {
+  const { mount } = useModal();
   const queryClient = useQueryClient();
+  const clickedLocation = useLocationStore(state => state.clickedLocation);
+  const session = useSessionStore(state => state.session);
+  const userId = session?.user.id;
+  const imgRef = useRef<HTMLInputElement>(null);
   const [data, setData] = useState<any>(null);
   const [imgFile, setImgFile] = useState<string>();
-  const [imgUrl, setImgUrl] = useState<string>(location === 'header' ? '' : data?.images);
-  const [switchChecked, setSwitchChecked] = useState(location === 'header' ? false : data?.private);
   const [here, setHere] = useState(false);
-  const [contents, handleChangeContents] = useInput(location === 'header' ? '' : data?.contents);
-  const imgRef = useRef<HTMLInputElement>(null);
-  const session = useSessionStore(state => state.session);
-  const clickedLocation = useLocationStore(state => state.clickedLocation);
-  const userId = session?.user.id;
-  const { mount } = useModal();
+  const [imgUrl, setImgUrl] = useState<string>(type === 'post' ? '' : data?.images);
+  const [switchChecked, setSwitchChecked] = useState(type === 'post' ? false : data?.private);
+  const [contents, handleChangeContents] = useInput(type === 'post' ? '' : data?.contents);
+  const [location, setLocation] = useState({ longitude: 0, latitude: 0 });
+  const [locationInfo, setLocationInfo] = useState<LocationInfoTypes>({ countryId: '', regionId: '', address: '' });
 
   const { mutate } = useMutation({
     mutationFn: async () => {
-      location === 'header'
+      type === 'post'
         ? await supabase.from('posts').insert({
             userId: session?.user.id,
             contents: contents,
             images: imgUrl,
-            countryId: clickedLocation?.countryId,
-            regionId: clickedLocation?.regionId,
-            latitude: clickedLocation?.latitude,
-            longitude: clickedLocation?.longitude,
-            address: clickedLocation?.address,
+            countryId: locationInfo.countryId,
+            regionId: locationInfo.regionId,
+            latitude: location?.latitude,
+            longitude: location?.longitude,
+            address: locationInfo.address,
             private: switchChecked,
           })
         : await supabase
@@ -58,17 +65,28 @@ const Post = ({ location, unmount, setIsPostOpened, postId }: PostProps) => {
               userId: session?.user.id,
               contents: contents,
               images: imgUrl,
-              countryId: clickedLocation?.countryId,
-              regionId: clickedLocation?.regionId,
-              latitude: clickedLocation?.latitude,
-              longitude: clickedLocation?.longitude,
-              address: clickedLocation?.address,
               private: switchChecked,
             })
             .eq('id', data?.id);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries(['getPosts']);
+      unmount('post');
+      usePostStore.getState().setIsPosting(false);
+
+      if (type === 'post') {
+        toast('업로드 완료! 다른 게시물들도 확인해보세요 :)', { className: 'post-alert', position: 'top-center' });
+        const post = userId ? await getPostByUserId(userId) : null;
+        if (post) {
+          mount('detail', <Detail data={post} />);
+        }
+      } else {
+        toast('수정 완료!', { className: 'post-alert', position: 'top-center' });
+        const post = postId ? await getPostByPostId(postId) : null;
+        if (post) {
+          mount('detail', <Detail data={post} />);
+        }
+      }
     },
   });
 
@@ -144,35 +162,45 @@ const Post = ({ location, unmount, setIsPostOpened, postId }: PostProps) => {
     }
   };
 
-  const handleToSetLocation = () => {
-    setHere(true);
+  const getLocationInformation = async () => {
+    const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${location.longitude},${location.latitude}.json?access_token=${process.env.REACT_APP_ACCESS_TOKEN}&language=ko`);
+    const data = await response.json();
+    const dataFeatures = data.features;
+    const placeName = dataFeatures[dataFeatures.length - 2].place_name_ko || dataFeatures[dataFeatures.length - 2].place_name;
+    const placeComponents = placeName.split(', ');
+    setLocationInfo({ countryId: placeComponents[placeComponents.length - 2], regionId: placeComponents[placeComponents.length - 1], address: dataFeatures[0].place_name_ko !== undefined ? dataFeatures[0].place_name_ko : dataFeatures[0].place_name });
   };
 
-  const handleToSubmit = async () => {
-    mutate();
-    unmount('post');
-    setIsPostOpened(false);
-    usePostStore.getState().setIsPosting(false);
-    toast('업로드 완료! 다른 게시물들도 확인해보세요 :)', { className: 'post-alert', position: 'top-center' });
+  useEffect(() => {
+    if (location.latitude === 0 || location.longitude === 0) return;
+    getLocationInformation();
+  }, [location]);
 
-    const post = userId ? await getPost(userId) : null;
-    if (post) {
-      mount('detail', <Detail data={post} />);
-    }
+  const handleToSetLocation = () => {
+    setHere(true);
+    setLocation({ longitude: clickedLocation.longitude, latitude: clickedLocation.latitude });
+  };
+
+  const handleToSubmit = () => {
+    mutate();
   };
 
   const fetchData = async () => {
-    if (postId) {
-      const postData = await getPostToUpdate(postId);
-      setData(postData);
-    }
+    if (!postId) return;
+    const postData = await getPostByPostId(postId);
+    if (!postData) return;
+    setData(postData);
+    setImgFile(postData.images);
+    setLocation({ longitude: postData.longitude, latitude: postData.latitude });
+    setSwitchChecked(postData.private);
+    setLocationInfo({ countryId: postData.countryId!, regionId: postData.regionId!, address: postData.address! });
   };
 
   useEffect(() => {
     fetchData();
   }, [postId]);
 
-  return location === 'header' ? (
+  return (
     <Styled.PostLayout>
       <Styled.UploadBox onDragEnter={event => event.preventDefault()} onDragOver={event => event.preventDefault()} onDragLeave={event => event.preventDefault()} onDrop={handleDrop}>
         <label htmlFor="inputImg">
@@ -192,13 +220,13 @@ const Post = ({ location, unmount, setIsPostOpened, postId }: PostProps) => {
         <input id="inputImg" type="file" accept="image/png, image/jpeg, image/jpg, image/HEIC, image/heic " onChange={handleImageInputChange} ref={imgRef} />
       </Styled.UploadBox>
 
-      {imgFile && (
+      {type === 'post' && imgFile && (
         <>
           <GlobeSearch />
           {here ? (
             <>
               <Styled.Pin src={pin} alt="위치" />
-              <Styled.PinButton size="large" variant="black">
+              <Styled.PinButton size="large" variant="black" onClick={handleToSetLocation}>
                 수정하기
               </Styled.PinButton>
             </>
@@ -208,9 +236,15 @@ const Post = ({ location, unmount, setIsPostOpened, postId }: PostProps) => {
                 핀을 이동해서 <br /> 정확한 여행지를 알려주세요!
               </Styled.PinParagraph>
               <Styled.Pin src={pin} alt="위치" />
-              <Styled.PinButton size="large" variant="black" onClick={handleToSetLocation}>
-                여기예요!
-              </Styled.PinButton>
+              {clickedLocation.latitude === 0 || clickedLocation.longitude === 0 ? (
+                <Styled.PinButton size="large" variant="gray">
+                  여기예요!
+                </Styled.PinButton>
+              ) : (
+                <Styled.PinButton size="large" variant="black" onClick={handleToSetLocation}>
+                  여기예요!
+                </Styled.PinButton>
+              )}
             </>
           )}
         </>
@@ -241,43 +275,42 @@ const Post = ({ location, unmount, setIsPostOpened, postId }: PostProps) => {
           )}
         </>
       )}
-    </Styled.PostLayout>
-  ) : (
-    <Styled.PostLayout>
-      <Styled.UploadBox onDragEnter={event => event.preventDefault()} onDragOver={event => event.preventDefault()} onDragLeave={event => event.preventDefault()} onDrop={handleDrop}>
-        <label htmlFor="inputImg">
-        {imgFile ? (
-            <Styled.UploadImgFile src={imgFile} alt="이미지 업로드" />
-          ) : (
-          <Styled.UploadImgFile src={data?.images} alt="이미지 업로드" />
-          )}
-        </label>
-        <input id="inputImg" type="file" accept="image/png, image/jpeg, image/jpg, image/HEIC, image/heic " onChange={handleImageInputChange} ref={imgRef} />
-      </Styled.UploadBox>
-      <GlobeSearch />
-      {here ? (
+
+      {type === 'update' && (
         <>
-          <Styled.Pin src={pin} alt="위치" />
-          <Styled.PinButton size="large" variant="black">
-            수정하기
-          </Styled.PinButton>
-        </>
-      ) : (
-        <>
-          <Styled.PinParagraph>
-            핀을 이동해서 <br /> 정확한 여행지를 알려주세요!
-          </Styled.PinParagraph>
-          <Styled.Pin src={pin} alt="위치" />
-          <Styled.PinButton size="large" variant="black" onClick={handleToSetLocation}>
-            여기예요!
-          </Styled.PinButton>
+          <Styled.PinBackground>
+            <Styled.Pin src={pin} alt="위치" />
+            <Styled.PinWarning>위치는 수정이 안돼요!</Styled.PinWarning>
+          </Styled.PinBackground>
+          <Styled.SearchInput value={`${locationInfo.countryId}, ${locationInfo.regionId}`} disabled />
+          <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" defaultValue={data?.contents} onChange={handleChangeContents} maxLength={30} rows={2} />
+          <Switch
+            checked={switchChecked}
+            onChange={setSwitchChecked}
+            leftText={'전체공유'}
+            rightText={'나만보기'}
+            width={'300px'}
+            checkedtextcolor={'#353C49'}
+            textcolor={'#72808E'}
+            checkedbackground={'#72808E'}
+            background={'rgba(18, 18, 18, 0.6)'}
+          />
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <Button size="medium" variant="deep-gray" onClick={handleToSubmit}>
+              삭제하기
+            </Button>
+            {contents === '' ? (
+              <Button size="medium" variant="gray">
+                작성하기
+              </Button>
+            ) : (
+              <Button size="medium" variant="orange" onClick={handleToSubmit}>
+                작성하기
+              </Button>
+            )}
+          </div>
         </>
       )}
-      <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" defaultValue={data?.contents} onChange={handleChangeContents} maxLength={30} rows={2} />
-      <Switch checked={switchChecked} onChange={setSwitchChecked} leftText={'전체공유'} rightText={'나만보기'} width={'300px'} checkedtextcolor={'#353C49'} textcolor={'#72808E'} checkedbackground={'#72808E'} background={'rgba(18, 18, 18, 0.6)'} />
-      <Button size="large" variant="orange" onClick={handleToSubmit}>
-        수정하기
-      </Button>
     </Styled.PostLayout>
   );
 };

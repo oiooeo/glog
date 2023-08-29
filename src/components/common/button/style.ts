@@ -42,29 +42,11 @@ export const Button = styled.button<ButtonProps>`
     `}
 
   ${props =>
-    props.color === 'primary' &&
+    props.variant === 'deep-gray' &&
     css`
-      color: #ffffff;
-    `}
-
-  ${props =>
-    props.color === 'secondary' &&
-    css`
-      background-color: #c5c5c5;
-      color: #000000;
-    `}
-
-  ${props =>
-    props.variant === 'transparent' &&
-    css`
-      background-color: transparent;
-    `}
-
-  ${props =>
-    props.variant === 'outlined' &&
-    css`
-      background-color: #ffffff;
-      border: 2px solid black;
+      background-color: #4d5765;
+      color: #e4e7eb;
+      box-shadow: 3px 3px 20px rgba(251, 232, 189, 0.4);
     `}
 
   ${props =>
@@ -77,16 +59,18 @@ export const Button = styled.button<ButtonProps>`
   ${props =>
     props.size === 'medium' &&
     css`
-      width: 130px;
-      height: 38px;
+      width: 145px;
+      height: 50px;
+      border-radius: 10px;
+      font-size: 18px;
     `}
 
   ${props =>
     props.size === 'large' &&
     css`
-      font-size: 18px;
       width: 300px;
       height: 50px;
       border-radius: 10px;
+      font-size: 18px;
     `}
 `;

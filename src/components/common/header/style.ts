@@ -21,6 +21,7 @@ export const Wrapper = styled.div`
 export const HeaderLogo = styled.img`
   width: fit-content;
   height: 40px;
+  cursor: pointer;
 `;
 
 export const CircleButton = styled.button`
