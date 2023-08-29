@@ -131,7 +131,7 @@ const Header = () => {
     closeLikesList();
     setIsSearchListOpened(true);
     handleToSearch();
-    useTabStore.getState().setTab('search');
+    // useTabStore.getState().setTab('search');
   };
 
   const openLikesList = () => {

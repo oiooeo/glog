@@ -22,13 +22,13 @@ export const addPost = async (newPost: Tables<'posts'>) => {
 };
 
 export const getMyPosts = async (userId: string) => {
-  const { data, error } = await supabase.from('posts').select('*, user:userId(*)').eq('userId', userId);
+  const { data, error } = await supabase.from('posts').select('*, user:userId(*)').eq('userId', userId).order('createdAt', { ascending: false });
   if (error) throw new Error(`에러!! ${error.message}`);
   return data;
 };
 
 export const getPosts = async () => {
-  const { data, error } = await supabase.from('posts').select('*, user:userId(*)').eq('private', false);
+  const { data, error } = await supabase.from('posts').select('*, user:userId(*)').eq('private', false).order('createdAt', { ascending: false });
   if (error) throw new Error(`에러!! ${error.message}`);
   return data;
 };

@@ -17,15 +17,6 @@ interface MapProps {
   postsData: Tables<'posts'>[] | undefined;
 }
 
-interface PointFeature<T> {
-  type: 'Feature';
-  properties: T;
-  geometry: {
-    type: 'Point';
-    coordinates: [number, number];
-  };
-}
-
 const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
   mapboxgl.accessToken = process.env.REACT_APP_ACCESS_TOKEN ? process.env.REACT_APP_ACCESS_TOKEN : '';
   const { mount, unmount } = useModal();
@@ -60,7 +51,6 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
         useLocationStore.getState().setClickedLocation(clickedLocation);
       } catch (error) {}
     };
-
     if (!map.current && mapContainerRef.current) {
       map.current = new mapboxgl.Map({
         container: mapContainerRef.current,
@@ -130,7 +120,6 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
   useEffect(() => {
     if (postsData && postsData.length !== 0 && !isPostModalOpened) {
       const sortedData = [...postsData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-
       if (sortedData.length > 7) {
         const imageMarkers = document.querySelectorAll('.image-marker');
         imageMarkers.forEach(marker => marker.remove());
@@ -206,6 +195,7 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
     }
     pickLocationWithMarker(clickedPostLocation);
   }, [clickedPostLocation]);
+
   useEffect(() => {
     GlobeCluster({ mapLocation, postsData, mount });
   }, [postsData]);

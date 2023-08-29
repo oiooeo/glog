@@ -1,7 +1,5 @@
 import React from 'react';
 import { Tables } from '../../types/supabase';
-import { useMapLocationStore } from '../../zustand/store';
-import { useModal } from '../common/overlay/modal/Modal.hooks';
 import LargePin from '../../assets/pin/LargePin.png';
 import mediumPin from '../../assets/pin/mideumPin.png';
 import smallPin from '../../assets/pin/smallPin.png';
@@ -16,8 +14,10 @@ interface Error {
   error: Error | undefined;
 }
 export const GlobeCluster = ({ mapLocation, postsData, mount }: Props) => {
+  console.log(postsData);
   const clusterData = postsData?.slice(5);
   if (clusterData) {
+    console.log(clusterData);
     mapLocation.on('load', function () {
       mapLocation?.loadImage(`${LargePin}`, (error: Error | undefined, image: any) => {
         if (error) throw error;
