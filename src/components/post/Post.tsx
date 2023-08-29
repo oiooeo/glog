@@ -13,9 +13,9 @@ import pin from '../../assets/pin/pinLarge.svg';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Detail from '../detail/Detail';
 import { getPost } from '../../api/supabaseDatabase';
-import SearchBox from '../globe/SearchBox';
 import imageCompression from 'browser-image-compression';
 import heic2any from 'heic2any';
+import GlobeSearch from '../globeSearch/GlobeSearch';
 
 type PostProps = {
   unmount: (name: string) => void;
@@ -172,7 +172,7 @@ const Post = ({ leftMount, unmount, setIsPostOpened }: PostProps) => {
 
       {imgFile && (
         <>
-          <SearchBox />
+          <GlobeSearch />
           {here ? (
             <>
               <Styled.Pin src={pin} alt="위치" />
