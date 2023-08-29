@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import * as Styled from './style';
 import { supabase } from '../../api/supabaseClient';
@@ -218,7 +218,7 @@ const Post = ({ location, unmount, setIsPostOpened, postId }: PostProps) => {
 
       {clickedLocation && here && (
         <>
-          <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" name="contents" onChange={handleChangeContents} maxLength={30} rows={2} />
+          <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" onChange={handleChangeContents} maxLength={30} rows={2} />
           <Switch
             checked={switchChecked}
             onChange={setSwitchChecked}
@@ -246,11 +246,15 @@ const Post = ({ location, unmount, setIsPostOpened, postId }: PostProps) => {
     <Styled.PostLayout>
       <Styled.UploadBox onDragEnter={event => event.preventDefault()} onDragOver={event => event.preventDefault()} onDragLeave={event => event.preventDefault()} onDrop={handleDrop}>
         <label htmlFor="inputImg">
+        {imgFile ? (
+            <Styled.UploadImgFile src={imgFile} alt="이미지 업로드" />
+          ) : (
           <Styled.UploadImgFile src={data?.images} alt="이미지 업로드" />
+          )}
         </label>
         <input id="inputImg" type="file" accept="image/png, image/jpeg, image/jpg, image/HEIC, image/heic " onChange={handleImageInputChange} ref={imgRef} />
       </Styled.UploadBox>
-      <GlobeSearch/>
+      <GlobeSearch />
       {here ? (
         <>
           <Styled.Pin src={pin} alt="위치" />
