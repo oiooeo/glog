@@ -1,7 +1,5 @@
 import React from 'react';
 import { Tables } from '../../types/supabase';
-import { useMapLocationStore } from '../../zustand/store';
-import { useModal } from '../common/overlay/modal/Modal.hooks';
 import LargePin from '../../assets/pin/LargePin.png';
 import mediumPin from '../../assets/pin/mideumPin.png';
 import smallPin from '../../assets/pin/smallPin.png';
@@ -11,11 +9,13 @@ interface Props {
   mapLocation: any;
   postsData: Tables<'posts'>[] | undefined;
   mount: (name: string, element: React.ReactNode) => void;
+  flyToLocation: (lng: number, lat: number) => void;
 }
 interface Error {
   error: Error | undefined;
 }
-export const GlobeCluster = ({ mapLocation, postsData, mount }: Props) => {
+
+export const GlobeCluster = ({ mapLocation, postsData, mount, flyToLocation }: Props) => {
   const clusterData = postsData?.slice(5);
   if (clusterData) {
     mapLocation.on('load', function () {
@@ -81,8 +81,9 @@ export const GlobeCluster = ({ mapLocation, postsData, mount }: Props) => {
     mapLocation.on('click', 'unclustered-point', async (e: any) => {
       if (postsData) {
         const postId = e.features[0].properties.cluster;
-        const unclusteredData = postsData.filter(itme => itme.id === postId);
+        const unclusteredData = postsData.filter(item => item.id === postId);
         mount('detail', <Detail data={unclusteredData[0]} />);
+        flyToLocation(unclusteredData[0].longitude, unclusteredData[0].latitude);
       }
     });
   }

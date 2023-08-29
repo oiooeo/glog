@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import * as Styled from './style';
 import { Tables } from '../../types/supabase';
 import { RiPencilLine } from 'react-icons/ri';
 import Like from '../like/Like';
-import { useSessionStore } from '../../zustand/store';
+import { usePostStore, useSessionStore } from '../../zustand/store';
 import { deleteButton } from '../../api/supabaseDatabase';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
@@ -17,21 +17,22 @@ type DetailProps = {
 const Detail: React.FC<DetailProps> = ({ data }) => {
   const queryClient = useQueryClient();
   const session = useSessionStore(state => state.session);
+  const { leftMount, unmount } = useModal();
+
   const deletePostMutation = useMutation((postId: string) => deleteButton(postId), {
     onSuccess: () => {
       queryClient.invalidateQueries(['getPosts']);
     },
   });
-  const { leftMount, rightMount, unmount } = useModal();
-  const [isPostOpened, setIsPostOpened] = useState(false);
+
   const handleDelete = () => {
     deletePostMutation.mutate(data.id);
   };
-  const openUpdate = (id:string) => {
-    leftMount('detail', <Post location={'detail'} unmount={unmount} setIsPostOpened={setIsPostOpened} postId={id}/>);
-    setIsPostOpened(true);
-  };
 
+  const openUpdate = (id: string) => {
+    usePostStore.getState().setIsPosting(true);
+    leftMount('post', <Post type={'update'} unmount={unmount} postId={id} />);
+  };
 
   return (
     <Styled.DetailLayout>

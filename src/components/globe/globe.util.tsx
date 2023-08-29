@@ -1,10 +1,9 @@
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { DefaultMarker, ImageMarker, OrangeMarker } from './Globe.marker';
+import { ImageMarker, OrangeMarker } from './Globe.marker';
 
 export enum CustomMarker {
   Orange,
-  Default,
   Image,
 }
 
@@ -17,9 +16,6 @@ export const getHTMLElement = ({ type, imgSrc }: { type: CustomMarker; imgSrc: s
   switch (type) {
     case CustomMarker.Orange:
       el = renderToStaticMarkup(<OrangeMarker pin={imgSrc} />);
-      break;
-    case CustomMarker.Default:
-      el = renderToStaticMarkup(<DefaultMarker pin={imgSrc} />);
       break;
     case CustomMarker.Image:
       el = renderToStaticMarkup(<ImageMarker pin={imgSrc} />);

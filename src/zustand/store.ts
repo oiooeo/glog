@@ -15,9 +15,6 @@ interface LocationStore {
   clickedLocation: {
     latitude: number;
     longitude: number;
-    regionId: string;
-    countryId: string;
-    address: string;
   };
   setClickedLocation: (location: LocationStore['clickedLocation']) => void;
 }
@@ -26,9 +23,6 @@ export const useLocationStore = create<LocationStore>(set => ({
   clickedLocation: {
     latitude: 0,
     longitude: 0,
-    regionId: '',
-    countryId: '',
-    address: '',
   },
   setClickedLocation: location => set({ clickedLocation: location }),
 }));

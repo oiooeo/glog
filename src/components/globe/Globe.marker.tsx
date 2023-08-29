@@ -8,14 +8,6 @@ export const OrangeMarker = ({ pin }: { pin: string }) => {
   );
 };
 
-export const DefaultMarker = ({ pin }: { pin: string }) => {
-  return (
-    <Styled.PinBox className="pin-marker">
-      <Styled.PinMarker src={pin} alt="marker" />
-    </Styled.PinBox>
-  );
-};
-
 export const ImageMarker = ({ pin }: { pin: string }) => {
   return (
     <div className="image-marker">
