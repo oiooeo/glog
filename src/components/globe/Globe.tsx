@@ -8,9 +8,7 @@ import { Tables } from '../../types/supabase';
 import pinSmall from '../../assets/pin/pinSmall.svg';
 import Supercluster from 'supercluster';
 import pinFocus from '../../assets/pin/pinFocus.svg';
-import LargePin from '../../assets/pin/LargePin.png';
-import mediumPin from '../../assets/pin/mideumPin.png';
-import smallPin from '../../assets/pin/smallPin.png';
+import { CustomMarker, getHTMLElement } from './globe.util';
 import { GlobeCluster } from './GlobeCluster';
 
 interface MapProps {
@@ -60,21 +58,7 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
         };
 
         useLocationStore.getState().setClickedLocation(clickedLocation);
-
-        const textMarker = document.createElement('div');
-        textMarker.className = 'formMarker';
-        textMarker.style.width = `40px`;
-        textMarker.style.height = `40px`;
-        textMarker.style.backgroundSize = '100%';
-
-        if (marker) {
-          marker.setLngLat([location.lng, location.lat]);
-        } else {
-          marker = new mapboxgl.Marker(textMarker).setLngLat([location.lng, location.lat]).addTo(map.current!);
-        }
-      } catch (error) {
-        console.error('error', error);
-      }
+      } catch (error) {}
     };
 
     if (!map.current && mapContainerRef.current) {
@@ -128,45 +112,58 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
       });
     }
 
+    if (map) {
+      useMapLocationStore.getState().setMapLocation(map.current);
+    }
+  }, [initialCenter, zoom]);
+
+  const pickImageMarker = (postData: Tables<'posts'>) => {
+    const marker = getHTMLElement({ type: CustomMarker.Image, imgSrc: postData.images });
+    const markerInstance = new mapboxgl.Marker(marker).setLngLat([postData.longitude, postData.latitude]);
+    markerInstance.addTo(map.current!);
+
+    marker.addEventListener('click', async () => {
+      mount('detail', <Detail data={postData} />);
+    });
+  };
+
+  useEffect(() => {
     if (postsData && postsData.length !== 0 && !isPostModalOpened) {
-      zoomSize = map.current?.getZoom();
       const sortedData = [...postsData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+
       if (sortedData.length > 7) {
         const imageMarkers = document.querySelectorAll('.image-marker');
         imageMarkers.forEach(marker => marker.remove());
+
         for (let i = 0; i < 6; i++) {
           const postData = sortedData[i];
-          if (postData.latitude !== null && postData.longitude !== null) {
-            const imageMarker = document.createElement('div');
-            imageMarker.className = 'image-marker-div';
-
-            const imgElement = document.createElement('img');
-            imageMarker.className = 'image-marker';
-            if (postData.images) imgElement.src = postData.images;
-            imgElement.alt = '이미지';
-            imageMarker.appendChild(imgElement);
-
-            const markerInstance = new mapboxgl.Marker(imageMarker).setLngLat([postData.longitude, postData.latitude]);
-            markerInstance.addTo(map.current!);
-
-            imageMarker.addEventListener('click', async () => {
-              mount('detail', <Detail data={postData} />);
-            });
-          }
+          if (!postData) return;
+          pickImageMarker(postData);
         }
+
         const pinMarkers = document.querySelectorAll('.pin-marker');
         pinMarkers.forEach(marker => marker.remove());
 
+        // for (let i = 6; i < postsData.length; i++) {
+        //   const postData = sortedData[i];
+        //   if (!postData) return;
+
+        //   const marker = getHTMLElement({ type: CustomMarker.Default, imgSrc: pinSmall });
+        //   const markerInstance = new mapboxgl.Marker(marker).setLngLat([postData.longitude, postData.latitude]);
+        //   markerInstance.addTo(map.current!);
+
+        //   marker.addEventListener('click', async () => {
+        //     mount('detail', <Detail data={postData} />);
+        //   });
+        // }
         // for (let i = 6; i < postsData.length; i++) {
         //   const postData = sortedData[i];
         //   if (postData.latitude !== null && postData.longitude !== null) {
         //     const imageMarker = document.createElement('div');
         //     imageMarker.className = 'pin-marker';
         //     imageMarker.style.backgroundImage = `url(${pinSmall})`;
-
         //     const markerInstance = new mapboxgl.Marker(imageMarker).setLngLat([postData.longitude, postData.latitude]);
         //     markerInstance.addTo(map.current!);
-
         //     imageMarker.addEventListener('click', async () => {
         //       mount('detail', <Detail data={postData} />);
         //     });
@@ -175,25 +172,11 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
       } else {
         const imageMarkers = document.querySelectorAll('.image-marker');
         imageMarkers.forEach(marker => marker.remove());
+
         for (let i = 0; i < sortedData.length; i++) {
           const postData = sortedData[i];
-          if (postData.latitude !== null && postData.longitude !== null) {
-            const imageMarker = document.createElement('div');
-            imageMarker.className = 'image-marker-div';
-
-            const imgElement = document.createElement('img');
-            imageMarker.className = 'image-marker';
-            if (postData.images) imgElement.src = postData.images;
-            imgElement.alt = '이미지';
-            imageMarker.appendChild(imgElement);
-
-            const markerInstance = new mapboxgl.Marker(imageMarker).setLngLat([postData.longitude, postData.latitude]);
-            markerInstance.addTo(map.current!);
-
-            imageMarker.addEventListener('click', async () => {
-              mount('detail', <Detail data={postData} />);
-            });
-          }
+          if (!postData) return;
+          pickImageMarker(postData);
         }
       }
     } else if (isPostModalOpened) {
@@ -202,39 +185,30 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
       const pinMarkers = document.querySelectorAll('.pin-marker');
       pinMarkers.forEach(marker => marker.remove());
     }
-    if (map) {
-      useMapLocationStore.getState().setMapLocation(map.current);
-    }
-  }, [initialCenter, zoom, postsData, isPostModalOpened]);
+  }, [mount, postsData, isPostModalOpened, pickImageMarker]);
 
-  //cluster 요소
-  useEffect(() => {
-    GlobeCluster({ mapLocation, postsData, mount });
-  }, [postsData]);
-
-  useEffect(() => {
+  const pickLocationWithMarker = (clickedPostLocation: { latitude: number; longitude: number }) => {
     const OrangePinMarker = document.querySelector('.orange-pin-marker');
     if (OrangePinMarker) OrangePinMarker.remove();
 
-    if (clickedPostLocation && clickedPostLocation?.latitude !== null && clickedPostLocation?.longitude !== null) {
-      const imageMarker = document.createElement('div');
-      imageMarker.className = 'orange-pin-marker';
-      imageMarker.style.backgroundImage = `url(${pinFocus})`;
+    const marker = getHTMLElement({ type: CustomMarker.Orange, imgSrc: pinFocus });
+    const markerInstance = new mapboxgl.Marker(marker).setLngLat([clickedPostLocation.longitude, clickedPostLocation.latitude]);
+    markerInstance.addTo(map.current!);
+    map.current?.flyTo({
+      center: [clickedPostLocation.longitude, clickedPostLocation.latitude],
+      speed: 8,
+    });
+  };
 
-      const markerInstance = new mapboxgl.Marker(imageMarker).setLngLat([clickedPostLocation.longitude, clickedPostLocation.latitude]);
-      markerInstance.addTo(map.current!);
-      map.current?.flyTo({
-        center: [clickedPostLocation.longitude, clickedPostLocation.latitude],
-        speed: 8,
-      });
-    }
-  }, [clickedPostLocation]);
-
-  // 지역 검색에 필요한 코드
   useEffect(() => {
-    if (mapLocation) {
+    if (!clickedPostLocation) {
+      return;
     }
-  }, [mapLocation]);
+    pickLocationWithMarker(clickedPostLocation);
+  }, [clickedPostLocation]);
+  useEffect(() => {
+    GlobeCluster({ mapLocation, postsData, mount });
+  }, [postsData]);
 
   return <Styled.GlobeLayout ref={mapContainerRef} className="globeScroll" />;
 };
