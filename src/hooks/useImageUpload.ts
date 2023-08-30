@@ -8,7 +8,6 @@ import { useMapLocationStore } from '../zustand/useMapLocationStore';
 
 const useImageUpload = (userId: string) => {
   const [imgFile, setImgFile] = useState<string | null>(null);
-  // 여기 수정
   const [imgUrl, setImgUrl] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const imageLocation = useMapLocationStore(state => state.mapLocation);
@@ -40,7 +39,6 @@ const useImageUpload = (userId: string) => {
     setLoading(true);
 
     const originalMetadata = await exifr.parse(file);
-    console.log(originalMetadata);
     if (originalMetadata && originalMetadata.longitude && originalMetadata.latitude) {
       imageLocation.flyTo({ center: [originalMetadata.longitude, originalMetadata.latitude], zoom: 5 });
     }
