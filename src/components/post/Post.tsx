@@ -286,7 +286,7 @@ const Post = ({ type, unmount, postId }: PostProps) => {
           <Switch
             checked={switchChecked}
             onChange={setSwitchChecked}
-            leftText={'전체공유'}
+            leftText={'전체공개'}
             rightText={'나만보기'}
             width={'300px'}
             checkedtextcolor={'#353C49'}
@@ -317,7 +317,7 @@ const Post = ({ type, unmount, postId }: PostProps) => {
           <Switch
             checked={switchChecked}
             onChange={setSwitchChecked}
-            leftText={'전체공유'}
+            leftText={'전체공개'}
             rightText={'나만보기'}
             width={'300px'}
             checkedtextcolor={'#353C49'}
