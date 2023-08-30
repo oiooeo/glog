@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import * as Styled from './style';
 import { supabase } from '../../api/supabaseClient';
-import { uuid } from '@supabase/gotrue-js/dist/module/lib/helpers';
 import Switch from '../common/switch/Switch';
 import Button from '../common/button/Button';
 import useInput from '../../hooks/useInput';
@@ -12,15 +11,12 @@ import pin from '../../assets/pin/pinLarge.svg';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Detail from '../detail/Detail';
 import { getPostByUserId, getPostByPostId, deleteButton } from '../../api/supabaseDatabase';
-import imageCompression from 'browser-image-compression';
-import heic2any from 'heic2any';
 import GlobeSearch from '../globeSearch/GlobeSearch';
-import exifr from 'exifr';
 import ReactLoading from 'react-loading';
 import { useSessionStore } from '../../zustand/useSessionStore';
 import { useLocationStore } from '../../zustand/useLocationStore';
-import { useMapLocationStore } from '../../zustand/useMapLocationStore';
 import { usePostStore } from '../../zustand/usePostStore';
+import useImageUpload from '../../hooks/useImageUpload';
 
 type PostProps = {
   unmount: (name: string) => void;
@@ -42,15 +38,13 @@ const Post = ({ type, unmount, postId }: PostProps) => {
   const userId = session?.user.id;
   const imgRef = useRef<HTMLInputElement>(null);
   const [data, setData] = useState<any>(null);
-  const [imgFile, setImgFile] = useState<string>();
   const [here, setHere] = useState(false);
-  const [imgUrl, setImgUrl] = useState<string>(type === 'post' ? '' : data?.images);
   const [switchChecked, setSwitchChecked] = useState(type === 'post' ? false : data?.private);
   const [contents, handleChangeContents] = useInput(type === 'post' ? '' : data?.contents);
   const [location, setLocation] = useState({ longitude: 0, latitude: 0 });
   const [locationInfo, setLocationInfo] = useState<LocationInfoTypes>({ countryId: '', regionId: '', address: '' });
-  const imageLocation = useMapLocationStore(state => state.mapLocation);
-  const [loading, setLoading] = useState(false);
+
+  const { imgFile, imgUrl, loading, handleImageInputChange } = useImageUpload(userId!);
 
   const { mutate } = useMutation({
     mutationFn: async () => {
@@ -97,76 +91,19 @@ const Post = ({ type, unmount, postId }: PostProps) => {
     },
   });
 
-  const uploadImg = async (file: File) => {
-    const { data: storageData } = await supabase.storage.from('images').upload(`${userId}/${uuid()}`, file, {
-      cacheControl: '3600',
-      upsert: false,
-    });
-
-    const { data: publicUrlData } = supabase.storage.from('images').getPublicUrl(storageData?.path || '');
-    setImgUrl(publicUrlData.publicUrl);
-  };
-
-  const uploadImgFile = async (file: File) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      if (reader.result instanceof ArrayBuffer) {
-        const blob = new Blob([reader.result], { type: file.type });
-        const blobUrl = URL.createObjectURL(blob);
-        setImgFile(blobUrl);
-      }
-    };
-    reader.readAsArrayBuffer(file);
-    await uploadImg(file);
-  };
-
   const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
 
     const file = event.dataTransfer.files[0];
     if (file) {
-      await uploadImgFile(file);
+      await handleImageInputChange(file);
     }
   };
 
-  const handleImageInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageSubmit = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-
-    if (file) {
-      setLoading(true);
-
-      const originalMetadata = await exifr.parse(file);
-      if (originalMetadata && originalMetadata.longitude && originalMetadata.latitude) {
-        imageLocation.flyTo({ center: [originalMetadata.longitude, originalMetadata.latitude], zoom: 5 });
-      }
-
-      const options = {
-        maxSizeMB: 1,
-        useWebWorker: true,
-      };
-
-      const resizeFile = async (fileToResize: File) => {
-        try {
-          const compressedFile = await imageCompression(fileToResize, options);
-          await uploadImgFile(compressedFile);
-        } catch (error) {
-          console.error('Image compression error:', error);
-        }
-      };
-
-      if (file.type === 'image/heic' || file.type === 'image/HEIC') {
-        heic2any({ blob: file, toType: 'image/jpeg' }).then(function (resultBlob: any) {
-          const jpgFile = new File([resultBlob], file.name.split('.')[0] + '.jpg', {
-            type: 'image/jpeg',
-            lastModified: new Date().getTime(),
-          });
-          resizeFile(jpgFile);
-        });
-      } else {
-        console.log('No conversion needed. Using original file.');
-        resizeFile(file);
-      }
-    }
+    if (!file) return;
+    handleImageInputChange(file);
   };
 
   const getLocationInformation = async () => {
@@ -197,7 +134,6 @@ const Post = ({ type, unmount, postId }: PostProps) => {
     const postData = await getPostByPostId(postId);
     if (!postData) return;
     setData(postData);
-    setImgFile(postData.images);
     setLocation({ longitude: postData.longitude, latitude: postData.latitude });
     setSwitchChecked(postData.private);
     setLocationInfo({ countryId: postData.countryId!, regionId: postData.regionId!, address: postData.address! });
@@ -238,19 +174,19 @@ const Post = ({ type, unmount, postId }: PostProps) => {
                   </p>
                 </>
               ) : (
-                <Styled.ImgBox>
+                <>
                   <PiImageSquareFill size={'26px'} className="image" />
                   <p>
                     여기에 사진을
                     <br />
                     업로드 해주세요
                   </p>
-                </Styled.ImgBox>
+                </>
               )}
             </Styled.ImgBox>
           )}
         </label>
-        <input id="inputImg" type="file" accept="image/png, image/jpeg, image/jpg, image/HEIC, image/heic " onChange={handleImageInputChange} ref={imgRef} />
+        <input id="inputImg" type="file" accept="image/png, image/jpeg, image/jpg, image/HEIC, image/heic " onChange={handleImageSubmit} ref={imgRef} />
       </Styled.UploadBox>
 
       {type === 'post' && imgFile && (
@@ -266,7 +202,7 @@ const Post = ({ type, unmount, postId }: PostProps) => {
           ) : (
             <>
               <Styled.PinParagraph>
-                핀을 이동해서 <br /> 정확한 여행지를 알려주세요!
+                지구본을 움직여 <br /> 정확한 위치에 핀을 꽂아주세요!
               </Styled.PinParagraph>
               <Styled.Pin src={pin} alt="위치" />
               {clickedLocation.latitude === 0 || clickedLocation.longitude === 0 ? (
