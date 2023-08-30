@@ -40,6 +40,7 @@ const useImageUpload = (userId: string) => {
     setLoading(true);
 
     const originalMetadata = await exifr.parse(file);
+    console.log(originalMetadata);
     if (originalMetadata && originalMetadata.longitude && originalMetadata.latitude) {
       imageLocation.flyTo({ center: [originalMetadata.longitude, originalMetadata.latitude], zoom: 5 });
     }
