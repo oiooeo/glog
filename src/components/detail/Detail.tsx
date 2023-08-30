@@ -1,21 +1,20 @@
-import React from 'react';
 import * as Styled from './style';
-import { Tables } from '../../types/supabase';
 import { RiPencilLine } from 'react-icons/ri';
-import Like from '../like/Like';
+import { useSessionStore } from '../../zustand/useSessionStore';
+import { usePostStore } from '../../zustand/usePostStore';
 import { deleteButton } from '../../api/supabaseDatabase';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Post from '../post/Post';
-import { useSessionStore } from '../../zustand/useSessionStore';
-import { usePostStore } from '../../zustand/usePostStore';
+import Like from '../like/Like';
+
+import type { Tables } from '../../types/supabase';
 
 type DetailProps = {
   data: Tables<'posts'>;
-  contents?: string;
 };
 
-const Detail: React.FC<DetailProps> = ({ data }) => {
+const Detail = ({ data }: DetailProps) => {
   const queryClient = useQueryClient();
   const session = useSessionStore(state => state.session);
   const { leftMount, unmount } = useModal();
@@ -35,7 +34,6 @@ const Detail: React.FC<DetailProps> = ({ data }) => {
     leftMount('post', <Post type={'update'} unmount={unmount} postId={id} />);
     unmount('detail');
   };
-
   return (
     <Styled.DetailLayout>
       <Styled.DetailImageContainer>

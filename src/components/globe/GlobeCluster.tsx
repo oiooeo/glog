@@ -1,9 +1,8 @@
 import React from 'react';
-import { Tables } from '../../types/supabase';
-import LargePin from '../../assets/pin/LargePin.png';
-import mediumPin from '../../assets/pin/mideumPin.png';
-import smallPin from '../../assets/pin/smallPin.png';
 import Detail from '../detail/Detail';
+import { loadPinImage, pinImages, removeMapLayersAndSource } from './GlobeCluster.util';
+
+import type { Tables } from '../../types/supabase';
 
 interface Props {
   mapLocation: any;
@@ -12,37 +11,18 @@ interface Props {
   flyToLocation: (lng: number, lat: number) => void;
   postModalOpen: boolean;
 }
-interface Error {
-  error: Error | undefined;
-}
 
 export const globeCluster = ({ mapLocation, postsData, mount, flyToLocation, postModalOpen }: Props) => {
   const clusterData = postsData?.slice(5);
+
+  pinImages.forEach(({ name, url }) => loadPinImage(mapLocation, name, url));
+
   if (clusterData) {
     const getValue = mapLocation.getSource('pinPoint');
     if (getValue) {
-      mapLocation.removeLayer('unclustered-point');
-      mapLocation.removeLayer('cluster-pin');
-      mapLocation.removeSource('pinPoint');
+      removeMapLayersAndSource(mapLocation);
     }
-    mapLocation?.loadImage(`${LargePin}`, (error: Error | undefined, image: any) => {
-      if (error) throw error;
-      if (!mapLocation?.hasImage('LargePin')) {
-        mapLocation?.addImage('LargePin', image);
-      }
-    });
-    mapLocation?.loadImage(`${mediumPin}`, (error: Error | undefined, image: any) => {
-      if (error) throw error;
-      if (!mapLocation?.hasImage('mediumPin')) {
-        mapLocation?.addImage('mediumPin', image);
-      }
-    });
-    mapLocation?.loadImage(`${smallPin}`, (error: Error | undefined, image: any) => {
-      if (error) throw error;
-      if (!mapLocation?.hasImage('smallPin')) {
-        mapLocation?.addImage('smallPin', image);
-      }
-    });
+
     mapLocation?.addSource('pinPoint', {
       type: 'geojson',
       data: {
@@ -83,18 +63,19 @@ export const globeCluster = ({ mapLocation, postsData, mount, flyToLocation, pos
       },
     });
 
-    mapLocation.on('click', 'unclustered-point', async (e: any) => {
-      if (postsData) {
-        const postId = e.features[0].properties.cluster;
-        const unclusteredData = postsData.filter(item => item.id === postId);
-        mount('detail', <Detail data={unclusteredData[0]} />);
-        flyToLocation(unclusteredData[0].longitude, unclusteredData[0].latitude);
-      }
-    });
+    mapLocation.on('click', 'unclustered-point', handleUnclusteredPointClick);
   }
+
   if (postModalOpen) {
-    mapLocation.removeLayer('unclustered-point');
-    mapLocation.removeLayer('cluster-pin');
-    mapLocation.removeSource('pinPoint');
+    removeMapLayersAndSource(mapLocation);
+  }
+
+  function handleUnclusteredPointClick(e: any) {
+    if (postsData) {
+      const postId = e.features[0].properties.cluster;
+      const unclusteredData = postsData.filter(item => item.id === postId);
+      mount('detail', <Detail data={unclusteredData[0]} />);
+      flyToLocation(unclusteredData[0].longitude, unclusteredData[0].latitude);
+    }
   }
 };
