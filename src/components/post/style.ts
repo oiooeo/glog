@@ -99,8 +99,8 @@ export const Pin = styled.img`
   position: fixed;
   top: 50%;
   left: 50%;
-  width: 70px;
-  height: 70px;
+  width: 50px;
+  height: 50px;
   transform: translate(-50%, -50%);
 `;
 

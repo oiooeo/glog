@@ -2,12 +2,12 @@ import { styled } from 'styled-components';
 
 export const FooterWrapper = styled.footer`
   position: fixed;
-  bottom: 0;
+  bottom: 30px;
   display: flex;
   justify-content: center;
   background-color: transparent;
   width: 100%;
-  height: 100px;
+  height: fit-content;
   z-index: 98;
 `;
 
