@@ -26,8 +26,7 @@ const GlobeSearch = () => {
     enabled: false,
   });
 
-  const handleSearch = (searchValue: string) => {
-    setValue(searchValue);
+  const handleSearch = (value: string) => {
     refetch();
   };
 
