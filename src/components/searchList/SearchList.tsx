@@ -4,9 +4,10 @@ import * as Styled from './style';
 import { useQuery } from '@tanstack/react-query';
 import { getMyPosts, getPosts } from '../../api/supabaseDatabase';
 import { Tables } from '../../types/supabase';
-import { useSessionStore, useTabStore } from '../../zustand/store';
 import { signin } from '../../api/supabaseAuth';
 import ReactLoading from 'react-loading';
+import { useSessionStore } from '../../zustand/useSessionStore';
+import { useTabStore } from '../../zustand/useTabStore';
 
 type SearchListProps = {
   keyword: string;

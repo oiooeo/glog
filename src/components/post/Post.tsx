@@ -6,7 +6,6 @@ import { uuid } from '@supabase/gotrue-js/dist/module/lib/helpers';
 import Switch from '../common/switch/Switch';
 import Button from '../common/button/Button';
 import useInput from '../../hooks/useInput';
-import { useLocationStore, useMapLocationStore, usePostStore, useSessionStore } from '../../zustand/store';
 import toast from 'react-simple-toasts';
 import { PiImageSquareFill } from 'react-icons/pi';
 import pin from '../../assets/pin/pinLarge.svg';
@@ -18,6 +17,10 @@ import heic2any from 'heic2any';
 import GlobeSearch from '../globeSearch/GlobeSearch';
 import exifr from 'exifr';
 import ReactLoading from 'react-loading';
+import { useSessionStore } from '../../zustand/useSessionStore';
+import { useLocationStore } from '../../zustand/useLocationStore';
+import { useMapLocationStore } from '../../zustand/useMapLocationStore';
+import { usePostStore } from '../../zustand/usePostStore';
 
 type PostProps = {
   unmount: (name: string) => void;

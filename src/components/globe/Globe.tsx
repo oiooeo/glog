@@ -1,13 +1,16 @@
 import React, { useRef, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
 import * as Styled from './style';
-import { useClickedPostStore, useLocationStore, useMapLocationStore, usePostStore } from '../../zustand/store';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Detail from '../detail/Detail';
 import { Tables } from '../../types/supabase';
 import pinFocus from '../../assets/pin/pinFocus.svg';
 import { CustomMarker, getHTMLElement } from './globe.util';
 import { globeCluster } from './GlobeCluster';
+import { useLocationStore } from '../../zustand/useLocationStore';
+import { useMapLocationStore } from '../../zustand/useMapLocationStore';
+import { usePostStore } from '../../zustand/usePostStore';
+import { useClickedPostStore } from '../../zustand/useClickedPostStore';
 
 interface MapProps {
   initialCenter: [number, number];

@@ -3,11 +3,12 @@ import * as Styled from './style';
 import { Tables } from '../../types/supabase';
 import { RiPencilLine } from 'react-icons/ri';
 import Like from '../like/Like';
-import { usePostStore, useSessionStore } from '../../zustand/store';
 import { deleteButton } from '../../api/supabaseDatabase';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Post from '../post/Post';
+import { useSessionStore } from '../../zustand/useSessionStore';
+import { usePostStore } from '../../zustand/usePostStore';
 
 type DetailProps = {
   data: Tables<'posts'>;
