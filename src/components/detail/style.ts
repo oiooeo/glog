@@ -20,12 +20,6 @@ export const DetailImageContainer = styled.div`
   border-radius: 20px 20px 0 0;
 `;
 
-export const DetailImage = styled.img`
-  width: 300px;
-  height: 300px;
-  object-fit: cover;
-`;
-
 export const LocationParagraph = styled.p`
   position: absolute;
   top: 20px;
@@ -56,6 +50,12 @@ export const EditButton = styled.button`
   & > .edit {
     color: rgba(204, 207, 211, 0.8);
   }
+`;
+
+export const DetailImage = styled.img`
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
 `;
 
 export const DetailContainer = styled.div`

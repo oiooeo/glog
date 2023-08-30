@@ -1,4 +1,3 @@
-import React from 'react';
 import * as Styled from './style';
 import { Tables } from '../../types/supabase';
 import { RiPencilLine } from 'react-icons/ri';
@@ -12,10 +11,9 @@ import { usePostStore } from '../../zustand/usePostStore';
 
 type DetailProps = {
   data: Tables<'posts'>;
-  contents?: string;
 };
 
-const Detail: React.FC<DetailProps> = ({ data }) => {
+const Detail = ({ data }:DetailProps) => {
   const queryClient = useQueryClient();
   const session = useSessionStore(state => state.session);
   const { leftMount, unmount } = useModal();
@@ -35,7 +33,6 @@ const Detail: React.FC<DetailProps> = ({ data }) => {
     leftMount('post', <Post type={'update'} unmount={unmount} postId={id} />);
     unmount('detail');
   };
-
   return (
     <Styled.DetailLayout>
       <Styled.DetailImageContainer>
@@ -55,7 +52,7 @@ const Detail: React.FC<DetailProps> = ({ data }) => {
       </Styled.DetailImageContainer>
 
       <Styled.DetailContainer>
-        <Styled.NameParagraph>{(data as any).user.name}</Styled.NameParagraph>
+        <Styled.NameParagraph>{(data as any) .user.name}</Styled.NameParagraph>
         <Styled.ContentsParagraph>{data.contents}</Styled.ContentsParagraph>
         <Styled.TimeParagraph>
           {new Intl.DateTimeFormat('ko-KR', {
