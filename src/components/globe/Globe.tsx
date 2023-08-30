@@ -11,14 +11,13 @@ import { useLocationStore } from '../../zustand/useLocationStore';
 import { useMapLocationStore } from '../../zustand/useMapLocationStore';
 import { usePostStore } from '../../zustand/usePostStore';
 import { useClickedPostStore } from '../../zustand/useClickedPostStore';
+import { INITIAL_CENTER, ZOOM } from './Globe.content';
 
 interface MapProps {
-  initialCenter: [number, number];
-  zoom: number;
   postsData: Tables<'posts'>[] | undefined;
 }
 
-const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
+const Globe: React.FC<MapProps> = ({ postsData }) => {
   mapboxgl.accessToken = process.env.REACT_APP_ACCESS_TOKEN ? process.env.REACT_APP_ACCESS_TOKEN : '';
   const { mount } = useModal();
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -32,11 +31,11 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
       map.current = new mapboxgl.Map({
         container: mapContainerRef.current,
         style: 'mapbox://styles/yoon1103/cllpvs4xd002s01rfflaa66x3',
-        center: initialCenter,
-        zoom: zoom,
+        center: INITIAL_CENTER,
+        zoom: ZOOM,
       });
     }
-  }, [initialCenter, zoom]);
+  }, []);
 
   useEffect(() => {
     map.current?.on('moveend', () => {
