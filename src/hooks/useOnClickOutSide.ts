@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useClickedPostStore } from '../zustand/store';
+import { useClickedPostStore } from '../zustand/useClickedPostStore';
 
 const useOnClickOutside = (ref: React.RefObject<HTMLElement>, handler: (event: MouseEvent | TouchEvent) => void) => {
   useEffect(() => {

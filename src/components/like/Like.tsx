@@ -4,8 +4,8 @@ import { BsHeart, BsHeartFill } from 'react-icons/bs';
 import { Tables } from '../../types/supabase';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../api/supabaseClient';
-import { useSessionStore } from '../../zustand/store';
 import { getIsLike } from '../../api/supabaseDatabase';
+import { useSessionStore } from '../../zustand/useSessionStore';
 
 type LikeProps = { data: Tables<'posts'> };
 

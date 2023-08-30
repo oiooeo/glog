@@ -5,7 +5,7 @@ import { Tables } from '../../../types/supabase';
 import useOnClickOutside from '../../../hooks/useOnClickOutSide';
 import Detail from '../../detail/Detail';
 import { signin } from '../../../api/supabaseAuth';
-import { useClickedPostStore } from '../../../zustand/store';
+import { useClickedPostStore } from '../../../zustand/useClickedPostStore';
 
 type PostItemProps = { data: Tables<'posts'>; lastItem?: boolean };
 
