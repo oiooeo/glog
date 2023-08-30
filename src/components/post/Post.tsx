@@ -17,6 +17,7 @@ import { useSessionStore } from '../../zustand/useSessionStore';
 import { useLocationStore } from '../../zustand/useLocationStore';
 import { usePostStore } from '../../zustand/usePostStore';
 import useImageUpload from '../../hooks/useImageUpload';
+import UploadBox from './Post.UploadBox';
 
 type PostProps = {
   unmount: (name: string) => void;
@@ -158,36 +159,7 @@ const Post = ({ type, unmount, postId }: PostProps) => {
 
   return (
     <Styled.PostLayout>
-      <Styled.UploadBox onDragEnter={event => event.preventDefault()} onDragOver={event => event.preventDefault()} onDragLeave={event => event.preventDefault()} onDrop={handleDrop}>
-        <label htmlFor="inputImg">
-          {imgFile ? (
-            <Styled.UploadImgFile src={imgFile} alt="이미지 업로드" />
-          ) : (
-            <Styled.ImgBox>
-              {loading ? (
-                <>
-                  <ReactLoading type="spin" color="#ffffff" width={'50px'} />
-                  <p>
-                    사진 업로드 중 ...
-                    <br />
-                    잠시만 기다려주세요!
-                  </p>
-                </>
-              ) : (
-                <>
-                  <PiImageSquareFill size={'26px'} className="image" />
-                  <p>
-                    여기에 사진을
-                    <br />
-                    업로드 해주세요
-                  </p>
-                </>
-              )}
-            </Styled.ImgBox>
-          )}
-        </label>
-        <input id="inputImg" type="file" accept="image/png, image/jpeg, image/jpg, image/HEIC, image/heic " onChange={handleImageSubmit} ref={imgRef} />
-      </Styled.UploadBox>
+      <UploadBox imgFile={imgFile} loading={loading} handleImageInputChange={handleImageInputChange} handleImageSubmit={handleImageSubmit} imgRef={imgRef} handleDrop={handleDrop} />
 
       {type === 'post' && imgFile && (
         <>
