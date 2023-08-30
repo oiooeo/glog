@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import Globe from '../components/globe/Globe';
 import { getMyPosts, getPosts } from '../api/supabaseDatabase';
 import { useQuery } from '@tanstack/react-query';
-import { useSessionStore, useTabStore } from '../zustand/store';
 import { Tables } from '../types/supabase';
+import { useSessionStore } from '../zustand/useSessionStore';
+import { useTabStore } from '../zustand/useTabStore';
 
 const Home = () => {
   const initialCenter: [number, number] = [126.958692133901, 37.5175237576854];

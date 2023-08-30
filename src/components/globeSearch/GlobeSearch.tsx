@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useMapLocationStore } from '../../zustand/store';
 import { getSearchData } from '../../api/mapbox';
 import { useQuery } from '@tanstack/react-query';
 import SearchBox from './SearchBox';
+import { useMapLocationStore } from '../../zustand/useMapLocationStore';
 
 interface SearchResult {
   boundingbox: string[];

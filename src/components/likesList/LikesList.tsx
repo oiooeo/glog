@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import PostItem from '../common/postItem/PostItem';
-import { useSessionStore } from '../../zustand/store';
 import { getLikes, getPosts } from '../../api/supabaseDatabase';
 import { Tables } from '../../types/supabase';
 import * as Styled from './style';
 import ReactLoading from 'react-loading';
+import { useSessionStore } from '../../zustand/useSessionStore';
 
 const LikesList = () => {
   const session = useSessionStore(state => state.session);

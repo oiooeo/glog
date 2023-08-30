@@ -11,11 +11,12 @@ import SearchList from '../../searchList/SearchList';
 import { User } from '@supabase/supabase-js';
 import { addNewUser } from '../../../api/supabaseDatabase';
 import Post from '../../post/Post';
-import { usePostStore, useSessionStore, useTabStore } from '../../../zustand/store';
 import useInput from '../../../hooks/useInput';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../../assets/logo.svg';
-import toast from 'react-simple-toasts';
+import { useSessionStore } from '../../../zustand/useSessionStore';
+import { usePostStore } from '../../../zustand/usePostStore';
+import { useTabStore } from '../../../zustand/useTabStore';
 
 const Header = () => {
   const [user, setUser] = useState<User>();
