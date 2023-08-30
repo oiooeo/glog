@@ -2,10 +2,8 @@ import React, { useRef, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
 import * as Styled from './style';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
-import Detail from '../detail/Detail';
 import { Tables } from '../../types/supabase';
-import pinFocus from '../../assets/pin/pinFocus.svg';
-import { CustomMarker, getHTMLElement } from './globe.util';
+import { pickImageMarker, pickLocationWithMarker } from './globe.util';
 import { globeCluster } from './GlobeCluster';
 import { useLocationStore } from '../../zustand/useLocationStore';
 import { useMapLocationStore } from '../../zustand/useMapLocationStore';
@@ -17,7 +15,7 @@ interface MapProps {
   postsData: Tables<'posts'>[] | undefined;
 }
 
-const Globe: React.FC<MapProps> = ({ postsData }) => {
+const Globe = ({ postsData }: MapProps) => {
   mapboxgl.accessToken = process.env.REACT_APP_ACCESS_TOKEN ? process.env.REACT_APP_ACCESS_TOKEN : '';
   const { mount } = useModal();
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -35,9 +33,6 @@ const Globe: React.FC<MapProps> = ({ postsData }) => {
         zoom: ZOOM,
       });
     }
-  }, []);
-
-  useEffect(() => {
     map.current?.on('moveend', () => {
       const watchingLat = map.current?.getCenter().lat;
       const watchingLng = map.current?.getCenter().lng;
@@ -49,11 +44,8 @@ const Globe: React.FC<MapProps> = ({ postsData }) => {
 
       useLocationStore.getState().setClickedLocation(clickedLocation);
     });
-
-    if (map) {
-      useMapLocationStore.getState().setMapLocation(map.current);
-    }
-  }, [map]);
+    useMapLocationStore.getState().setMapLocation(map.current);
+  }, []);
 
   const flyToLocation = (lng: number, lat: number) => {
     const zoomSize = map.current?.getZoom();
@@ -64,38 +56,18 @@ const Globe: React.FC<MapProps> = ({ postsData }) => {
     });
   };
 
-  const pickImageMarker = (postData: Tables<'posts'>) => {
-    const marker = getHTMLElement({ type: CustomMarker.Image, imgSrc: postData.images });
-    const markerInstance = new mapboxgl.Marker(marker).setLngLat([postData.longitude, postData.latitude]);
-    markerInstance.addTo(map.current!);
-
-    marker.addEventListener('click', async () => {
-      mount('detail', <Detail data={postData} />);
-      flyToLocation(postData.longitude, postData.latitude);
-    });
-  };
-
   useEffect(() => {
     if (postsData && postsData.length !== 0 && !isPostModalOpened) {
       const sortedData = [...postsData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-      if (sortedData.length > 6) {
-        const imageMarkers = document.querySelectorAll('.image-marker');
-        imageMarkers.forEach(marker => marker.remove());
+      const markerCount = Math.min(sortedData.length, 6);
 
-        for (let i = 0; i < 6; i++) {
-          const postData = sortedData[i];
-          if (!postData) return;
-          pickImageMarker(postData);
-        }
-      } else {
-        const imageMarkers = document.querySelectorAll('.image-marker');
-        imageMarkers.forEach(marker => marker.remove());
+      const imageMarkers = document.querySelectorAll('.image-marker');
+      imageMarkers.forEach(marker => marker.remove());
 
-        for (let i = 0; i < sortedData.length; i++) {
-          const postData = sortedData[i];
-          if (!postData) return;
-          pickImageMarker(postData);
-        }
+      for (let i = 0; i < markerCount; i++) {
+        const postData = sortedData[i];
+        if (!postData) return;
+        pickImageMarker(map, mount, flyToLocation, postData);
       }
     } else if (isPostModalOpened) {
       const imageMarkers = document.querySelectorAll('.image-marker');
@@ -103,24 +75,10 @@ const Globe: React.FC<MapProps> = ({ postsData }) => {
     }
   }, [mount, postsData, isPostModalOpened]);
 
-  const pickLocationWithMarker = (clickedPostLocation: { latitude: number; longitude: number }) => {
-    const OrangePinMarker = document.querySelector('.orange-pin-marker');
-    if (OrangePinMarker) OrangePinMarker.remove();
-
-    const marker = getHTMLElement({ type: CustomMarker.Orange, imgSrc: pinFocus });
-    const markerInstance = new mapboxgl.Marker(marker).setLngLat([clickedPostLocation.longitude, clickedPostLocation.latitude]);
-    markerInstance.addTo(map.current!);
-    map.current?.flyTo({
-      center: [clickedPostLocation.longitude, clickedPostLocation.latitude],
-      speed: 8,
-    });
-  };
-
   useEffect(() => {
-    if (!clickedPostLocation) {
-      return;
+    if (clickedPostLocation) {
+      pickLocationWithMarker(map, clickedPostLocation);
     }
-    pickLocationWithMarker(clickedPostLocation);
   }, [clickedPostLocation]);
 
   useEffect(() => {

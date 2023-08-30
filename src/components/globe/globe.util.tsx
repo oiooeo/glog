@@ -1,11 +1,18 @@
 import React from 'react';
+import mapboxgl from 'mapbox-gl';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { ImageMarker, OrangeMarker } from './Globe.marker';
+import Detail from '../detail/Detail';
+import { ReactNode } from 'react';
+import pinFocus from '../../assets/pin/pinFocus.svg';
 
+import type { Tables } from '../../types/supabase';
 export enum CustomMarker {
   Orange,
   Image,
 }
+type MapRef = React.MutableRefObject<mapboxgl.Map | null>;
+type Mount = (name: string, element: ReactNode) => void;
 
 const err = (n: never) => {
   return n;
@@ -29,4 +36,28 @@ export const getHTMLElement = ({ type, imgSrc }: { type: CustomMarker; imgSrc: s
   imageMarker.innerHTML = el;
 
   return imageMarker.firstChild as HTMLElement;
+};
+
+export const pickImageMarker = (map: MapRef, mount: Mount, flyToLocation: (lng: number, lat: number) => void, postData: Tables<'posts'>) => {
+  const marker = getHTMLElement({ type: CustomMarker.Image, imgSrc: postData.images });
+  const markerInstance = new mapboxgl.Marker(marker).setLngLat([postData.longitude, postData.latitude]);
+  markerInstance.addTo(map.current!);
+
+  marker.addEventListener('click', async () => {
+    mount('detail', <Detail data={postData} />);
+    flyToLocation(postData.longitude, postData.latitude);
+  });
+};
+
+export const pickLocationWithMarker = (map: MapRef, clickedPostLocation: { latitude: number; longitude: number }) => {
+  const OrangePinMarker = document.querySelector('.orange-pin-marker');
+  if (OrangePinMarker) OrangePinMarker.remove();
+
+  const marker = getHTMLElement({ type: CustomMarker.Orange, imgSrc: pinFocus });
+  const markerInstance = new mapboxgl.Marker(marker).setLngLat([clickedPostLocation.longitude, clickedPostLocation.latitude]);
+  markerInstance.addTo(map.current!);
+  map.current?.flyTo({
+    center: [clickedPostLocation.longitude, clickedPostLocation.latitude],
+    speed: 8,
+  });
 };
