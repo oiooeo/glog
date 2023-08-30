@@ -1,19 +1,20 @@
 import * as Styled from './style';
-import { Tables } from '../../types/supabase';
 import { RiPencilLine } from 'react-icons/ri';
-import Like from '../like/Like';
+import { useSessionStore } from '../../zustand/useSessionStore';
+import { usePostStore } from '../../zustand/usePostStore';
 import { deleteButton } from '../../api/supabaseDatabase';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Post from '../post/Post';
-import { useSessionStore } from '../../zustand/useSessionStore';
-import { usePostStore } from '../../zustand/usePostStore';
+import Like from '../like/Like';
+
+import type { Tables } from '../../types/supabase';
 
 type DetailProps = {
   data: Tables<'posts'>;
 };
 
-const Detail = ({ data }:DetailProps) => {
+const Detail = ({ data }: DetailProps) => {
   const queryClient = useQueryClient();
   const session = useSessionStore(state => state.session);
   const { leftMount, unmount } = useModal();
@@ -52,7 +53,7 @@ const Detail = ({ data }:DetailProps) => {
       </Styled.DetailImageContainer>
 
       <Styled.DetailContainer>
-        <Styled.NameParagraph>{(data as any) .user.name}</Styled.NameParagraph>
+        <Styled.NameParagraph>{(data as any).user.name}</Styled.NameParagraph>
         <Styled.ContentsParagraph>{data.contents}</Styled.ContentsParagraph>
         <Styled.TimeParagraph>
           {new Intl.DateTimeFormat('ko-KR', {
