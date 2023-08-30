@@ -24,6 +24,7 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
   const [myData, setMyData] = useState<Tables<'posts'>[]>();
   const tab = useTabStore(state => state.tab);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     async function fetchMyPosts() {
       try {
@@ -56,15 +57,6 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
       setKey(keyword);
     } else setKey('');
   }, [keyword, isSearchListOpened]);
-
-  // useEffect(() => {
-  //   if (data) {
-  //     const filteredData = data?.filter(item => item.countryId?.includes(key) || item.regionId?.includes(key) || item.address?.includes(key));
-  //     const sortedData = [...filteredData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-
-  //     setSearchResult(sortedData);
-  //   }
-  // }, [data, key]);
 
   useEffect(() => {
     const searchData = data?.filter(item => item.countryId?.includes(key) || item.regionId?.includes(key) || item.address?.includes(key));

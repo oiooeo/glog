@@ -3,7 +3,7 @@ import { AuthError, signin, signout } from '../../../api/supabaseAuth';
 import { supabase } from '../../../api/supabaseClient';
 import * as Styled from './style';
 import { BsPlusCircle, BsXCircle } from 'react-icons/bs';
-import { BiSearch, BiHeart } from 'react-icons/bi';
+import { BiSearch, BiHeart, BiSolidHeart } from 'react-icons/bi';
 import Switch from '../switch/Switch';
 import { useModal } from '../overlay/modal/Modal.hooks';
 import LikesList from '../../likesList/LikesList';
@@ -136,11 +136,7 @@ const Header = () => {
     closeSearchList();
     setIsLikeListOpened(true);
     rightMount('likesList', <LikesList />);
-    useTabStore.getState().setTab('like');
-  };
-
-  const openLoginToast = () => {
-    toast('로그인 해주세요!', { className: 'login-alert', position: 'top-right' });
+    // useTabStore.getState().setTab('like');
   };
 
   return (
@@ -195,12 +191,12 @@ const Header = () => {
             {isLikeListOpened ? (
               <>
                 <Styled.CircleButton onClick={closeLikesList}>
-                  <BsXCircle size={'22px'} />
+                  <BiSolidHeart size={'22px'} />
                 </Styled.CircleButton>
               </>
             ) : (
               <>
-                <Styled.CircleButton onClick={session ? openLikesList : openLoginToast}>
+                <Styled.CircleButton onClick={session ? openLikesList : signinHandler}>
                   <BiHeart size={'22px'} />
                 </Styled.CircleButton>
               </>
