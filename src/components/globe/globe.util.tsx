@@ -50,7 +50,6 @@ export const pickImageMarker = (map: MapRef, mount: Mount, flyToLocation: (lng: 
 };
 
 export const pickLocationWithMarker = (map: MapRef, clickedPostLocation: { latitude: number; longitude: number }) => {
-  console.log('hi');
   const OrangePinMarker = document.querySelector('.orange-pin-marker');
   if (OrangePinMarker) OrangePinMarker.remove();
 

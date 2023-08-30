@@ -9,14 +9,13 @@ import { useLocationStore } from '../../zustand/useLocationStore';
 import { useMapLocationStore } from '../../zustand/useMapLocationStore';
 import { usePostStore } from '../../zustand/usePostStore';
 import { useClickedPostStore } from '../../zustand/useClickedPostStore';
+import { INITIAL_CENTER, ZOOM } from './Globe.content';
 
 interface MapProps {
-  initialCenter: [number, number];
-  zoom: number;
   postsData: Tables<'posts'>[] | undefined;
 }
 
-const Globe = ({ initialCenter, zoom, postsData }: MapProps) => {
+const Globe = ({ postsData }: MapProps) => {
   mapboxgl.accessToken = process.env.REACT_APP_ACCESS_TOKEN ? process.env.REACT_APP_ACCESS_TOKEN : '';
   const { mount } = useModal();
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -30,8 +29,8 @@ const Globe = ({ initialCenter, zoom, postsData }: MapProps) => {
       map.current = new mapboxgl.Map({
         container: mapContainerRef.current,
         style: 'mapbox://styles/yoon1103/cllpvs4xd002s01rfflaa66x3',
-        center: initialCenter,
-        zoom: zoom,
+        center: INITIAL_CENTER,
+        zoom: ZOOM,
       });
     }
     map.current?.on('moveend', () => {
@@ -46,7 +45,7 @@ const Globe = ({ initialCenter, zoom, postsData }: MapProps) => {
       useLocationStore.getState().setClickedLocation(clickedLocation);
     });
     useMapLocationStore.getState().setMapLocation(map.current);
-  }, [initialCenter, zoom]);
+  }, []);
 
   const flyToLocation = (lng: number, lat: number) => {
     const zoomSize = map.current?.getZoom();
