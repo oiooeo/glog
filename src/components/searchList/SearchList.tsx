@@ -6,6 +6,7 @@ import { getMyPosts, getPosts } from '../../api/supabaseDatabase';
 import { Tables } from '../../types/supabase';
 import { useSessionStore, useTabStore } from '../../zustand/store';
 import { signin } from '../../api/supabaseAuth';
+import ReactLoading from 'react-loading';
 
 type SearchListProps = {
   keyword: string;
@@ -39,7 +40,6 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
   }, [session]);
 
   useEffect(() => {
-    console.log(tab);
     if (tab === 'explore') {
       setData(postsData);
       scrollToTop();
@@ -119,7 +119,11 @@ const SearchList: React.FC<SearchListProps> = ({ keyword, isSearchListOpened }) 
               <PostItem key={item.id} data={item} />
             ))}
           </Styled.ScrollDiv>
-          {loading && <Styled.LoadingDiv>Loading..</Styled.LoadingDiv>}
+          {loading && (
+            <Styled.LoadingDiv>
+              <ReactLoading type="spin" color="#ffffff" width={'50px'} />
+            </Styled.LoadingDiv>
+          )}
         </>
       ) : (
         <>

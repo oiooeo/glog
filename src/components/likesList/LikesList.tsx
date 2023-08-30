@@ -4,6 +4,7 @@ import { useSessionStore } from '../../zustand/store';
 import { getLikes, getPosts } from '../../api/supabaseDatabase';
 import { Tables } from '../../types/supabase';
 import * as Styled from './style';
+import ReactLoading from 'react-loading';
 
 const LikesList = () => {
   const session = useSessionStore(state => state.session);
@@ -61,7 +62,11 @@ const LikesList = () => {
           <PostItem key={post.id} data={post} />
         ))}
       </Styled.scrollDiv>
-      {loading && <Styled.loadingDiv>Loading..</Styled.loadingDiv>}
+      {loading && (
+        <Styled.LoadingDiv>
+          <ReactLoading type="spin" color="#ffffff" width={'50px'} />
+        </Styled.LoadingDiv>
+      )}
     </>
   );
 };
