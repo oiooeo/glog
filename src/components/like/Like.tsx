@@ -1,80 +1,45 @@
 import React from 'react';
 import * as Styled from './style';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
-import { Tables } from '../../types/supabase';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '../../api/supabaseClient';
+import { useQuery } from '@tanstack/react-query';
 import { getIsLike } from '../../api/supabaseDatabase';
 import { useSessionStore } from '../../zustand/useSessionStore';
+import { AuthError, signin } from '../../api/supabaseAuth';
+import { useLikeMutation } from './Like.hooks';
+import { Tables } from '../../types/supabase';
 
 type LikeProps = { data: Tables<'posts'> };
 
-const Like: React.FC<LikeProps> = ({ data }) => {
-  const queryClient = useQueryClient();
+const Like = ({ data }: LikeProps) => {
   const session = useSessionStore(state => state.session);
-
   const { data: likesData } = useQuery(['getIsLike', data.id], () => getIsLike(data.id));
   const isLiked = likesData?.some(like => like.userId === session?.user.id);
-  const myLikedData = likesData?.filter(like => like.userId === session?.user.id)[0];
+  const myLikedData = likesData?.find(like => like.userId === session?.user.id);
+  const { deleteLikeMutation, addLikeMutation, updatePostLikeMutation } = useLikeMutation();
 
-  const { mutate: plusLikesMutate } = useMutation({
-    mutationFn: async () => {
-      await supabase.from('likes').insert({
-        postId: data.id,
-        userId: session?.user.id,
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['getIsLike']);
-    },
-  });
+  const signinHandler = async () => {
+    try {
+      await signin();
+    } catch (error) {
+      if (error instanceof AuthError) {
+        alert({ type: 'alert', title: '로그인 실패', content: error.message });
+      }
+    }
+  };
 
-  const { mutate: plusPostsMutate } = useMutation({
-    mutationFn: async () => {
-      await supabase
-        .from('posts')
-        .update({
-          likes: data.likes + 1,
-        })
-        .eq('id', data.id);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['getPosts']);
-    },
-  });
+  const pressLike = async () => {
+    if (!session) {
+      signinHandler();
+      return;
+    }
 
-  const { mutate: minusLikesMutate } = useMutation({
-    mutationFn: async () => {
-      await supabase.from('likes').delete().eq('id', myLikedData?.id);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['getIsLike']);
-    },
-  });
-
-  const { mutate: minusPostsMutate } = useMutation({
-    mutationFn: async () => {
-      await supabase
-        .from('posts')
-        .update({
-          likes: data.likes - 1,
-        })
-        .eq('id', data.id);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['getPosts']);
-    },
-  });
-
-  const pressLike = () => {
-    if (session && isLiked) {
-      minusLikesMutate();
-      minusPostsMutate();
-    } else if (session && !isLiked) {
-      plusLikesMutate();
-      plusPostsMutate();
+    if (isLiked) {
+      if (!myLikedData) return;
+      await deleteLikeMutation.mutateAsync(myLikedData?.id);
+      await updatePostLikeMutation.mutateAsync({ newLikes: data.likes - 1, id: data.id });
     } else {
-      console.log('로그인하세요!');
+      await addLikeMutation.mutateAsync({ postId: data.id, userId: session.user.id });
+      await updatePostLikeMutation.mutateAsync({ newLikes: data.likes + 1, id: data.id });
     }
   };
 

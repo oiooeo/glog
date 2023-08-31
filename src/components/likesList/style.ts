@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-export const scrollDiv = styled.div`
+export const ScrollDiv = styled.div`
   overflow-y: scroll;
   height: 100%;
   &::-webkit-scrollbar {
