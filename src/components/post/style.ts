@@ -27,9 +27,9 @@ export const ImgBox = styled.div`
   & > p {
     color: #ffffff;
     text-align: center;
-    font-size: 18px;
-    font-weight: 300;
-    line-height: 22px;
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 25px;
   }
 `;
 

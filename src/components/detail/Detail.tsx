@@ -1,5 +1,5 @@
 import * as Styled from './style';
-import { RiPencilLine } from 'react-icons/ri';
+import { SlPencil } from 'react-icons/sl';
 import { useSessionStore } from '../../zustand/useSessionStore';
 import { usePostStore } from '../../zustand/usePostStore';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
@@ -21,7 +21,7 @@ const Detail = ({ data }: DetailProps) => {
     leftMount('post', <Post type={'update'} unmount={unmount} postId={id} />);
     unmount('detail');
   };
-  
+
   return (
     <Styled.DetailLayout>
       <Styled.DetailImageContainer>
@@ -33,7 +33,7 @@ const Detail = ({ data }: DetailProps) => {
         </Styled.LikeBox>
         {session?.user.id === data.userId && (
           <Styled.EditButton>
-            <RiPencilLine size={'24px'} className="edit" onClick={() => openUpdate(data.id)} />
+            <SlPencil size={'20px'} className="edit" onClick={() => openUpdate(data.id)} />
           </Styled.EditButton>
         )}
         <Styled.DetailImage src={data.images!} alt={`Image for ${data.contents}`} />
