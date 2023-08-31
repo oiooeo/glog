@@ -2,21 +2,17 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import * as Styled from './style';
 import { supabase } from '../../api/supabaseClient';
-import Switch from '../common/switch/Switch';
-import Button from '../common/button/Button';
 import useInput from '../../hooks/useInput';
 import toast from 'react-simple-toasts';
-import { PiImageSquareFill } from 'react-icons/pi';
-import pin from '../../assets/pin/pinLarge.svg';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Detail from '../detail/Detail';
 import { getPostByUserId, getPostByPostId, deleteButton } from '../../api/supabaseDatabase';
-import GlobeSearch from '../globeSearch/GlobeSearch';
-import ReactLoading from 'react-loading';
 import { useSessionStore } from '../../zustand/useSessionStore';
 import { useLocationStore } from '../../zustand/useLocationStore';
 import { usePostStore } from '../../zustand/usePostStore';
 import useImageUpload from '../../hooks/useImageUpload';
+import UploadBox from './Post.UploadBox';
+import ContentsSection from './Post.ContentsSection';
 
 type PostProps = {
   unmount: (name: string) => void;
@@ -24,7 +20,7 @@ type PostProps = {
   postId?: string;
 };
 
-type LocationInfoTypes = {
+export type LocationInfoTypes = {
   countryId: string | null;
   regionId: string | null;
   address: string | null;
@@ -158,128 +154,23 @@ const Post = ({ type, unmount, postId }: PostProps) => {
 
   return (
     <Styled.PostLayout>
-      <Styled.UploadBox onDragEnter={event => event.preventDefault()} onDragOver={event => event.preventDefault()} onDragLeave={event => event.preventDefault()} onDrop={handleDrop}>
-        <label htmlFor="inputImg">
-          {imgFile ? (
-            <Styled.UploadImgFile src={imgFile} alt="이미지 업로드" />
-          ) : (
-            <Styled.ImgBox>
-              {loading ? (
-                <>
-                  <ReactLoading type="spin" color="#ffffff" width={'50px'} />
-                  <p>
-                    사진 업로드 중 ...
-                    <br />
-                    잠시만 기다려주세요!
-                  </p>
-                </>
-              ) : (
-                <>
-                  <PiImageSquareFill size={'26px'} className="image" />
-                  <p>
-                    여기에 사진을
-                    <br />
-                    업로드 해주세요
-                  </p>
-                </>
-              )}
-            </Styled.ImgBox>
-          )}
-        </label>
-        <input id="inputImg" type="file" accept="image/png, image/jpeg, image/jpg, image/HEIC, image/heic " onChange={handleImageSubmit} ref={imgRef} />
-      </Styled.UploadBox>
-
-      {type === 'post' && imgFile && (
-        <>
-          <GlobeSearch />
-          {here ? (
-            <>
-              <Styled.Pin src={pin} alt="위치" />
-              <Styled.PinButton size="large" variant="black" onClick={handleToSetLocation}>
-                수정하기
-              </Styled.PinButton>
-            </>
-          ) : (
-            <>
-              <Styled.PinParagraph>
-                지구본을 움직여 <br /> 정확한 위치에 핀을 꽂아주세요!
-              </Styled.PinParagraph>
-              <Styled.Pin src={pin} alt="위치" />
-              {clickedLocation.latitude === 0 || clickedLocation.longitude === 0 ? (
-                <Styled.PinButton size="large" variant="gray">
-                  여기예요!
-                </Styled.PinButton>
-              ) : (
-                <Styled.PinButton size="large" variant="black" onClick={handleToSetLocation}>
-                  여기예요!
-                </Styled.PinButton>
-              )}
-            </>
-          )}
-        </>
-      )}
-
-      {clickedLocation && here && (
-        <>
-          <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" onChange={handleChangeContents} maxLength={30} rows={2} />
-          <Switch
-            checked={switchChecked}
-            onChange={setSwitchChecked}
-            leftText={'전체공개'}
-            rightText={'나만보기'}
-            width={'300px'}
-            checkedtextcolor={'#353C49'}
-            textcolor={'#72808E'}
-            checkedbackground={'#72808E'}
-            background={'rgba(18, 18, 18, 0.6)'}
-          />
-          {contents === '' ? (
-            <Button size="large" variant="gray">
-              작성하기
-            </Button>
-          ) : (
-            <Button size="large" variant="orange" onClick={handleToSubmit}>
-              작성하기
-            </Button>
-          )}
-        </>
-      )}
-
-      {type === 'update' && (
-        <>
-          <Styled.PinBackground>
-            <Styled.Pin src={pin} alt="위치" />
-            <Styled.PinWarning>위치는 수정이 안돼요!</Styled.PinWarning>
-          </Styled.PinBackground>
-          <Styled.SearchInput value={`${locationInfo.countryId}, ${locationInfo.regionId}`} disabled />
-          <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" defaultValue={data?.contents} onChange={handleChangeContents} maxLength={30} rows={2} />
-          <Switch
-            checked={switchChecked}
-            onChange={setSwitchChecked}
-            leftText={'전체공개'}
-            rightText={'나만보기'}
-            width={'300px'}
-            checkedtextcolor={'#353C49'}
-            textcolor={'#72808E'}
-            checkedbackground={'#72808E'}
-            background={'rgba(18, 18, 18, 0.6)'}
-          />
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <Button size="medium" variant="deep-gray" onClick={handleDelete}>
-              삭제하기
-            </Button>
-            {contents === '' ? (
-              <Button size="medium" variant="gray">
-                작성하기
-              </Button>
-            ) : (
-              <Button size="medium" variant="orange" onClick={handleToSubmit}>
-                작성하기
-              </Button>
-            )}
-          </div>
-        </>
-      )}
+      <UploadBox imgFile={imgFile} loading={loading} handleImageInputChange={handleImageInputChange} handleImageSubmit={handleImageSubmit} imgRef={imgRef} handleDrop={handleDrop} />
+      <ContentsSection
+        type={type}
+        imgFile={imgFile}
+        here={here}
+        locationInfo={locationInfo}
+        clickedLocation={clickedLocation}
+        contents={contents}
+        switchChecked={switchChecked}
+        handleDelete={handleDelete}
+        setSwitchChecked={setSwitchChecked}
+        handleChangeContents={handleChangeContents}
+        handleToSetLocation={handleToSetLocation}
+        handleToSubmit={handleToSubmit}
+        deleteButton={deleteButton}
+        data={data}
+      />
     </Styled.PostLayout>
   );
 };
