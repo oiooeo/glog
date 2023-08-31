@@ -33,7 +33,6 @@ const Like = ({ data }: LikeProps) => {
       return;
     }
 
-    console.log(isLiked);
     if (isLiked) {
       if (!myLikedData) return;
       await deleteLikeMutation.mutateAsync(myLikedData?.id);
