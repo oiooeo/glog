@@ -3,7 +3,7 @@ import * as Styled from './style';
 import ReactLoading from 'react-loading';
 import { PiImageSquareFill } from 'react-icons/pi';
 
-interface UploadBox {
+interface UploadBoxTypes {
   imgFile: string | null;
   loading: boolean;
   handleImageSubmit: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
@@ -11,7 +11,7 @@ interface UploadBox {
   handleDrop: (event: React.DragEvent<HTMLDivElement>) => Promise<void>;
 }
 
-const UploadBox = ({ imgFile, loading, handleImageSubmit, imgRef, handleDrop }: UploadBox) => {
+const UploadBox = ({ imgFile, loading, handleImageSubmit, imgRef, handleDrop }: UploadBoxTypes) => {
   return (
     <Styled.UploadBox onDragEnter={(event: any) => event.preventDefault()} onDragOver={(event: any) => event.preventDefault()} onDragLeave={(event: any) => event.preventDefault()} onDrop={handleDrop}>
       <label htmlFor="inputImg">
