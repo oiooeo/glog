@@ -1,11 +1,13 @@
-import mediumPin from '../../assets/pin/mideumPin.png';
-import smallPin from '../../assets/pin/smallPin.png';
-import LargePin from '../../assets/pin/LargePin.png';
+import clusterFive from '../../assets/pin/clusterFive.png';
+import clusterTen from '../../assets/pin/clusterTen.png';
+import clusterTwenty from '../../assets/pin/clusterTwenty.png';
+import unclusterPin from '../../assets/pin/unclusterPin.png';
 
 export const pinImages = [
-  { name: 'LargePin', url: LargePin },
-  { name: 'mediumPin', url: mediumPin },
-  { name: 'smallPin', url: smallPin },
+  { name: 'unclusterPin', url: unclusterPin },
+  { name: 'clusterFive', url: clusterFive },
+  { name: 'clusterTen', url: clusterTen },
+  { name: 'clusterTwenty', url: clusterTwenty },
 ];
 
 export const loadPinImage = (mapLocation: any, imageName: string, imageUrl: string) => {

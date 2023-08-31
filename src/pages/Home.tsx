@@ -1,44 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Globe from '../components/globe/Globe';
 import { getMyPosts, getPosts } from '../api/supabaseDatabase';
-import { useQuery } from '@tanstack/react-query';
-import { Tables } from '../types/supabase';
 import { useSessionStore } from '../zustand/useSessionStore';
 import { useTabStore } from '../zustand/useTabStore';
+import { useQuery } from '@tanstack/react-query';
+
+import { Tables } from '../types/supabase';
 
 const Home = () => {
-  const initialCenter: [number, number] = [126.958692133901, 37.5175237576854];
-  const zoom = 1;
-  const [data, setData] = useState<Tables<'posts'>[]>();
-  const { data: postsData } = useQuery(['getPosts'], getPosts);
   const session = useSessionStore(state => state.session);
-  const [myData, setMyData] = useState<Tables<'posts'>[]>();
-
-  useEffect(() => {
-    async function fetchMyPosts() {
-      try {
-        if (session) {
-          const data = await getMyPosts(session.user.id);
-          setMyData(data);
-        }
-      } catch (error) {
-        console.error('Error fetching liked posts:', error);
-      }
-    }
-
-    fetchMyPosts();
-  }, [session]);
   const tab = useTabStore(state => state.tab);
+  const [data, setData] = useState<Tables<'posts'>[]>();
+  const [myData, setMyData] = useState<Tables<'posts'>[]>();
+  const { data: posts } = useQuery(['getPosts'], getPosts);
+
+  const fetchMyPosts = async (id: string) => {
+    try {
+      const myPosts = await getMyPosts(id);
+      setMyData(myPosts);
+    } catch (error) {
+      console.error('Error fetching my posts:', error);
+    }
+  };
 
   useEffect(() => {
-    if (tab === 'explore') {
-      setData(postsData);
-    } else if (tab === 'my') {
-      setData(myData);
+    if (session) {
+      fetchMyPosts(session?.user.id);
     }
-  }, [tab, postsData, myData]);
+  }, [session]);
 
-  return <Globe initialCenter={initialCenter} zoom={zoom} postsData={data} />;
+  useEffect(() => {
+    setData(tab === 'explore' ? posts : myData);
+  }, [tab, posts, data]);
+
+  return <Globe postsData={data} />;
 };
 
 export default Home;

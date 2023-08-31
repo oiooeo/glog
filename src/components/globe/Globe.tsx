@@ -2,23 +2,20 @@ import React, { useRef, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
 import * as Styled from './style';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
-import Detail from '../detail/Detail';
 import { Tables } from '../../types/supabase';
-import pinFocus from '../../assets/pin/pinFocus.svg';
-import { CustomMarker, getHTMLElement } from './globe.util';
+import { pickImageMarker, pickLocationWithMarker } from './globe.util';
 import { globeCluster } from './GlobeCluster';
 import { useLocationStore } from '../../zustand/useLocationStore';
 import { useMapLocationStore } from '../../zustand/useMapLocationStore';
 import { usePostStore } from '../../zustand/usePostStore';
 import { useClickedPostStore } from '../../zustand/useClickedPostStore';
+import { INITIAL_CENTER, ZOOM } from './Globe.content';
 
 interface MapProps {
-  initialCenter: [number, number];
-  zoom: number;
   postsData: Tables<'posts'>[] | undefined;
 }
 
-const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
+const Globe = ({ postsData }: MapProps) => {
   mapboxgl.accessToken = process.env.REACT_APP_ACCESS_TOKEN ? process.env.REACT_APP_ACCESS_TOKEN : '';
   const { mount } = useModal();
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -26,19 +23,15 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
   const mapLocation = useMapLocationStore(state => state.mapLocation);
   const isPostModalOpened = usePostStore(state => state.isPosting);
   const clickedPostLocation = useClickedPostStore(state => state.clickedPostLocation);
-
   useEffect(() => {
     if (!map.current && mapContainerRef.current) {
       map.current = new mapboxgl.Map({
         container: mapContainerRef.current,
         style: 'mapbox://styles/yoon1103/cllpvs4xd002s01rfflaa66x3',
-        center: initialCenter,
-        zoom: zoom,
+        center: INITIAL_CENTER,
+        zoom: ZOOM,
       });
     }
-  }, [initialCenter, zoom]);
-
-  useEffect(() => {
     map.current?.on('moveend', () => {
       const watchingLat = map.current?.getCenter().lat;
       const watchingLng = map.current?.getCenter().lng;
@@ -50,11 +43,8 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
 
       useLocationStore.getState().setClickedLocation(clickedLocation);
     });
-
-    if (map) {
-      useMapLocationStore.getState().setMapLocation(map.current);
-    }
-  }, [map]);
+    useMapLocationStore.getState().setMapLocation(map.current);
+  }, []);
 
   const flyToLocation = (lng: number, lat: number) => {
     const zoomSize = map.current?.getZoom();
@@ -65,72 +55,38 @@ const Globe: React.FC<MapProps> = ({ initialCenter, zoom, postsData }) => {
     });
   };
 
-  const pickImageMarker = (postData: Tables<'posts'>) => {
-    const marker = getHTMLElement({ type: CustomMarker.Image, imgSrc: postData.images });
-    const markerInstance = new mapboxgl.Marker(marker).setLngLat([postData.longitude, postData.latitude]);
-    markerInstance.addTo(map.current!);
+  const handleImageMarkers = (postData: Tables<'posts'>[], count: number) => {
+    const imageMarkers = document.querySelectorAll('.image-marker');
+    imageMarkers.forEach(marker => marker.remove());
 
-    marker.addEventListener('click', async () => {
-      mount('detail', <Detail data={postData} />);
-      flyToLocation(postData.longitude, postData.latitude);
-    });
+    for (let i = 0; i < count; i++) {
+      const data = postData[i];
+      if (!data) return;
+      pickImageMarker(map, mount, flyToLocation, data);
+    }
   };
 
   useEffect(() => {
     if (postsData && postsData.length !== 0 && !isPostModalOpened) {
       const sortedData = [...postsData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-      if (sortedData.length > 6) {
-        const imageMarkers = document.querySelectorAll('.image-marker');
-        imageMarkers.forEach(marker => marker.remove());
-
-        for (let i = 0; i < 6; i++) {
-          const postData = sortedData[i];
-          if (!postData) return;
-          pickImageMarker(postData);
-        }
-      } else {
-        const imageMarkers = document.querySelectorAll('.image-marker');
-        imageMarkers.forEach(marker => marker.remove());
-
-        for (let i = 0; i < sortedData.length; i++) {
-          const postData = sortedData[i];
-          if (!postData) return;
-          pickImageMarker(postData);
-        }
-      }
-    } else if (isPostModalOpened) {
-      const imageMarkers = document.querySelectorAll('.image-marker');
-      imageMarkers.forEach(marker => marker.remove());
+      const markerCount = Math.min(sortedData.length, 6);
+      handleImageMarkers(sortedData, markerCount);
+    } else if (isPostModalOpened || postsData?.length === 0) {
+      handleImageMarkers([], 0);
     }
   }, [mount, postsData, isPostModalOpened]);
 
-  const pickLocationWithMarker = (clickedPostLocation: { latitude: number; longitude: number }) => {
-    const OrangePinMarker = document.querySelector('.orange-pin-marker');
-    if (OrangePinMarker) OrangePinMarker.remove();
-
-    const marker = getHTMLElement({ type: CustomMarker.Orange, imgSrc: pinFocus });
-    const markerInstance = new mapboxgl.Marker(marker).setLngLat([clickedPostLocation.longitude, clickedPostLocation.latitude]);
-    markerInstance.addTo(map.current!);
-    map.current?.flyTo({
-      center: [clickedPostLocation.longitude, clickedPostLocation.latitude],
-      speed: 8,
-    });
-  };
-
   useEffect(() => {
-    if (!clickedPostLocation) {
-      return;
+    if (clickedPostLocation) {
+      pickLocationWithMarker(map, clickedPostLocation);
     }
-    pickLocationWithMarker(clickedPostLocation);
   }, [clickedPostLocation]);
 
   useEffect(() => {
-    if (!isPostModalOpened) {
-      const postModalOpen = false;
-      globeCluster({ mapLocation, postsData, mount, postModalOpen, flyToLocation });
+    if (isPostModalOpened) {
+      globeCluster({ mapLocation, postsData, mount, isPostModalOpened, flyToLocation });
     } else {
-      const postModalOpen = true;
-      globeCluster({ mapLocation, postsData, mount, postModalOpen, flyToLocation });
+      globeCluster({ mapLocation, postsData, mount, isPostModalOpened, flyToLocation });
     }
   }, [postsData, isPostModalOpened]);
 

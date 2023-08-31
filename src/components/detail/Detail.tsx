@@ -2,8 +2,6 @@ import * as Styled from './style';
 import { RiPencilLine } from 'react-icons/ri';
 import { useSessionStore } from '../../zustand/useSessionStore';
 import { usePostStore } from '../../zustand/usePostStore';
-import { deleteButton } from '../../api/supabaseDatabase';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Post from '../post/Post';
 import Like from '../like/Like';
@@ -15,19 +13,8 @@ type DetailProps = {
 };
 
 const Detail = ({ data }: DetailProps) => {
-  const queryClient = useQueryClient();
   const session = useSessionStore(state => state.session);
   const { leftMount, unmount } = useModal();
-
-  const deletePostMutation = useMutation((postId: string) => deleteButton(postId), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['getPosts']);
-    },
-  });
-
-  const handleDelete = () => {
-    deletePostMutation.mutate(data.id);
-  };
 
   const openUpdate = (id: string) => {
     usePostStore.getState().setIsPosting(true);
@@ -46,7 +33,6 @@ const Detail = ({ data }: DetailProps) => {
         {session?.user.id === data.userId && (
           <Styled.EditButton>
             <RiPencilLine size={'24px'} className="edit" onClick={() => openUpdate(data.id)} />
-            {/* <RiDeleteBin4Fill color="#ffffff80" onClick={handleDelete} /> */}
           </Styled.EditButton>
         )}
         <Styled.DetailImage src={data.images!} alt={`Image for ${data.contents}`} />

@@ -57,6 +57,18 @@ export const getLikes = async (userId: string) => {
   return data;
 };
 
+export const addLike = async ({ postId, userId }: { postId: string; userId: string }) => {
+  await supabase.from('likes').insert({ postId: postId, userId: userId });
+};
+
+export const deleteLike = async (id: string) => {
+  await supabase.from('likes').delete().eq('id', id);
+};
+
+export const updatePostLike = async ({ newLikes, id }: { newLikes: number; id: string }) => {
+  await supabase.from('posts').update({ likes: newLikes }).eq('id', id);
+};
+
 export const deleteButton = async (postId: string) => {
   try {
     await supabase.from('likes').delete().eq('postId', postId);
