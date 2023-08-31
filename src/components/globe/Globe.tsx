@@ -3,13 +3,13 @@ import mapboxgl from 'mapbox-gl';
 import * as Styled from './style';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import { Tables } from '../../types/supabase';
-import { pickImageMarker, pickLocationWithMarker } from './globe.util';
+import { pickImageMarker } from './globe.util';
 import { globeCluster } from './GlobeCluster';
 import { useLocationStore } from '../../zustand/useLocationStore';
 import { useMapLocationStore } from '../../zustand/useMapLocationStore';
 import { usePostStore } from '../../zustand/usePostStore';
-import { useClickedPostStore } from '../../zustand/useClickedPostStore';
 import { INITIAL_CENTER, ZOOM } from './Globe.content';
+import { useMarkerInvisible } from '../../zustand/useMarkerInvisible';
 
 interface MapProps {
   postsData: Tables<'posts'>[] | undefined;
@@ -22,7 +22,8 @@ const Globe = ({ postsData }: MapProps) => {
   const map = useRef<mapboxgl.Map | null>(null);
   const mapLocation = useMapLocationStore(state => state.mapLocation);
   const isPostModalOpened = usePostStore(state => state.isPosting);
-  const clickedPostLocation = useClickedPostStore(state => state.clickedPostLocation);
+  const isRightModalOpened = useMarkerInvisible(state => state.isMarkerInvisible);
+
   useEffect(() => {
     if (!map.current && mapContainerRef.current) {
       map.current = new mapboxgl.Map({
@@ -32,6 +33,7 @@ const Globe = ({ postsData }: MapProps) => {
         zoom: ZOOM,
       });
     }
+
     map.current?.on('moveend', () => {
       const watchingLat = map.current?.getCenter().lat;
       const watchingLng = map.current?.getCenter().lng;
@@ -43,6 +45,7 @@ const Globe = ({ postsData }: MapProps) => {
 
       useLocationStore.getState().setClickedLocation(clickedLocation);
     });
+
     useMapLocationStore.getState().setMapLocation(map.current);
   }, []);
 
@@ -67,28 +70,16 @@ const Globe = ({ postsData }: MapProps) => {
   };
 
   useEffect(() => {
-    if (postsData && postsData.length !== 0 && !isPostModalOpened) {
+    if (postsData && postsData.length !== 0 && !isPostModalOpened && !isRightModalOpened) {
       const sortedData = [...postsData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
       const markerCount = Math.min(sortedData.length, 6);
       handleImageMarkers(sortedData, markerCount);
-    } else if (isPostModalOpened || postsData?.length === 0) {
+    } else if (isPostModalOpened || postsData?.length === 0 || isRightModalOpened) {
       handleImageMarkers([], 0);
     }
-  }, [mount, postsData, isPostModalOpened]);
 
-  useEffect(() => {
-    if (clickedPostLocation) {
-      pickLocationWithMarker(map, clickedPostLocation);
-    }
-  }, [clickedPostLocation]);
-
-  useEffect(() => {
-    if (isPostModalOpened) {
-      globeCluster({ mapLocation, postsData, mount, isPostModalOpened, flyToLocation });
-    } else {
-      globeCluster({ mapLocation, postsData, mount, isPostModalOpened, flyToLocation });
-    }
-  }, [postsData, isPostModalOpened]);
+    globeCluster({ mapLocation, postsData, mount, isPostModalOpened, isRightModalOpened, flyToLocation });
+  }, [mount, postsData, isPostModalOpened, isRightModalOpened, handleImageMarkers]);
 
   return <Styled.GlobeLayout ref={mapContainerRef} className="globeScroll" />;
 };

@@ -3,16 +3,17 @@ import { usePostStore } from '../../../zustand/usePostStore';
 import { useSessionStore } from '../../../zustand/useSessionStore';
 import * as Styled from './style';
 
-type HeaderLogin = {
+type HeaderLoginTypes = {
   openPost: () => void;
   signinHandler: () => Promise<void>;
   signoutHandler: () => Promise<void>;
   closePost: () => void;
 };
-const HeaderLogin = (props: HeaderLogin )=> {
+const HeaderLogin = (props: HeaderLoginTypes) => {
   const { openPost, signinHandler, signoutHandler, closePost } = props;
   const session = useSessionStore(state => state.session);
   const isPostModalOpened = usePostStore(state => state.isPosting);
+
   return (
     <>
       {isPostModalOpened ? (

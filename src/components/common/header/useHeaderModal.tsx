@@ -5,28 +5,29 @@ import useInput from '../../../hooks/useInput';
 import LikesList from '../../likesList/LikesList';
 import SearchList from '../../searchList/SearchList';
 import Post from '../../post/Post';
+import { useMarkerInvisible } from '../../../zustand/useMarkerInvisible';
 
 export const useHeaderModal = () => {
   const { leftMount, rightMount, unmount } = useModal();
   const [isLikeListOpened, setIsLikeListOpened] = useState(false);
   const [isSearchListOpened, setIsSearchListOpened] = useState(false);
   const [keyword, handleChangeKeyword] = useInput();
-  
+
   const closePost = () => {
     usePostStore.getState().setIsPosting(false);
     unmount('post');
   };
 
   const closeSearchList = () => {
-    // useTabStore.getState().setTab('explore');
     unmount('searchList');
     setIsSearchListOpened(false);
+    useMarkerInvisible.getState().setIsMarkerInvisible(false);
   };
 
   const closeLikesList = () => {
-    // useTabStore.getState().setTab('explore');
     unmount('likesList');
     setIsLikeListOpened(false);
+    useMarkerInvisible.getState().setIsMarkerInvisible(false);
   };
 
   const openPost = () => {
@@ -34,6 +35,7 @@ export const useHeaderModal = () => {
     leftMount('post', <Post type={'post'} unmount={unmount} />);
     closeLikesList();
     closeSearchList();
+    unmount('detail');
   };
 
   const handleToSearch = () => {
@@ -55,15 +57,16 @@ export const useHeaderModal = () => {
     closeLikesList();
     setIsSearchListOpened(true);
     handleToSearch();
-    // useTabStore.getState().setTab('search');
+    useMarkerInvisible.getState().setIsMarkerInvisible(true);
   };
 
   const openLikesList = () => {
     closeSearchList();
     setIsLikeListOpened(true);
     rightMount('likesList', <LikesList />);
-    // useTabStore.getState().setTab('like');
+    useMarkerInvisible.getState().setIsMarkerInvisible(true);
   };
+
   return {
     isSearchListOpened,
     isLikeListOpened,

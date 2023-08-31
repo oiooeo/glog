@@ -4,7 +4,8 @@ import Like from '../../like/Like';
 import useOnClickOutside from '../../../hooks/useOnClickOutSide';
 import Detail from '../../detail/Detail';
 import { signin } from '../../../api/supabaseAuth';
-import { useClickedPostStore } from '../../../zustand/useClickedPostStore';
+import { useMapLocationStore } from '../../../zustand/useMapLocationStore';
+import { pickLocationWithMarker } from '../../globe/globe.util';
 
 import type { Tables } from '../../../types/supabase';
 
@@ -14,22 +15,18 @@ const PostItem = ({ data, lastItem }: PostItemProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const itemRef = useRef<HTMLDivElement>(null);
   const [isClicked, setIsClicked] = useState(false);
+  const mapLocation = useMapLocationStore(state => state.mapLocation);
 
-  const clickedPostLocation = {
-    latitude: data.latitude,
-    longitude: data.longitude,
+  const focus = () => {
+    setIsClicked(!isClicked);
+    pickLocationWithMarker(mapLocation, { longitude: data.longitude, latitude: data.latitude });
+    if (itemRef.current) {
+      itemRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   };
 
   const showDetail = () => {
     setIsClicked(!isClicked);
-    if (itemRef.current) {
-      itemRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-    if (!clickedPostLocation) {
-      return;
-    }
-
-    useClickedPostStore.getState().setClickedPostLocation(clickedPostLocation);
   };
 
   useOnClickOutside(ref, showDetail);
@@ -41,7 +38,7 @@ const PostItem = ({ data, lastItem }: PostItemProps) => {
           <Detail data={data} />
         </Styled.DetailLayout>
       ) : (
-        <Styled.PostItemLayout ref={itemRef} onClick={lastItem ? signin : showDetail} lastItem={lastItem}>
+        <Styled.PostItemLayout ref={itemRef} onClick={lastItem ? signin : focus} lastItem={lastItem}>
           {data.images !== null ? <Styled.PostItemImg src={data.images} alt="" /> : null}
           <Styled.LocationParagraph>
             {data.countryId}, {data.regionId}

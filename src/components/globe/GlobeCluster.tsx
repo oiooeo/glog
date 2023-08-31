@@ -10,20 +10,25 @@ interface Props {
   mount: (name: string, element: React.ReactNode) => void;
   flyToLocation: (lng: number, lat: number) => void;
   isPostModalOpened: boolean | null;
+  isRightModalOpened: boolean | null;
 }
 
-export const globeCluster = ({ mapLocation, postsData, mount, flyToLocation, isPostModalOpened }: Props) => {
+export const globeCluster = ({ mapLocation, postsData, mount, flyToLocation, isPostModalOpened, isRightModalOpened }: Props) => {
   const clusterData = postsData?.slice(5);
   pinImages.forEach(({ name, url }) => loadPinImage(mapLocation, name, url));
+
   if (clusterData) {
     const getValue = mapLocation.getSource('pinPoint');
+
     if (getValue) {
       removeMapLayersAndSource(mapLocation);
     }
+
     const handleClusterPointClick = (e: any) => {
       const features = mapLocation.queryRenderedFeatures(e.point, {
         layers: ['cluster-pin'],
       });
+
       const clusterId = features[0].properties.cluster_id;
       mapLocation.getSource('pinPoint').getClusterExpansionZoom(clusterId, (error: Error, zoom: number) => {
         const zoomSize = Math.min(zoom, 10);
@@ -34,6 +39,7 @@ export const globeCluster = ({ mapLocation, postsData, mount, flyToLocation, isP
         });
       });
     };
+
     const handleUnclusteredPointClick = async (e: any) => {
       if (postsData) {
         const postId = await e.features[0].properties.cluster;
@@ -44,6 +50,7 @@ export const globeCluster = ({ mapLocation, postsData, mount, flyToLocation, isP
         }
       }
     };
+
     mapLocation?.addSource('pinPoint', {
       type: 'geojson',
       data: {
@@ -62,6 +69,7 @@ export const globeCluster = ({ mapLocation, postsData, mount, flyToLocation, isP
       cluster: true,
       clusterRadius: 50,
     });
+
     mapLocation?.addLayer({
       id: 'cluster-pin',
       type: 'symbol',
@@ -73,6 +81,7 @@ export const globeCluster = ({ mapLocation, postsData, mount, flyToLocation, isP
         'icon-size': 2,
       },
     });
+
     mapLocation?.addLayer({
       id: 'unclustered-point',
       type: 'symbol',
@@ -83,11 +92,12 @@ export const globeCluster = ({ mapLocation, postsData, mount, flyToLocation, isP
         'icon-size': 0.5,
       },
     });
+
     mapLocation.on('click', 'cluster-pin', handleClusterPointClick);
     mapLocation.on('click', 'unclustered-point', handleUnclusteredPointClick);
   }
 
-  if (isPostModalOpened) {
+  if (isPostModalOpened || isRightModalOpened) {
     removeMapLayersAndSource(mapLocation);
   }
 };
