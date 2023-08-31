@@ -23,7 +23,7 @@ const UploadBox = ({ imgFile, loading, handleImageSubmit, imgRef, handleDrop }: 
               <>
                 <Loader />
                 <p>
-                  사진 업로드 중 ...
+                  사진 업로드 중 ···
                   <br />
                   잠시만 기다려주세요!
                 </p>

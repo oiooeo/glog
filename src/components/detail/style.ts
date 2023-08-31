@@ -38,17 +38,17 @@ export const LikeBox = styled.div`
 
 export const EditButton = styled.button`
   position: absolute;
-  top: 250px;
-  left: 20px;
+  top: 255px;
+  right: 10px;
   width: 40px;
   height: 40px;
-  background: rgba(53, 60, 73, 0.6);
-  border: 1px solid rgba(53, 60, 73, 1);
-  border-radius: 50%;
+  background: transparent;
+  border: transparent;
   cursor: pointer;
 
   & > .edit {
-    color: rgba(204, 207, 211, 0.8);
+    color: #ffffff;
+    filter: drop-shadow(0px 0px 3px rgb(0, 0, 0));
   }
 `;
 
