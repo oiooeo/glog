@@ -40,7 +40,7 @@ const Post = ({ type, unmount, postId }: PostProps) => {
   const [location, setLocation] = useState({ longitude: 0, latitude: 0 });
   const [locationInfo, setLocationInfo] = useState<LocationInfoTypes>({ countryId: '', regionId: '', address: '' });
 
-  const { imgFile, imgUrl, loading, handleImageInputChange } = useImageUpload(userId!);
+  const { imgFile, setImgFile, imgUrl, loading, handleImageInputChange } = useImageUpload(userId!);
 
   const { mutate } = useMutation({
     mutationFn: async () => {
@@ -130,6 +130,7 @@ const Post = ({ type, unmount, postId }: PostProps) => {
     const postData = await getPostByPostId(postId);
     if (!postData) return;
     setData(postData);
+    setImgFile(postData.images);
     setLocation({ longitude: postData.longitude, latitude: postData.latitude });
     setSwitchChecked(postData.private);
     setLocationInfo({ countryId: postData.countryId!, regionId: postData.regionId!, address: postData.address! });
@@ -154,7 +155,7 @@ const Post = ({ type, unmount, postId }: PostProps) => {
 
   return (
     <Styled.PostLayout>
-      <UploadBox imgFile={imgFile} loading={loading} handleImageInputChange={handleImageInputChange} handleImageSubmit={handleImageSubmit} imgRef={imgRef} handleDrop={handleDrop} />
+      <UploadBox imgFile={imgFile} loading={loading} handleImageSubmit={handleImageSubmit} imgRef={imgRef} handleDrop={handleDrop} />
       <ContentsSection
         type={type}
         imgFile={imgFile}
