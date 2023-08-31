@@ -71,7 +71,6 @@ export interface Database {
           id: string;
           images: string;
           latitude: number;
-          likes: number;
           longitude: number;
           private: boolean | null;
           regionId: string | null;
@@ -85,7 +84,6 @@ export interface Database {
           id?: string;
           images?: string;
           latitude: number;
-          likes?: number;
           longitude: number;
           private?: boolean | null;
           regionId?: string | null;
@@ -99,7 +97,6 @@ export interface Database {
           id?: string;
           images?: string;
           latitude?: number;
-          likes?: number;
           longitude?: number;
           private?: boolean | null;
           regionId?: string | null;

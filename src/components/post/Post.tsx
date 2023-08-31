@@ -106,6 +106,7 @@ const Post = ({ type, unmount, postId }: PostProps) => {
   const handleDelete = () => {
     if (!data) return;
     deletePostMutation.mutate(data.id);
+    usePostStore.getState().setIsPosting(false);
     unmount('post');
     unmount('detail');
   };

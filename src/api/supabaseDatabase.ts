@@ -40,7 +40,7 @@ export const getPostByPostId = async (postId: string) => {
 };
 
 export const getPostByUserId = async (userId: string) => {
-  const { data, error } = await supabase.from('posts').select('*, user:userId(*)').eq('userId', userId).order('createdAt', { ascending: false }).limit(1);
+  const { data, error } = await supabase.from('posts').select(`*, user:userId(*)`).eq('userId', userId).order('createdAt', { ascending: false }).limit(1);
   if (error) throw new Error(`에러!! ${error.message}`);
   return data[0];
 };
@@ -63,10 +63,6 @@ export const addLike = async ({ postId, userId }: { postId: string; userId: stri
 
 export const deleteLike = async (id: string) => {
   await supabase.from('likes').delete().eq('id', id);
-};
-
-export const updatePostLike = async ({ newLikes, id }: { newLikes: number; id: string }) => {
-  await supabase.from('posts').update({ likes: newLikes }).eq('id', id);
 };
 
 export const deleteButton = async (postId: string) => {
