@@ -23,7 +23,6 @@ const Globe = ({ postsData }: MapProps) => {
   const mapLocation = useMapLocationStore(state => state.mapLocation);
   const isPostModalOpened = usePostStore(state => state.isPosting);
   const clickedPostLocation = useClickedPostStore(state => state.clickedPostLocation);
-
   useEffect(() => {
     if (!map.current && mapContainerRef.current) {
       map.current = new mapboxgl.Map({
@@ -56,22 +55,24 @@ const Globe = ({ postsData }: MapProps) => {
     });
   };
 
+  const handleImageMarkers = (postData: Tables<'posts'>[], count: number) => {
+    const imageMarkers = document.querySelectorAll('.image-marker');
+    imageMarkers.forEach(marker => marker.remove());
+
+    for (let i = 0; i < count; i++) {
+      const data = postData[i];
+      if (!data) return;
+      pickImageMarker(map, mount, flyToLocation, data);
+    }
+  };
+
   useEffect(() => {
     if (postsData && postsData.length !== 0 && !isPostModalOpened) {
       const sortedData = [...postsData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
       const markerCount = Math.min(sortedData.length, 6);
-
-      const imageMarkers = document.querySelectorAll('.image-marker');
-      imageMarkers.forEach(marker => marker.remove());
-
-      for (let i = 0; i < markerCount; i++) {
-        const postData = sortedData[i];
-        if (!postData) return;
-        pickImageMarker(map, mount, flyToLocation, postData);
-      }
-    } else if (isPostModalOpened) {
-      const imageMarkers = document.querySelectorAll('.image-marker');
-      imageMarkers.forEach(marker => marker.remove());
+      handleImageMarkers(sortedData, markerCount);
+    } else if (isPostModalOpened || postsData?.length === 0) {
+      handleImageMarkers([], 0);
     }
   }, [mount, postsData, isPostModalOpened]);
 
@@ -82,12 +83,10 @@ const Globe = ({ postsData }: MapProps) => {
   }, [clickedPostLocation]);
 
   useEffect(() => {
-    if (!isPostModalOpened) {
-      const postModalOpen = false;
-      globeCluster({ mapLocation, postsData, mount, postModalOpen, flyToLocation });
+    if (isPostModalOpened) {
+      globeCluster({ mapLocation, postsData, mount, isPostModalOpened, flyToLocation });
     } else {
-      const postModalOpen = true;
-      globeCluster({ mapLocation, postsData, mount, postModalOpen, flyToLocation });
+      globeCluster({ mapLocation, postsData, mount, isPostModalOpened, flyToLocation });
     }
   }, [postsData, isPostModalOpened]);
 
