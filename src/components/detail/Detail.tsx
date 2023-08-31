@@ -21,6 +21,7 @@ const Detail = ({ data }: DetailProps) => {
     leftMount('post', <Post type={'update'} unmount={unmount} postId={id} />);
     unmount('detail');
   };
+  
   return (
     <Styled.DetailLayout>
       <Styled.DetailImageContainer>
@@ -49,6 +50,7 @@ const Detail = ({ data }: DetailProps) => {
             hour: '2-digit',
             minute: '2-digit',
             hour12: false,
+            timeZone: 'GMT',
           }).format(new Date(data.createdAt))}
         </Styled.TimeParagraph>
       </Styled.DetailContainer>
