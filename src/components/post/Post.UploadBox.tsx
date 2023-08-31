@@ -1,7 +1,6 @@
 import React from 'react';
 import * as Styled from './style';
-import ReactLoading from 'react-loading';
-import { PiImageSquareFill } from 'react-icons/pi';
+import { BsFillImageFill } from 'react-icons/bs';
 import Loader from '../common/loader/Loader';
 
 interface UploadBoxTypes {
@@ -31,7 +30,7 @@ const UploadBox = ({ imgFile, loading, handleImageSubmit, imgRef, handleDrop }: 
               </>
             ) : (
               <>
-                <PiImageSquareFill size={'26px'} className="image" />
+                <BsFillImageFill size={'25px'} className="image" />
                 <p>
                   여기에 사진을
                   <br />

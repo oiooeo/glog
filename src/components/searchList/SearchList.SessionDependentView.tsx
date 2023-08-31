@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactLoading from 'react-loading';
+import Loader from '../common/loader/Loader';
 import * as Styled from './style';
 import { Session } from '@supabase/supabase-js';
 import { renderPostItems } from './SearchList.until';
@@ -28,7 +28,7 @@ const SessionDependentView = ({ session, scrollRef, searchResult, loading }: Pro
       )}
       {loading && (
         <Styled.LoadingDiv>
-          <ReactLoading type="spin" color="#ffffff" width={'50px'} />
+          <Loader />
         </Styled.LoadingDiv>
       )}
     </>
