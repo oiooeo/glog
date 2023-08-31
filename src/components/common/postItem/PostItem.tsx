@@ -16,12 +16,16 @@ const PostItem: React.FC<PostItemProps> = ({ data, lastItem }) => {
   const [isClicked, setIsClicked] = useState(false);
   const mapLocation = useMapLocationStore(state => state.mapLocation);
 
-  const showDetail = () => {
+  const focus = () => {
     setIsClicked(!isClicked);
+    pickLocationWithMarker(mapLocation, { longitude: data.longitude, latitude: data.latitude });
     if (itemRef.current) {
       itemRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-    pickLocationWithMarker(mapLocation, { longitude: data.longitude, latitude: data.latitude });
+  };
+
+  const showDetail = () => {
+    setIsClicked(!isClicked);
   };
 
   useOnClickOutside(ref, showDetail);
@@ -33,7 +37,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, lastItem }) => {
           <Detail data={data} />
         </Styled.DetailLayout>
       ) : (
-        <Styled.PostItemLayout ref={itemRef} onClick={lastItem ? signin : showDetail} lastItem={lastItem}>
+        <Styled.PostItemLayout ref={itemRef} onClick={lastItem ? signin : focus} lastItem={lastItem}>
           {data.images !== null ? <Styled.PostItemImg src={data.images} alt="" /> : null}
           <Styled.LocationParagraph>
             {data.countryId}, {data.regionId}

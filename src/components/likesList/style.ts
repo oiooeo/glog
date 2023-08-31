@@ -14,5 +14,5 @@ export const LoadingDiv = styled.div`
   width: 300px;
   height: fit-content;
   float: right;
-  margin: 20px 0;
+  padding: 20px 0;
 `;
