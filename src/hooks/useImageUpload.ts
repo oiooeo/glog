@@ -71,7 +71,7 @@ const useImageUpload = (userId: string) => {
     }
   };
 
-  return { imgFile, imgUrl, loading, handleImageInputChange };
+  return { imgFile, setImgFile, imgUrl, loading, handleImageInputChange };
 };
 
 export default useImageUpload;
