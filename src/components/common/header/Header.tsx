@@ -1,34 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { AuthError, signin, signout } from '../../../api/supabaseAuth';
-import { supabase } from '../../../api/supabaseClient';
 import * as Styled from './style';
-import { BsPlusCircle, BsXCircle } from 'react-icons/bs';
-import { BiSearch, BiHeart, BiSolidHeart } from 'react-icons/bi';
-import Switch from '../switch/Switch';
-import { useModal } from '../overlay/modal/Modal.hooks';
-import LikesList from '../../likesList/LikesList';
-import SearchList from '../../searchList/SearchList';
-import { User } from '@supabase/supabase-js';
-import { addNewUser } from '../../../api/supabaseDatabase';
-import Post from '../../post/Post';
-import useInput from '../../../hooks/useInput';
-import { useNavigate } from 'react-router-dom';
 import logo from '../../../assets/logo.svg';
+import { useEffect, useState } from 'react';
+import { supabase } from '../../../api/supabaseClient';
+import { AuthError, signin, signout } from '../../../api/supabaseAuth';
+import { addNewUser } from '../../../api/supabaseDatabase';
+import { useNavigate } from 'react-router-dom';
 import { useSessionStore } from '../../../zustand/useSessionStore';
-import { usePostStore } from '../../../zustand/usePostStore';
 import { useTabStore } from '../../../zustand/useTabStore';
+import { useHeaderModal } from './useHeaderModal';
+import HeaderLogin from './HeaderLogin';
+import HeaderSearch from './HeaderSearch';
+import Switch from '../switch/Switch';
+
+import type { User } from '@supabase/supabase-js';
 
 const Header = () => {
   const [user, setUser] = useState<User>();
   const [switchChecked, setSwitchChecked] = useState(false);
-  const [isLikeListOpened, setIsLikeListOpened] = useState(false);
-  const [isSearchListOpened, setIsSearchListOpened] = useState(false);
-  const [keyword, handleChangeKeyword] = useInput();
-  const { leftMount, rightMount, unmount } = useModal();
+  const { closePost, closeSearchList, closeLikesList, openPost, handleToSearch, handleOnEnterPress, openSearchList, openLikesList, isSearchListOpened, isLikeListOpened, handleChangeKeyword } = useHeaderModal();
   const session = useSessionStore(state => state.session);
   const setSession = useSessionStore(state => state.setSession);
   const navigate = useNavigate();
-  const isPostModalOpened = usePostStore(state => state.isPosting);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -87,74 +79,11 @@ const Header = () => {
     }
   };
 
-  const closePost = () => {
-    usePostStore.getState().setIsPosting(false);
-    unmount('post');
-  };
-
-  const closeSearchList = () => {
-    // useTabStore.getState().setTab('explore');
-    unmount('searchList');
-    setIsSearchListOpened(false);
-  };
-
-  const closeLikesList = () => {
-    // useTabStore.getState().setTab('explore');
-    unmount('likesList');
-    setIsLikeListOpened(false);
-  };
-
-  const openPost = () => {
-    usePostStore.getState().setIsPosting(true);
-    leftMount('post', <Post type={'post'} unmount={unmount} />);
-    closeLikesList();
-    closeSearchList();
-  };
-
-  const handleToSearch = () => {
-    rightMount(
-      'searchList',
-      <>
-        <SearchList keyword={keyword} isSearchListOpened={isSearchListOpened} />
-      </>,
-    );
-  };
-
-  const handleOnEnterPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleToSearch();
-    }
-  };
-
-  const openSearchList = () => {
-    closeLikesList();
-    setIsSearchListOpened(true);
-    handleToSearch();
-    // useTabStore.getState().setTab('search');
-  };
-
-  const openLikesList = () => {
-    closeSearchList();
-    setIsLikeListOpened(true);
-    rightMount('likesList', <LikesList />);
-    // useTabStore.getState().setTab('like');
-  };
-
   return (
     <Styled.HeaderWrapper>
       <Styled.Wrapper>
         <Styled.HeaderLogo src={logo} alt="" onClick={() => (window.location.href = '/')} />
-        {isPostModalOpened ? (
-          <Styled.ClosePostButton onClick={closePost}>
-            <BsXCircle size={'22px'} />
-          </Styled.ClosePostButton>
-        ) : (
-          <Styled.OpenPostButton onClick={session ? openPost : signinHandler}>
-            <BsPlusCircle size={'22px'} className="plus" />
-          </Styled.OpenPostButton>
-        )}
-
-        {session ? <Styled.AuthSpan onClick={signoutHandler}>로그아웃</Styled.AuthSpan> : <Styled.AuthSpan onClick={signinHandler}>로그인</Styled.AuthSpan>}
+        <HeaderLogin openPost={openPost} closePost={closePost} signinHandler={signinHandler} signoutHandler={signoutHandler} />
       </Styled.Wrapper>
 
       <Styled.SwitchBox>
@@ -170,42 +99,19 @@ const Header = () => {
           background={'rgba(18, 18, 18, 0.6)'}
         />
       </Styled.SwitchBox>
-
       <Styled.Wrapper>
-        {isSearchListOpened ? (
-          <>
-            <Styled.CircleButton onClick={closeSearchList}>
-              <BsXCircle size={'22px'} />
-            </Styled.CircleButton>
-            <Styled.SearchBox>
-              <Styled.SearchInput placeholder="가고 싶은 여행지를 입력하세요" type="text" name="keyword" onChange={handleChangeKeyword} onKeyPress={handleOnEnterPress} maxLength={20} autoComplete="off" />
-              <Styled.SearchButton type="button" onClick={handleToSearch}>
-                <BiSearch size={'22px'} />
-              </Styled.SearchButton>
-            </Styled.SearchBox>
-          </>
-        ) : (
-          <>
-            <Styled.CircleButton onClick={openSearchList}>
-              <BiSearch size={'22px'} />
-            </Styled.CircleButton>
-            {isLikeListOpened ? (
-              <>
-                <Styled.CircleButton onClick={closeLikesList}>
-                  <BiSolidHeart size={'22px'} />
-                </Styled.CircleButton>
-              </>
-            ) : (
-              <>
-                <Styled.CircleButton onClick={session ? openLikesList : signinHandler}>
-                  <BiHeart size={'22px'} />
-                </Styled.CircleButton>
-              </>
-            )}
-          </>
-        )}
-
-        {}
+        <HeaderSearch
+          openSearchList={openSearchList}
+          closeSearchList={closeSearchList}
+          handleToSearch={handleToSearch}
+          closeLikesList={closeLikesList}
+          openLikesList={openLikesList}
+          signinHandler={signinHandler}
+          handleOnEnterPress={handleOnEnterPress}
+          isSearchListOpened={isSearchListOpened}
+          isLikeListOpened={isLikeListOpened}
+          handleChangeKeyword={handleChangeKeyword}
+        />
       </Styled.Wrapper>
     </Styled.HeaderWrapper>
   );
