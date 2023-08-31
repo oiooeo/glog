@@ -15,7 +15,7 @@ const Like = ({ data }: LikeProps) => {
   const { data: likesData } = useQuery(['getIsLike', data.id], () => getIsLike(data.id));
   const isLiked = likesData?.some(like => like.userId === session?.user.id);
   const myLikedData = likesData?.find(like => like.userId === session?.user.id);
-  const { deleteLikeMutation, addLikeMutation, updatePostLikeMutation } = useLikeMutation();
+  const { deleteLikeMutation, addLikeMutation } = useLikeMutation();
 
   const signinHandler = async () => {
     try {
@@ -36,17 +36,15 @@ const Like = ({ data }: LikeProps) => {
     if (isLiked) {
       if (!myLikedData) return;
       await deleteLikeMutation.mutateAsync(myLikedData?.id);
-      await updatePostLikeMutation.mutateAsync({ newLikes: data.likes - 1, id: data.id });
     } else {
       await addLikeMutation.mutateAsync({ postId: data.id, userId: session.user.id });
-      await updatePostLikeMutation.mutateAsync({ newLikes: data.likes + 1, id: data.id });
     }
   };
 
   return (
     <Styled.LikeLayout>
       <Styled.LikeButton onClick={pressLike}>{isLiked ? <BsHeartFill size={'18px'} className="like" /> : <BsHeart size={'18px'} className="like" />}</Styled.LikeButton>
-      <Styled.LikeParagraph>{data.likes}</Styled.LikeParagraph>
+      <Styled.LikeParagraph>{likesData?.length}</Styled.LikeParagraph>
     </Styled.LikeLayout>
   );
 };
