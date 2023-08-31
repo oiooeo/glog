@@ -27,9 +27,6 @@ const Home = () => {
     if (session) {
       fetchMyPosts(session?.user.id);
     }
-  }, [session]);
-
-  useEffect(() => {
     setData(tab === 'explore' ? posts : myData);
   }, [tab, posts, myData]);
 
