@@ -31,7 +31,7 @@ const Home = () => {
 
   useEffect(() => {
     setData(tab === 'explore' ? posts : myData);
-  }, [tab, posts, myData]);
+  }, [tab, posts, data]);
 
   return <Globe postsData={data} />;
 };
