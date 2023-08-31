@@ -10,6 +10,7 @@ import useImageUpload from '../../hooks/useImageUpload';
 import UploadBox from './Post.UploadBox';
 import ContentsSection from './Post.ContentsSection';
 import { handleMutationFunction, handleMutationSuccess } from './Post.util';
+import { usePostStore } from '../../zustand/usePostStore';
 
 type PostProps = {
   unmount: (name: string) => void;
