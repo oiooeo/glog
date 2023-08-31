@@ -2,6 +2,7 @@ import React from 'react';
 import * as Styled from './style';
 import ReactLoading from 'react-loading';
 import { PiImageSquareFill } from 'react-icons/pi';
+import Loader from '../common/loader/Loader';
 
 interface UploadBoxTypes {
   imgFile: string | null;
@@ -21,7 +22,7 @@ const UploadBox = ({ imgFile, loading, handleImageSubmit, imgRef, handleDrop }: 
           <Styled.ImgBox>
             {loading ? (
               <>
-                <ReactLoading type="spin" color="#ffffff" width={'50px'} />
+                <Loader />
                 <p>
                   사진 업로드 중 ...
                   <br />

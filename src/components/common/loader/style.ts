@@ -2,19 +2,19 @@ import { keyframes, styled } from 'styled-components';
 
 const rotateLeft = keyframes`
   from {
-    transform: rotateY(0deg);
+    transform: rotateY(90deg);
   }
   to {
-    transform: rotateY(360deg);
+    transform: rotateY(180deg);
   }
 `;
 
 const rotateRight = keyframes`
   from {
-    transform: rotateY(0deg);
+    transform: rotateY(180deg);
   }
   to {
-    transform: rotateY(360deg);
+    transform: rotateY(90deg);
   }
 `;
 
@@ -39,7 +39,7 @@ export const EarthLeft = styled.div`
   left: 15%;
   width: 60%;
   transform-origin: center;
-  animation: ${rotateLeft} 1s linear infinite;
+  animation: ${rotateLeft} 0.5s linear infinite;
 `;
 
 export const EarthRight = styled.div`
@@ -48,5 +48,5 @@ export const EarthRight = styled.div`
   right: 25%;
   width: 60%;
   transform-origin: center;
-  animation: ${rotateRight} 1s linear infinite;
+  animation: ${rotateRight} 0.5s linear infinite;
 `;
