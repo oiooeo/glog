@@ -22,7 +22,7 @@ const HeaderSearch = (props: HeaderSearch) => {
   const session = useSessionStore(state => state.session);
 
   return (
-    <>
+    <Styled.Wrapper>
       {isSearchListOpened ? (
         <>
           <Styled.CircleButton onClick={closeSearchList}>
@@ -55,7 +55,7 @@ const HeaderSearch = (props: HeaderSearch) => {
           )}
         </>
       )}
-    </>
+    </Styled.Wrapper>
   );
 };
 

@@ -1,15 +1,16 @@
 import React, { useRef, useState } from 'react';
 import * as Styled from './style';
 import Like from '../../like/Like';
-import { Tables } from '../../../types/supabase';
 import useOnClickOutside from '../../../hooks/useOnClickOutSide';
 import Detail from '../../detail/Detail';
 import { signin } from '../../../api/supabaseAuth';
 import { useClickedPostStore } from '../../../zustand/useClickedPostStore';
 
+import type { Tables } from '../../../types/supabase';
+
 type PostItemProps = { data: Tables<'posts'>; lastItem?: boolean };
 
-const PostItem: React.FC<PostItemProps> = ({ data, lastItem }) => {
+const PostItem = ({ data, lastItem }: PostItemProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const itemRef = useRef<HTMLDivElement>(null);
   const [isClicked, setIsClicked] = useState(false);
