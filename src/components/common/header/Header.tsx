@@ -99,20 +99,18 @@ const Header = () => {
           background={'rgba(18, 18, 18, 0.6)'}
         />
       </Styled.SwitchBox>
-      <Styled.Wrapper>
-        <HeaderSearch
-          openSearchList={openSearchList}
-          closeSearchList={closeSearchList}
-          handleToSearch={handleToSearch}
-          closeLikesList={closeLikesList}
-          openLikesList={openLikesList}
-          signinHandler={signinHandler}
-          handleOnEnterPress={handleOnEnterPress}
-          isSearchListOpened={isSearchListOpened}
-          isLikeListOpened={isLikeListOpened}
-          handleChangeKeyword={handleChangeKeyword}
-        />
-      </Styled.Wrapper>
+      <HeaderSearch
+        openSearchList={openSearchList}
+        closeSearchList={closeSearchList}
+        handleToSearch={handleToSearch}
+        closeLikesList={closeLikesList}
+        openLikesList={openLikesList}
+        signinHandler={signinHandler}
+        handleOnEnterPress={handleOnEnterPress}
+        isSearchListOpened={isSearchListOpened}
+        isLikeListOpened={isLikeListOpened}
+        handleChangeKeyword={handleChangeKeyword}
+      />
     </Styled.HeaderWrapper>
   );
 };

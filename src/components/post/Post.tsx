@@ -1,18 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import * as Styled from './style';
-import { supabase } from '../../api/supabaseClient';
 import useInput from '../../hooks/useInput';
-import toast from 'react-simple-toasts';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
-import Detail from '../detail/Detail';
-import { getPostByUserId, getPostByPostId, deleteButton } from '../../api/supabaseDatabase';
+import { getPostByPostId, deleteButton } from '../../api/supabaseDatabase';
 import { useSessionStore } from '../../zustand/useSessionStore';
 import { useLocationStore } from '../../zustand/useLocationStore';
-import { usePostStore } from '../../zustand/usePostStore';
 import useImageUpload from '../../hooks/useImageUpload';
 import UploadBox from './Post.UploadBox';
 import ContentsSection from './Post.ContentsSection';
+import { handleMutationFunction, handleMutationSuccess } from './Post.util';
+import { usePostStore } from '../../zustand/usePostStore';
 
 type PostProps = {
   unmount: (name: string) => void;
@@ -44,46 +42,10 @@ const Post = ({ type, unmount, postId }: PostProps) => {
 
   const { mutate } = useMutation({
     mutationFn: async () => {
-      type === 'post'
-        ? await supabase.from('posts').insert({
-            userId: session?.user.id,
-            contents: contents,
-            images: imgUrl,
-            countryId: locationInfo.countryId,
-            regionId: locationInfo.regionId,
-            latitude: location?.latitude,
-            longitude: location?.longitude,
-            address: locationInfo.address,
-            private: switchChecked,
-          })
-        : await supabase
-            .from('posts')
-            .update({
-              userId: session?.user.id,
-              contents: contents,
-              images: imgUrl,
-              private: switchChecked,
-            })
-            .eq('id', data?.id);
+      await handleMutationFunction({ type, session, contents, imgUrl, locationInfo, location, switchChecked, data });
     },
     onSuccess: async () => {
-      queryClient.invalidateQueries(['getPosts']);
-      unmount('post');
-      usePostStore.getState().setIsPosting(false);
-
-      if (type === 'post') {
-        toast('업로드 완료! 다른 게시물들도 확인해보세요 :)', { className: 'post-alert', position: 'top-center' });
-        const post = userId ? await getPostByUserId(userId) : null;
-        if (post) {
-          mount('detail', <Detail data={post} />);
-        }
-      } else {
-        toast('수정 완료!', { className: 'post-alert', position: 'top-center' });
-        const post = postId ? await getPostByPostId(postId) : null;
-        if (post) {
-          mount('detail', <Detail data={post} />);
-        }
-      }
+      await handleMutationSuccess({ queryClient, type, mount, unmount, userId, postId });
     },
   });
 
@@ -145,6 +107,7 @@ const Post = ({ type, unmount, postId }: PostProps) => {
   const handleDelete = () => {
     if (!data) return;
     deletePostMutation.mutate(data.id);
+    usePostStore.getState().setIsPosting(false);
     unmount('post');
     unmount('detail');
   };

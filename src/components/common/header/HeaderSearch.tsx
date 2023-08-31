@@ -4,7 +4,7 @@ import { BsXCircle } from 'react-icons/bs';
 import { BiSearch, BiHeart, BiSolidHeart } from 'react-icons/bi';
 import { useSessionStore } from '../../../zustand/useSessionStore';
 
-type HeaderSearch = {
+type HeaderSearchTypes = {
   openSearchList: () => void;
   closeSearchList: () => void;
   handleToSearch: () => void;
@@ -16,13 +16,13 @@ type HeaderSearch = {
   isLikeListOpened: boolean;
   handleChangeKeyword: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string | undefined) => void;
 };
-const HeaderSearch = (props: HeaderSearch) => {
+const HeaderSearch = (props: HeaderSearchTypes) => {
   const { openSearchList, closeSearchList, handleToSearch, closeLikesList, openLikesList, signinHandler, handleOnEnterPress, isSearchListOpened, isLikeListOpened, handleChangeKeyword } = props;
 
   const session = useSessionStore(state => state.session);
 
   return (
-    <>
+    <Styled.Wrapper>
       {isSearchListOpened ? (
         <>
           <Styled.CircleButton onClick={closeSearchList}>
@@ -55,7 +55,7 @@ const HeaderSearch = (props: HeaderSearch) => {
           )}
         </>
       )}
-    </>
+    </Styled.Wrapper>
   );
 };
 

@@ -39,6 +39,9 @@ export const getHTMLElement = ({ type, imgSrc }: { type: CustomMarker; imgSrc: s
 };
 
 export const pickImageMarker = (map: MapRef, mount: Mount, flyToLocation: (lng: number, lat: number) => void, postData: Tables<'posts'>) => {
+  const OrangePinMarker = document.querySelector('.orange-pin-marker');
+  if (OrangePinMarker) OrangePinMarker.remove();
+
   const marker = getHTMLElement({ type: CustomMarker.Image, imgSrc: postData.images });
   const markerInstance = new mapboxgl.Marker(marker).setLngLat([postData.longitude, postData.latitude]);
   markerInstance.addTo(map.current!);
@@ -49,15 +52,18 @@ export const pickImageMarker = (map: MapRef, mount: Mount, flyToLocation: (lng: 
   });
 };
 
-export const pickLocationWithMarker = (map: MapRef, clickedPostLocation: { latitude: number; longitude: number }) => {
+export const pickLocationWithMarker = (map: any, clickedPostLocation: { longitude: number; latitude: number }) => {
   const OrangePinMarker = document.querySelector('.orange-pin-marker');
   if (OrangePinMarker) OrangePinMarker.remove();
 
+  if (map === null) return;
   const marker = getHTMLElement({ type: CustomMarker.Orange, imgSrc: pinFocus });
   const markerInstance = new mapboxgl.Marker(marker).setLngLat([clickedPostLocation.longitude, clickedPostLocation.latitude]);
-  markerInstance.addTo(map.current!);
-  map.current?.flyTo({
+  markerInstance.addTo(map);
+
+  map.flyTo({
     center: [clickedPostLocation.longitude, clickedPostLocation.latitude],
-    speed: 8,
+    zoom: 7,
+    speed: 10,
   });
 };

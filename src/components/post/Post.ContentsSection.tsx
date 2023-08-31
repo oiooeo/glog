@@ -4,7 +4,8 @@ import Switch from '../common/switch/Switch';
 import Button from '../common/button/Button';
 import GlobeSearch from '../globeSearch/GlobeSearch';
 import pin from '../../assets/pin/pinLarge.svg';
-import { LocationInfoTypes } from './Post';
+
+import type { LocationInfoTypes } from './Post';
 
 type ContentsSectionProps = {
   type: string;

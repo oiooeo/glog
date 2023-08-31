@@ -27,11 +27,11 @@ const Home = () => {
     if (session) {
       fetchMyPosts(session?.user.id);
     }
-  }, [session]);
+  }, [tab, posts]);
 
   useEffect(() => {
     setData(tab === 'explore' ? posts : myData);
-  }, [tab, posts, data]);
+  }, [tab, posts, myData]);
 
   return <Globe postsData={data} />;
 };
