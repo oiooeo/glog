@@ -1,5 +1,5 @@
 import * as Styled from './style';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSessionStore } from '../../zustand/useSessionStore';
 import { getLikes, getPosts } from '../../api/supabaseDatabase';
 import ReactLoading from 'react-loading';
@@ -12,6 +12,7 @@ const LikesList = () => {
   const [likedPosts, setLikedPosts] = useState<Tables<'posts'>[]>([]);
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     async function fetchLikedPosts() {
@@ -33,9 +34,8 @@ const LikesList = () => {
 
   const handleScroll = () => {
     setLoading(true);
-    const scrollLike = document.querySelector('.scrollLike');
-    if (scrollLike) {
-      const isAtBottom = scrollLike.scrollHeight - scrollLike.scrollTop === scrollLike.clientHeight;
+    if (scrollRef.current) {
+      const isAtBottom = scrollRef.current.scrollHeight - scrollRef.current.scrollTop === scrollRef.current.clientHeight;
       if (isAtBottom) {
         setTimeout(() => {
           setPage(prev => prev + 1);
@@ -48,15 +48,19 @@ const LikesList = () => {
   };
 
   useEffect(() => {
-    const scrollLike = document.querySelector('.scrollLike');
-    scrollLike?.addEventListener('scroll', handleScroll);
-
-    return () => window.removeEventListener('scroll', handleScroll);
+    if (scrollRef.current) {
+      scrollRef.current.addEventListener('scroll', handleScroll);
+    }
+    return () => {
+      if (scrollRef.current) {
+        scrollRef.current.removeEventListener('scroll', handleScroll);
+      }
+    };
   }, []);
 
   return (
     <>
-      <Styled.ScrollDiv className="scrollLike">
+      <Styled.ScrollDiv ref={scrollRef}>
         {likedPosts.map(post => (
           <PostItem key={post.id} data={post} />
         ))}
