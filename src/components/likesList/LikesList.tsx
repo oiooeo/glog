@@ -56,11 +56,11 @@ const LikesList = () => {
 
   return (
     <>
-      <Styled.scrollDiv className="scrollLike">
+      <Styled.ScrollDiv className="scrollLike">
         {likedPosts.map(post => (
           <PostItem key={post.id} data={post} />
         ))}
-      </Styled.scrollDiv>
+      </Styled.ScrollDiv>
       {loading && (
         <Styled.LoadingDiv>
           <ReactLoading type="spin" color="#ffffff" width={'50px'} />
