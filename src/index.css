@@ -1,0 +1,25 @@
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+.post-alert {
+  padding: 15px 18px;
+  border-radius: 18px;
+  background-color: rgba(114, 128, 142, 0.6);
+  color: #f4f4f5;
+  transform: translate(0, 180px);
+}
+
+.image-alert {
+  padding: 15px 18px;
+  border-radius: 18px;
+  background-color: rgba(114, 128, 142, 0.6);
+  color: #f4f4f5;
+  transform: translate(15px, 420px);
+}
