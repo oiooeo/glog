@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-export const PageLoading = styled.div<{ completeClass: boolean }>`
+export const PageLanding = styled.div<{ completeClass: boolean }>`
   z-index: ${props => (props.completeClass ? 0 : 101)};
   position: fixed;
   width: 100%;
@@ -18,14 +18,14 @@ export const PageLoading = styled.div<{ completeClass: boolean }>`
     opacity: 0;
   }
 `;
-export const Loding = styled.div`
+export const Landing = styled.div`
   width: 600px;
   height: 8px;
   border-radius: 5px;
   background-color: #fff;
   overflow: hidden;
 `;
-export const LoadingBar = styled.div<{ percentage: number }>`
+export const LandingBar = styled.div<{ percentage: number }>`
   background-color: #e55a54;
   width: ${props => props.percentage}%;
   height: 100%;

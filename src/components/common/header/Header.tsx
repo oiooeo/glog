@@ -7,7 +7,7 @@ import { addNewUser } from '../../../api/supabaseDatabase';
 import { useNavigate } from 'react-router-dom';
 import { useSessionStore } from '../../../zustand/useSessionStore';
 import { useTabStore } from '../../../zustand/useTabStore';
-import { useHeaderModal } from './useHeaderModal';
+import { useHeaderModal } from './Header.hooks';
 import HeaderLogin from './HeaderLogin';
 import HeaderSearch from './HeaderSearch';
 import Switch from '../switch/Switch';

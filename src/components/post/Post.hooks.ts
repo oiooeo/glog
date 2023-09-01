@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { supabase } from '../api/supabaseClient';
+import { supabase } from '../../api/supabaseClient';
 import imageCompression from 'browser-image-compression';
 import heic2any from 'heic2any';
 import exifr from 'exifr';
 import { uuid } from '@supabase/gotrue-js/dist/module/lib/helpers';
-import { useMapLocationStore } from '../zustand/useMapLocationStore';
+import { useMapLocationStore } from '../../zustand/useMapLocationStore';
 
-const useImageUpload = (userId: string) => {
+const imageUploadHook = (userId: string) => {
   const [imgFile, setImgFile] = useState<string | null>(null);
   const [imgUrl, setImgUrl] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
@@ -72,4 +72,4 @@ const useImageUpload = (userId: string) => {
   return { imgFile, setImgFile, imgUrl, loading, handleImageInputChange };
 };
 
-export default useImageUpload;
+export default imageUploadHook;

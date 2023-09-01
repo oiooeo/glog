@@ -6,12 +6,14 @@ import { useModal } from '../common/overlay/modal/Modal.hooks';
 import { getPostByPostId, deleteButton } from '../../api/supabaseDatabase';
 import { useSessionStore } from '../../zustand/useSessionStore';
 import { useLocationStore } from '../../zustand/useLocationStore';
-import useImageUpload from '../../hooks/useImageUpload';
 import UploadBox from './Post.UploadBox';
 import ContentsSection from './Post.ContentsSection';
 import { handleMutationFunction, handleMutationSuccess } from './Post.util';
 import { usePostStore } from '../../zustand/usePostStore';
 import toast from 'react-simple-toasts';
+import imageUploadHook from './Post.hooks';
+
+
 
 type PostProps = {
   unmount: (name: string) => void;
@@ -39,7 +41,7 @@ const Post = ({ type, unmount, postId }: PostProps) => {
   const [location, setLocation] = useState({ longitude: 0, latitude: 0 });
   const [locationInfo, setLocationInfo] = useState<LocationInfoTypes>({ countryId: '', regionId: '', address: '' });
 
-  const { imgFile, setImgFile, imgUrl, loading, handleImageInputChange } = useImageUpload(userId!);
+  const { imgFile, setImgFile, imgUrl, loading, handleImageInputChange } = imageUploadHook(userId!);
 
   const { mutate } = useMutation({
     mutationFn: async () => {

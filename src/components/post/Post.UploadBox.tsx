@@ -12,7 +12,7 @@ interface UploadBoxTypes {
   handleDrop: (event: React.DragEvent<HTMLDivElement>) => Promise<void>;
 }
 
-const UploadBox = ({ imgFile, loading, handleImageSubmit, imgRef, handleDrop }: UploadBoxTypes) => {
+const useImageUpload = ({ imgFile, loading, handleImageSubmit, imgRef, handleDrop }: UploadBoxTypes) => {
   return (
     <Styled.UploadBox onDragEnter={(event: any) => event.preventDefault()} onDragOver={(event: any) => event.preventDefault()} onDragLeave={(event: any) => event.preventDefault()} onDrop={handleDrop}>
       <label htmlFor="inputImg">
@@ -54,4 +54,4 @@ const UploadBox = ({ imgFile, loading, handleImageSubmit, imgRef, handleDrop }: 
   );
 };
 
-export default UploadBox;
+export default useImageUpload;
