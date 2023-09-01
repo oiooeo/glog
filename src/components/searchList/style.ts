@@ -1,11 +1,11 @@
 import { styled } from 'styled-components';
 
 export const LoginGuideButton = styled.button`
-  position: absolute;
-  right: 30px;
-  top: 1340px;
+  position: fixed;
+  bottom: 50px;
   width: 340px;
   height: 50px;
+  margin-left: 70px;
   background-color: rgba(114, 128, 142, 0.6);
   border: none;
   border-radius: 20px;

@@ -83,6 +83,10 @@ const Post = ({ type, unmount, postId }: PostProps) => {
     setLocation({ longitude: clickedLocation.longitude, latitude: clickedLocation.latitude });
   };
 
+  const handleToResetLocation = () => {
+    setHere(false);
+  };
+
   const handleToSubmit = () => {
     mutate();
   };
@@ -131,6 +135,7 @@ const Post = ({ type, unmount, postId }: PostProps) => {
         setSwitchChecked={setSwitchChecked}
         handleChangeContents={handleChangeContents}
         handleToSetLocation={handleToSetLocation}
+        handleToResetLocation={handleToResetLocation}
         handleToSubmit={handleToSubmit}
         deleteButton={deleteButton}
         data={data}
