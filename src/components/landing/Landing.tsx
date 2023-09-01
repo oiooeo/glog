@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as Styled from './style';
 
-const Loading = () => {
+const Landing = () => {
   const [percentage, setPercentage] = useState(0);
   const completeClass = percentage >= 100 ? true : false;
 
@@ -19,7 +19,7 @@ const Loading = () => {
   }, []);
 
   return (
-    <Styled.PageLoading completeClass={completeClass}>
+    <Styled.PageLanding completeClass={completeClass}>
       {percentage <= 50 && (
         <>
           <Styled.MainText>지구를 여행했던 기록을 남겨보세요</Styled.MainText>
@@ -32,11 +32,11 @@ const Loading = () => {
           <Styled.ServeText>지구 위 불빛들을 클릭해보세요</Styled.ServeText>
         </>
       )}
-      <Styled.Loding>
-        <Styled.LoadingBar percentage={percentage} />
-      </Styled.Loding>
-    </Styled.PageLoading>
+      <Styled.Landing>
+        <Styled.LandingBar percentage={percentage} />
+      </Styled.Landing>
+    </Styled.PageLanding>
   );
 };
 
-export default Loading;
+export default Landing;

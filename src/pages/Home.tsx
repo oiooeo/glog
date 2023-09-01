@@ -4,9 +4,9 @@ import { getMyPosts, getPosts } from '../api/supabaseDatabase';
 import { useSessionStore } from '../zustand/useSessionStore';
 import { useTabStore } from '../zustand/useTabStore';
 import { useQuery } from '@tanstack/react-query';
+import Landing from '../components/landing/Landing';
 
 import { Tables } from '../types/supabase';
-import Loading from '../components/loading/Loading';
 
 const Home = () => {
   const session = useSessionStore(state => state.session);
@@ -37,7 +37,7 @@ const Home = () => {
   return (
     <>
       <Globe postsData={data} />
-      <Loading />
+      <Landing/>
     </>
   );
 };

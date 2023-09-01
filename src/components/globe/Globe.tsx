@@ -4,7 +4,7 @@ import * as Styled from './style';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import { Tables } from '../../types/supabase';
 import { pickImageMarker } from './globe.util';
-import { globeCluster } from './GlobeCluster';
+import { globeCluster } from '../globeCluster/GlobeCluster';
 import { useLocationStore } from '../../zustand/useLocationStore';
 import { useMapLocationStore } from '../../zustand/useMapLocationStore';
 import { usePostStore } from '../../zustand/usePostStore';
