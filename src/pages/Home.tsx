@@ -6,6 +6,7 @@ import { useTabStore } from '../zustand/useTabStore';
 import { useQuery } from '@tanstack/react-query';
 
 import { Tables } from '../types/supabase';
+import Loading from '../components/loading/Loading';
 
 const Home = () => {
   const session = useSessionStore(state => state.session);
@@ -33,7 +34,12 @@ const Home = () => {
     setData(tab === 'explore' ? posts : myData);
   }, [tab, posts, myData]);
 
-  return <Globe postsData={data} />;
+  return (
+    <>
+      <Globe postsData={data} />
+      <Loading />
+    </>
+  );
 };
 
 export default Home;
