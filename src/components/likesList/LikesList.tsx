@@ -2,7 +2,7 @@ import * as Styled from './style';
 import { useEffect, useRef, useState } from 'react';
 import { useSessionStore } from '../../zustand/useSessionStore';
 import { getLikes, getPosts } from '../../api/supabaseDatabase';
-import ReactLoading from 'react-loading';
+import Loader from '../common/loader/Loader';
 import PostItem from '../common/postItem/PostItem';
 
 import type { Tables } from '../../types/supabase';
@@ -67,7 +67,7 @@ const LikesList = () => {
       </Styled.ScrollDiv>
       {loading && (
         <Styled.LoadingDiv>
-          <ReactLoading type="spin" color="#ffffff" width={'50px'} />
+          <Loader />
         </Styled.LoadingDiv>
       )}
     </>
