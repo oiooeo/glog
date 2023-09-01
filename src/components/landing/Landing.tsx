@@ -3,7 +3,7 @@ import * as Styled from './style';
 
 const Landing = () => {
   const [percentage, setPercentage] = useState(0);
-  const completeClass = percentage >= 100 ? true : false;
+  const completeclass = percentage >= 100 ? 'true' : 'false';
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -19,7 +19,7 @@ const Landing = () => {
   }, []);
 
   return (
-    <Styled.PageLanding completeClass={completeClass}>
+    <Styled.PageLanding completeclass={completeclass}>
       {percentage <= 50 && (
         <>
           <Styled.MainText>지구를 여행했던 기록을 남겨보세요</Styled.MainText>
