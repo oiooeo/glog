@@ -41,7 +41,7 @@ const UploadBox = ({ imgFile, loading, handleImageSubmit, imgRef, handleDrop }: 
           </Styled.ImgBox>
         )}
       </label>
-      <input id="inputImg" type="file" accept="image/png, image/jpeg, image/jpg, image/HEIC, image/heic " onChange={handleImageSubmit} ref={imgRef} />
+      <input id="inputImg" type="file" multiple accept="image/png, image/jpeg, image/jpg, image/HEIC, image/heic " onChange={handleImageSubmit} ref={imgRef} />
     </Styled.UploadBox>
   );
 };

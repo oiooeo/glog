@@ -11,6 +11,7 @@ import UploadBox from './Post.UploadBox';
 import ContentsSection from './Post.ContentsSection';
 import { handleMutationFunction, handleMutationSuccess } from './Post.util';
 import { usePostStore } from '../../zustand/usePostStore';
+import toast from 'react-simple-toasts';
 
 type PostProps = {
   unmount: (name: string) => void;
@@ -51,6 +52,9 @@ const Post = ({ type, unmount, postId }: PostProps) => {
 
   const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
+    if (event.dataTransfer.files && event.dataTransfer.files?.length > 1) {
+      toast('사진은 한 게시물에 한장까지만 업로드 돼요!', { className: 'image-alert', position: 'top-left', duration: 1000 });
+    }
 
     const file = event.dataTransfer.files[0];
     if (file) {
@@ -59,6 +63,9 @@ const Post = ({ type, unmount, postId }: PostProps) => {
   };
 
   const handleImageSubmit = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files?.length > 1) {
+      toast('사진은 한 게시물에 한장까지만 업로드 돼요!', { className: 'image-alert', position: 'top-left', duration: 1000 });
+    }
     const file = event.target.files?.[0];
     if (!file) return;
     handleImageInputChange(file);
