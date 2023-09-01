@@ -7,6 +7,32 @@ export const PostLayout = styled.div`
   gap: 10px;
 `;
 
+export const UploadImgFileContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & > p {
+    position: absolute;
+    top: 100px;
+    left: 65px;
+    text-align: center;
+    color: rgba(239, 235, 237, 0.8);
+    filter: drop-shadow(rgba(0, 0, 0, 0.4) 0px 0px 9px);
+  }
+
+  & > span {
+    position: absolute;
+    top: 100px;
+    left: 320px;
+    text-align: center;
+    font-size: 14px;
+    color: rgba(239, 235, 237, 0.8);
+    font-weight: 500;
+    filter: drop-shadow(rgba(0, 0, 0, 0.4) 0px 0px 9px);
+  }
+`;
+
 export const ImgBox = styled.div`
   display: flex;
   flex-direction: column;
@@ -30,6 +56,16 @@ export const ImgBox = styled.div`
     font-size: 17px;
     font-weight: 500;
     line-height: 25px;
+  }
+
+  & > span {
+    position: absolute;
+    top: 100px;
+    left: 320px;
+    text-align: center;
+    font-size: 14px;
+    color: rgba(239, 235, 237, 0.8);
+    font-weight: 500;
   }
 `;
 

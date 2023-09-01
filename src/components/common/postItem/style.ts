@@ -5,7 +5,7 @@ export const PostItemLayout = styled.div<{ lastItem?: boolean }>`
   overflow: hidden;
   width: 300px;
   height: ${props => (props.lastItem ? '150px' : '300px')};
-  margin: ${props => (props.lastItem ? '0' : '15px 0')};
+  margin: ${props => (props.lastItem ? '15px 20px 0 0' : '15px 20px 15px 0')};
   border-radius: ${props => (props.lastItem ? '16px 16px 0 0' : '16px')};
   filter: ${props => (props.lastItem ? 'blur(5px)' : 'none')};
   transition: filter 0.3s ease;

@@ -1,6 +1,7 @@
 import React from 'react';
 import * as Styled from './style';
 import { BsFillImageFill } from 'react-icons/bs';
+import { TbCameraRotate } from 'react-icons/tb';
 import Loader from '../common/loader/Loader';
 
 interface UploadBoxTypes {
@@ -16,7 +17,13 @@ const UploadBox = ({ imgFile, loading, handleImageSubmit, imgRef, handleDrop }: 
     <Styled.UploadBox onDragEnter={(event: any) => event.preventDefault()} onDragOver={(event: any) => event.preventDefault()} onDragLeave={(event: any) => event.preventDefault()} onDrop={handleDrop}>
       <label htmlFor="inputImg">
         {imgFile ? (
-          <Styled.UploadImgFile src={imgFile} alt="이미지 업로드" />
+          <Styled.UploadImgFileContainer>
+            <p>
+              <TbCameraRotate size={'22px'} className="image" />
+            </p>
+            <Styled.UploadImgFile src={imgFile} alt="이미지 업로드" />
+            <span>1/1</span>
+          </Styled.UploadImgFileContainer>
         ) : (
           <Styled.ImgBox>
             {loading ? (
@@ -30,6 +37,7 @@ const UploadBox = ({ imgFile, loading, handleImageSubmit, imgRef, handleDrop }: 
               </>
             ) : (
               <>
+                <span>0/1</span>
                 <BsFillImageFill size={'25px'} className="image" />
                 <p>
                   여기에 사진을

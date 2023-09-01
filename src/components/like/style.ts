@@ -13,7 +13,7 @@ export const LikeButton = styled.button`
   cursor: pointer;
 
   & .like {
-    filter: drop-shadow(0px 0px 3px rgb(0, 0, 0));
+    filter: drop-shadow(rgba(0, 0, 0, 0.4) 0px 0px 9px);
   }
 `;
 
