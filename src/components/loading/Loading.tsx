@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as Styled from './style';
 
-const LoadingPage = () => {
+const Loading = () => {
   const [percentage, setPercentage] = useState(0);
   const completeClass = percentage >= 100 ? true : false;
 
@@ -39,4 +39,4 @@ const LoadingPage = () => {
   );
 };
 
-export default LoadingPage;
+export default Loading;

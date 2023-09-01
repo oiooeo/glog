@@ -6,7 +6,7 @@ import { useTabStore } from '../zustand/useTabStore';
 import { useQuery } from '@tanstack/react-query';
 
 import { Tables } from '../types/supabase';
-import LoadingPage from './LoadingPage';
+import Loading from '../components/loading/Loading';
 
 const Home = () => {
   const session = useSessionStore(state => state.session);
@@ -37,7 +37,7 @@ const Home = () => {
   return (
     <>
       <Globe postsData={data} />
-      <LoadingPage />
+      <Loading />
     </>
   );
 };
