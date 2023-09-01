@@ -2,7 +2,7 @@ import React from 'react';
 import Loader from '../common/loader/Loader';
 import * as Styled from './style';
 import { Session } from '@supabase/supabase-js';
-import { renderPostItems } from './SearchList.until';
+import { renderPostItems } from './SearchList.util';
 import { signin } from '../../api/supabaseAuth';
 
 import type { Tables } from '../../types/supabase';

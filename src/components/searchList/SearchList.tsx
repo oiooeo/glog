@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getMyPosts, getPosts } from '../../api/supabaseDatabase';
 import { useSessionStore } from '../../zustand/useSessionStore';
 import { useTabStore } from '../../zustand/useTabStore';
-import { scrollToTop } from './SearchList.until';
+import { scrollToTop } from './SearchList.util';
 import SessionDependentView from './SearchList.SessionDependentView';
 
 import type { Tables } from '../../types/supabase';
