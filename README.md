@@ -1,8 +1,9 @@
-## [Glog\*](https://www.naver.com/)
+## [Glog\*](https://glog-alpha.vercel.app/)
 
 > `Globe` + `Log` = `Glog`
 
-![Aug-29-2023 17-52-03](https://github.com/oiooeo/glog/assets/133937368/7b26b409-5b86-4269-b0b4-91c501077379)
+![Sep-01-2023 20-39-36](https://github.com/oiooeo/glog/assets/133937368/0f497dc5-b1d3-4c57-b586-d7aafcc09ac1)
+![Sep-01-2023 20-38-43](https://github.com/oiooeo/glog/assets/133937368/6b849379-c089-4000-b0f2-f9641d7dfa1b)
 
 ---
 
