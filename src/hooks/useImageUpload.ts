@@ -53,7 +53,6 @@ const useImageUpload = (userId: string) => {
         const compressedFile = await imageCompression(fileToResize, options);
         await uploadImgFile(compressedFile);
       } catch (error) {
-        console.error('Image compression error:', error);
       }
     };
 
@@ -66,7 +65,6 @@ const useImageUpload = (userId: string) => {
         resizeFile(jpgFile);
       });
     } else {
-      console.log('No conversion needed. Using original file.');
       resizeFile(file);
     }
   };
