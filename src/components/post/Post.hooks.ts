@@ -6,7 +6,7 @@ import exifr from 'exifr';
 import { uuid } from '@supabase/gotrue-js/dist/module/lib/helpers';
 import { useMapLocationStore } from '../../zustand/useMapLocationStore';
 
-const imageUploadHook = (userId: string) => {
+const ImageUploadHook = (userId: string) => {
   const [imgFile, setImgFile] = useState<string | null>(null);
   const [imgUrl, setImgUrl] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
@@ -52,8 +52,7 @@ const imageUploadHook = (userId: string) => {
       try {
         const compressedFile = await imageCompression(fileToResize, options);
         await uploadImgFile(compressedFile);
-      } catch (error) {
-      }
+      } catch (error) {}
     };
 
     if (file.type === 'image/heic' || file.type === 'image/HEIC') {
@@ -72,4 +71,4 @@ const imageUploadHook = (userId: string) => {
   return { imgFile, setImgFile, imgUrl, loading, handleImageInputChange };
 };
 
-export default imageUploadHook;
+export default ImageUploadHook;
