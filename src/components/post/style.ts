@@ -18,7 +18,7 @@ export const UploadImgFileContainer = styled.div`
     left: 65px;
     text-align: center;
     color: rgba(239, 235, 237, 0.8);
-    filter: drop-shadow(0px 0px 8px rgb(0, 0, 0));
+    filter: drop-shadow(rgba(0, 0, 0, 0.4) 0px 0px 9px);
   }
 
   & > span {
@@ -29,7 +29,7 @@ export const UploadImgFileContainer = styled.div`
     font-size: 14px;
     color: rgba(239, 235, 237, 0.8);
     font-weight: 500;
-    filter: drop-shadow(0px 0px 8px rgb(0, 0, 0));
+    filter: drop-shadow(rgba(0, 0, 0, 0.4) 0px 0px 9px);
   }
 `;
 
