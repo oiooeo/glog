@@ -1,7 +1,7 @@
 import { styled } from 'styled-components';
 
-export const PageLanding = styled.div<{ completeClass: boolean }>`
-  z-index: ${props => (props.completeClass ? 0 : 101)};
+export const PageLanding = styled.div<{ completeclass: string }>`
+  z-index: ${props => (props.completeclass === 'true' ? 0 : 101)};
   position: fixed;
   width: 100%;
   height: 100%;
