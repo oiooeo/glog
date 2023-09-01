@@ -19,24 +19,41 @@ type ContentsSectionProps = {
   handleDelete: () => void;
   handleChangeContents: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string | undefined) => void;
   handleToSetLocation: () => void;
+  handleToResetLocation: () => void;
   handleToSubmit: () => void;
   deleteButton: (postId: string) => Promise<void>;
   data: any;
 };
 
-const ContentsSection = ({ type, imgFile, here, locationInfo, clickedLocation, contents, switchChecked, handleDelete, setSwitchChecked, handleChangeContents, handleToSetLocation, handleToSubmit, deleteButton, data }: ContentsSectionProps) => {
+const ContentsSection = ({
+  type,
+  imgFile,
+  here,
+  locationInfo,
+  clickedLocation,
+  contents,
+  switchChecked,
+  handleDelete,
+  setSwitchChecked,
+  handleChangeContents,
+  handleToSetLocation,
+  handleToResetLocation,
+  handleToSubmit,
+  deleteButton,
+  data,
+}: ContentsSectionProps) => {
   return (
     <>
       {type === 'post' && imgFile && (
         <>
           <GlobeSearch />
           {here ? (
-            <>
+            <Styled.PinBackground>
               <Styled.Pin src={pin} alt="위치" />
-              <Styled.PinButton size="large" variant="black" onClick={handleToSetLocation}>
+              <Styled.PinButton size="large" variant="black" onClick={handleToResetLocation}>
                 수정하기
               </Styled.PinButton>
-            </>
+            </Styled.PinBackground>
           ) : (
             <>
               <Styled.PinParagraph>
@@ -48,7 +65,7 @@ const ContentsSection = ({ type, imgFile, here, locationInfo, clickedLocation, c
                   여기예요!
                 </Styled.PinButton>
               ) : (
-                <Styled.PinButton size="large" variant="black" onClick={handleToSetLocation}>
+                <Styled.PinButton size="large" variant="orange" onClick={handleToSetLocation}>
                   여기예요!
                 </Styled.PinButton>
               )}
@@ -76,7 +93,7 @@ const ContentsSection = ({ type, imgFile, here, locationInfo, clickedLocation, c
               작성하기
             </Button>
           ) : (
-            <Button size="large" variant="orange" onClick={handleToSubmit}>
+            <Button size="large" variant="orange-shadow" onClick={handleToSubmit}>
               작성하기
             </Button>
           )}
@@ -111,7 +128,7 @@ const ContentsSection = ({ type, imgFile, here, locationInfo, clickedLocation, c
                 작성하기
               </Button>
             ) : (
-              <Button size="medium" variant="orange" onClick={handleToSubmit}>
+              <Button size="medium" variant="orange-shadow" onClick={handleToSubmit}>
                 작성하기
               </Button>
             )}
