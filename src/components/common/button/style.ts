@@ -53,7 +53,6 @@ export const Button = styled.button<ButtonProps>`
     css`
       background-color: #4d5765;
       color: #e4e7eb;
-      box-shadow: 3px 3px 20px rgba(251, 232, 189, 0.4);
     `}
 
   ${props =>

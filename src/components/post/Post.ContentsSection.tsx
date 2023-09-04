@@ -125,11 +125,11 @@ const ContentsSection = ({
             </Button>
             {contents === '' ? (
               <Button size="medium" variant="gray">
-                작성하기
+                수정하기
               </Button>
             ) : (
               <Button size="medium" variant="orange-shadow" onClick={handleToSubmit}>
-                작성하기
+                수정하기
               </Button>
             )}
           </div>
