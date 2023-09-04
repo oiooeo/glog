@@ -31,11 +31,10 @@ export const globeCluster = ({ mapLocation, postsData, mount, flyToLocation, isP
 
       const clusterId = features[0].properties.cluster_id;
       mapLocation.getSource('pinPoint').getClusterExpansionZoom(clusterId, (error: Error, zoom: number) => {
-        const zoomSize = Math.min(zoom, 10);
         if (error) return;
         mapLocation.easeTo({
           center: features[0].geometry.coordinates,
-          zoom: zoomSize,
+          zoom: zoom,
         });
       });
     };
