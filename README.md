@@ -2,17 +2,19 @@
 
 > `Globe` + `Log` = `Glog`
 
-![Sep-01-2023 20-39-36](https://github.com/oiooeo/glog/assets/133937368/0f497dc5-b1d3-4c57-b586-d7aafcc09ac1)
-![Sep-01-2023 20-38-43](https://github.com/oiooeo/glog/assets/133937368/6b849379-c089-4000-b0f2-f9641d7dfa1b)
+![Slide 16_9 - 1](https://github.com/oiooeo/glog/assets/133937368/a50c6d6f-a58b-49e3-8adb-c89ffc0cd5d7)
+
+<!-- ![Sep-01-2023 20-39-36](https://github.com/oiooeo/glog/assets/133937368/0f497dc5-b1d3-4c57-b586-d7aafcc09ac1)
+![Sep-01-2023 20-38-43](https://github.com/oiooeo/glog/assets/133937368/6b849379-c089-4000-b0f2-f9641d7dfa1b) -->
 
 ---
 
 ## 팀구성
 
-|                                 [최윤서](https://github.com/oiooeo)                                 |                                 [전수정](https://github.com/suzzjeon)                                 |                              [김승범](https://github.com/seungbeom1999)                               |                                 [백예나](https://github.com/whybwhyd)                                 |
-| :-------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------: |
-| <img src="https://avatars.githubusercontent.com/u/72060405?v=4" alt="프로필 이미지" width="200px"/> | <img src="https://avatars.githubusercontent.com/u/133937368?v=4" alt="프로필 이미지" width="200px" /> | <img src="https://avatars.githubusercontent.com/u/121495648?v=4" alt="프로필 이미지" width="200px" /> | <img src="https://avatars.githubusercontent.com/u/131356619?v=4" alt="프로필 이미지" width="200px" /> |
-|                                             `Front-end`                                             |                                              `Front-end`                                              |                                              `Front-end`                                              |                                              `Front-end`                                              |
+|                                 [최윤서](https://github.com/oiooeo)                                 |                                 [전수정](https://github.com/suzzjeon)                                 |                              [김승범](https://github.com/seungbeom1999)                               |                                 [백예나](https://github.com/whybwhyd)                                 |                               [서하영](https://onlehaaru.notion.site/6645d19e202f456d91bdf617e42df221)                               |
+| :-------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------: |
+| <img src="https://avatars.githubusercontent.com/u/72060405?v=4" alt="프로필 이미지" width="200px"/> | <img src="https://avatars.githubusercontent.com/u/133937368?v=4" alt="프로필 이미지" width="200px" /> | <img src="https://avatars.githubusercontent.com/u/121495648?v=4" alt="프로필 이미지" width="200px" /> | <img src="https://avatars.githubusercontent.com/u/131356619?v=4" alt="프로필 이미지" width="200px" /> | <img src="https://github.com/oiooeo/glog/assets/133937368/d91b563f-eb9f-4479-837e-01a89a23b7c3" alt="프로필 이미지" width="200px" /> |
+|                                             `Front-end`                                             |                                              `Front-end`                                              |                                              `Front-end`                                              |                                              `Front-end`                                              |                                                              `Designer`                                                              |
 
 ---
 
@@ -62,7 +64,7 @@ $ yarn start
 
 ## ERD
 
-![image](https://github.com/oiooeo/glog/assets/133937368/4e2628c1-5eb8-45e2-88d6-28e9810eda92)
+![image](https://github.com/oiooeo/glog/assets/133937368/8c60c900-018e-4264-a85c-27c55b720623)
 
 ---
 
