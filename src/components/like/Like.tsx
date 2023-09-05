@@ -40,9 +40,9 @@ const Like = ({ data }: LikeProps) => {
 
     if (isLiked) {
       if (!myLikedData) return;
-      deleteLikeMutation.mutateAsync(myLikedData?.id);
+      deleteLikeMutation.mutate(myLikedData?.id);
     } else {
-      addLikeMutation.mutateAsync({ postId: data.id, userId: session.user.id });
+      addLikeMutation.mutate({ postId: data.id, userId: session.user.id });
     }
   };
 
