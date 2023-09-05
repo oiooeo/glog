@@ -14,5 +14,7 @@ interface TabState extends TabInitState {
 
 export const useTabStore = create<TabState>(set => ({
   ...initState,
-  setTab: now => set({ tab: now }),
+  setTab: now => {
+    set({ tab: now });
+  },
 }));

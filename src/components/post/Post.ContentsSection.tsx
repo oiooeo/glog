@@ -1,13 +1,14 @@
 import React from 'react';
+
 import * as Styled from './style';
-import Switch from '../common/switch/Switch';
-import Button from '../common/button/Button';
-import GlobeSearch from '../globeSearch/GlobeSearch';
 import pin from '../../assets/pin/pinLarge.svg';
+import Button from '../common/button/Button';
+import Switch from '../common/switch/Switch';
+import GlobeSearch from '../globeSearch/GlobeSearch';
 
 import type { LocationInfoTypes } from './Post';
 
-type ContentsSectionProps = {
+interface ContentsSectionProps {
   type: string;
   imgFile: string | null;
   here: boolean;
@@ -23,7 +24,7 @@ type ContentsSectionProps = {
   handleToSubmit: () => void;
   deleteButton: (postId: string) => Promise<void>;
   data: any;
-};
+}
 
 const ContentsSection = ({
   type,

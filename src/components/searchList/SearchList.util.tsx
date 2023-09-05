@@ -1,5 +1,6 @@
-import { Tables } from '../../types/supabase';
 import PostItem from '../common/postItem/PostItem';
+
+import type { Tables } from '../../types/supabase';
 
 export const scrollToTop = (scrollRef: React.MutableRefObject<HTMLDivElement | null>) => {
   scrollRef.current?.scrollTo({
@@ -7,7 +8,7 @@ export const scrollToTop = (scrollRef: React.MutableRefObject<HTMLDivElement | n
   });
 };
 
-export const renderPostItems = (items: Tables<'posts'>[], startIndex: number, endIndex: number, lastItem?: boolean) => {
+export const renderPostItems = (items: Array<Tables<'posts'>>, startIndex: number, endIndex: number, lastItem?: boolean) => {
   return (
     <>
       {items.slice(startIndex, endIndex).map(item => (

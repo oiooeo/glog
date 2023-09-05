@@ -1,15 +1,17 @@
 import React from 'react';
-import * as Styled from './style';
+
 import { BsFillImageFill } from 'react-icons/bs';
 import { TbCameraRotate } from 'react-icons/tb';
+
+import * as Styled from './style';
 import Loader from '../common/loader/Loader';
 
 interface UploadBoxTypes {
   imgFile: string | null;
   loading: boolean;
-  handleImageSubmit: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
+  handleImageSubmit: (event: React.ChangeEvent<HTMLInputElement>) => void;
   imgRef: React.RefObject<HTMLInputElement>;
-  handleDrop: (event: React.DragEvent<HTMLDivElement>) => Promise<void>;
+  handleDrop: (event: React.DragEvent<HTMLDivElement>) => void;
 }
 
 const useImageUpload = ({ imgFile, loading, handleImageSubmit, imgRef, handleDrop }: UploadBoxTypes) => {

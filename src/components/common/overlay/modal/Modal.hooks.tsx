@@ -1,6 +1,7 @@
-import { ReactNode } from 'react';
-import { useOverlayContext } from '../Overlay.context';
+import type { ReactNode } from 'react';
+
 import Modal from './Modal';
+import { useOverlayContext } from '../Overlay.context';
 
 export const useModal = () => {
   const { mount: _mount, unmount: _unmount } = useOverlayContext();

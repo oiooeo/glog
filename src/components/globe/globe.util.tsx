@@ -1,10 +1,12 @@
 import React from 'react';
+import type { ReactNode } from 'react';
+
 import mapboxgl from 'mapbox-gl';
 import { renderToStaticMarkup } from 'react-dom/server';
+
 import { ImageMarker, OrangeMarker } from './Globe.marker';
-import Detail from '../detail/Detail';
-import { ReactNode } from 'react';
 import pinFocus from '../../assets/pin/pinFocus.svg';
+import Detail from '../detail/Detail';
 
 import type { Tables } from '../../types/supabase';
 export enum CustomMarker {
@@ -44,12 +46,18 @@ export const pickImageMarker = (map: MapRef, mount: Mount, flyToLocation: (lng: 
 
   const marker = getHTMLElement({ type: CustomMarker.Image, imgSrc: postData.images });
   const markerInstance = new mapboxgl.Marker(marker).setLngLat([postData.longitude, postData.latitude]);
-  markerInstance.addTo(map.current!);
+  if (map.current) {
+    markerInstance.addTo(map.current);
+  } else {
+    return;
+  }
 
-  marker.addEventListener('click', async () => {
+  const handleMarkerClick = () => {
     mount('detail', <Detail data={postData} />);
     flyToLocation(postData.longitude, postData.latitude);
-  });
+  };
+
+  marker.addEventListener('click', handleMarkerClick);
 };
 
 export const pickLocationWithMarker = (map: any, clickedPostLocation: { longitude: number; latitude: number }) => {

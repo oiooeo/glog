@@ -14,5 +14,7 @@ interface MarkerInvisibleStore extends MarkerInvisibleInitState {
 
 export const useMarkerInvisible = create<MarkerInvisibleStore>(set => ({
   ...initState,
-  setIsMarkerInvisible: nowIsMarkerInvisible => set({ isMarkerInvisible: nowIsMarkerInvisible }),
+  setIsMarkerInvisible: nowIsMarkerInvisible => {
+    set({ isMarkerInvisible: nowIsMarkerInvisible });
+  },
 }));

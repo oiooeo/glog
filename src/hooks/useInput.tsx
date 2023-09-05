@@ -1,5 +1,5 @@
-// useInput.tsx
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
+import type { ChangeEvent } from 'react';
 
 type UseInputReturnType = [string, (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => void, React.Dispatch<React.SetStateAction<string>>];
 

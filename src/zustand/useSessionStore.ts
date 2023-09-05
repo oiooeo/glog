@@ -1,5 +1,6 @@
-import { Session } from '@supabase/supabase-js';
 import { create } from 'zustand';
+
+import type { Session } from '@supabase/supabase-js';
 
 interface SessionInitState {
   session: Session | null;
@@ -15,5 +16,7 @@ interface SessionStore extends SessionInitState {
 
 export const useSessionStore = create<SessionStore>(set => ({
   ...initState,
-  setSession: newSession => set({ session: newSession }),
+  setSession: newSession => {
+    set({ session: newSession });
+  },
 }));

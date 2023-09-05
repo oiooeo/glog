@@ -291,10 +291,7 @@ export interface Database {
       };
       get_size_by_bucket: {
         Args: Record<PropertyKey, never>;
-        Returns: {
-          size: number;
-          bucket_id: string;
-        }[];
+        Returns: Array<{ size: number; bucket_id: string }>;
       };
       search: {
         Args: {
@@ -307,14 +304,14 @@ export interface Database {
           sortcolumn?: string;
           sortorder?: string;
         };
-        Returns: {
+        Returns: Array<{
           name: string;
           id: string;
           updated_at: string;
           created_at: string;
           last_accessed_at: string;
           metadata: Json;
-        }[];
+        }>;
       };
     };
     Enums: {

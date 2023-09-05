@@ -1,7 +1,8 @@
-import * as Styled from './style';
 import { useEffect, useRef, useState } from 'react';
-import { useSessionStore } from '../../zustand/useSessionStore';
+
+import * as Styled from './style';
 import { getLikes, getPosts } from '../../api/supabaseDatabase';
+import { useSessionStore } from '../../zustand/useSessionStore';
 import Loader from '../common/loader/Loader';
 import PostItem from '../common/postItem/PostItem';
 
@@ -9,7 +10,7 @@ import type { Tables } from '../../types/supabase';
 
 const LikesList = () => {
   const session = useSessionStore(state => state.session);
-  const [likedPosts, setLikedPosts] = useState<Tables<'posts'>[]>([]);
+  const [likedPosts, setLikedPosts] = useState<Array<Tables<'posts'>>>([]);
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
   const scrollRef = useRef<HTMLDivElement | null>(null);

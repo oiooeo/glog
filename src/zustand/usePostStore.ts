@@ -14,5 +14,7 @@ interface PostStore extends PostInitState {
 
 export const usePostStore = create<PostStore>(set => ({
   ...initState,
-  setIsPosting: nowIsPosting => set({ isPosting: nowIsPosting }),
+  setIsPosting: nowIsPosting => {
+    set({ isPosting: nowIsPosting });
+  },
 }));
