@@ -14,5 +14,7 @@ interface MapStore extends MapInitState {
 
 export const useMapLocationStore = create<MapStore>(set => ({
   ...initState,
-  setMapLocation: newMapLocation => set({ mapLocation: newMapLocation }),
+  setMapLocation: newMapLocation => {
+    set({ mapLocation: newMapLocation });
+  },
 }));

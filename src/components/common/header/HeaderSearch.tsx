@@ -1,10 +1,12 @@
 import React from 'react';
-import * as Styled from './style';
+
+import { BiHeart, BiSearch, BiSolidHeart } from 'react-icons/bi';
 import { BsXCircle } from 'react-icons/bs';
-import { BiSearch, BiHeart, BiSolidHeart } from 'react-icons/bi';
+
+import * as Styled from './style';
 import { useSessionStore } from '../../../zustand/useSessionStore';
 
-type HeaderSearchTypes = {
+interface HeaderSearchTypes {
   openSearchList: () => void;
   closeSearchList: () => void;
   handleToSearch: () => void;
@@ -15,7 +17,7 @@ type HeaderSearchTypes = {
   isSearchListOpened: boolean;
   isLikeListOpened: boolean;
   handleChangeKeyword: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string | undefined) => void;
-};
+}
 const HeaderSearch = (props: HeaderSearchTypes) => {
   const { openSearchList, closeSearchList, handleToSearch, closeLikesList, openLikesList, signinHandler, handleOnEnterPress, isSearchListOpened, isLikeListOpened, handleChangeKeyword } = props;
 

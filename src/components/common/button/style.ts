@@ -1,5 +1,6 @@
-import { ReactNode } from 'react';
-import { styled, css } from 'styled-components';
+import type { ReactNode } from 'react';
+
+import { css, styled } from 'styled-components';
 
 export interface ButtonProps {
   color?: string;

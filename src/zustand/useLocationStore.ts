@@ -17,5 +17,7 @@ interface LocationStore {
 
 export const useLocationStore = create<LocationStore>(set => ({
   clickedLocation: initState,
-  setClickedLocation: newLocation => set({ clickedLocation: newLocation }),
+  setClickedLocation: newLocation => {
+    set({ clickedLocation: newLocation });
+  },
 }));

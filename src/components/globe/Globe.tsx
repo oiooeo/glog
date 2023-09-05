@@ -1,18 +1,21 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+
 import mapboxgl from 'mapbox-gl';
-import * as Styled from './style';
-import { useModal } from '../common/overlay/modal/Modal.hooks';
-import { Tables } from '../../types/supabase';
+
+import { INITIAL_CENTER, ZOOM } from './Globe.content';
 import { pickImageMarker } from './globe.util';
-import { globeCluster } from '../globeCluster/GlobeCluster';
+import * as Styled from './style';
 import { useLocationStore } from '../../zustand/useLocationStore';
 import { useMapLocationStore } from '../../zustand/useMapLocationStore';
-import { usePostStore } from '../../zustand/usePostStore';
-import { INITIAL_CENTER, ZOOM } from './Globe.content';
 import { useMarkerInvisible } from '../../zustand/useMarkerInvisible';
+import { usePostStore } from '../../zustand/usePostStore';
+import { useModal } from '../common/overlay/modal/Modal.hooks';
+import { globeCluster } from '../globeCluster/GlobeCluster';
+
+import type { Tables } from '../../types/supabase';
 
 interface MapProps {
-  postsData: Tables<'posts'>[] | undefined;
+  postsData: Array<Tables<'posts'>> | undefined;
 }
 
 const Globe = ({ postsData }: MapProps) => {
@@ -58,9 +61,11 @@ const Globe = ({ postsData }: MapProps) => {
     });
   };
 
-  const handleImageMarkers = (postData: Tables<'posts'>[], count: number) => {
+  const handleImageMarkers = (postData: Array<Tables<'posts'>>, count: number) => {
     const imageMarkers = document.querySelectorAll('.image-marker');
-    imageMarkers.forEach(marker => marker.remove());
+    imageMarkers.forEach(marker => {
+      marker.remove();
+    });
 
     for (let i = 0; i < count; i++) {
       const data = postData[i];

@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+
 import Button from '../common/button/Button';
 
 export const PostLayout = styled.div`

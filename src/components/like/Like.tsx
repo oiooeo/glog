@@ -1,18 +1,23 @@
 import React from 'react';
-import * as Styled from './style';
-import { BsHeart, BsHeartFill } from 'react-icons/bs';
+
 import { useQuery } from '@tanstack/react-query';
+import { BsHeart, BsHeartFill } from 'react-icons/bs';
+
+import { useLikeMutation } from './Like.hooks';
+import * as Styled from './style';
+import { AuthError, signin } from '../../api/supabaseAuth';
 import { getIsLike } from '../../api/supabaseDatabase';
 import { useSessionStore } from '../../zustand/useSessionStore';
-import { AuthError, signin } from '../../api/supabaseAuth';
-import { useLikeMutation } from './Like.hooks';
-import { Tables } from '../../types/supabase';
 
-type LikeProps = { data: Tables<'posts'> };
+import type { Tables } from '../../types/supabase';
+
+interface LikeProps {
+  data: Tables<'posts'>;
+}
 
 const Like = ({ data }: LikeProps) => {
   const session = useSessionStore(state => state.session);
-  const { data: likesData } = useQuery(['getIsLike', data.id], () => getIsLike(data.id));
+  const { data: likesData } = useQuery(['getIsLike', data.id], async () => await getIsLike(data.id));
   const isLiked = likesData?.some(like => like.userId === session?.user.id);
   const myLikedData = likesData?.find(like => like.userId === session?.user.id);
   const { deleteLikeMutation, addLikeMutation } = useLikeMutation();
@@ -27,7 +32,7 @@ const Like = ({ data }: LikeProps) => {
     }
   };
 
-  const pressLike = async () => {
+  const pressLike = () => {
     if (!session) {
       signinHandler();
       return;
@@ -35,9 +40,9 @@ const Like = ({ data }: LikeProps) => {
 
     if (isLiked) {
       if (!myLikedData) return;
-      await deleteLikeMutation.mutateAsync(myLikedData?.id);
+      deleteLikeMutation.mutateAsync(myLikedData?.id);
     } else {
-      await addLikeMutation.mutateAsync({ postId: data.id, userId: session.user.id });
+      addLikeMutation.mutateAsync({ postId: data.id, userId: session.user.id });
     }
   };
 

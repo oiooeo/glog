@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { supabase } from '../../api/supabaseClient';
-import imageCompression from 'browser-image-compression';
-import heic2any from 'heic2any';
-import exifr from 'exifr';
+
 import { uuid } from '@supabase/gotrue-js/dist/module/lib/helpers';
+import imageCompression from 'browser-image-compression';
+import exifr from 'exifr';
+import heic2any from 'heic2any';
+
+import { supabase } from '../../api/supabaseClient';
 import { useMapLocationStore } from '../../zustand/useMapLocationStore';
 
 const ImageUploadHook = (userId: string) => {
@@ -39,7 +41,7 @@ const ImageUploadHook = (userId: string) => {
     setLoading(true);
 
     const originalMetadata = await exifr.parse(file);
-    if (originalMetadata && originalMetadata.longitude && originalMetadata.latitude) {
+    if (originalMetadata?.longitude && originalMetadata?.latitude) {
       imageLocation.flyTo({ center: [originalMetadata.longitude, originalMetadata.latitude], zoom: 5 });
     }
 

@@ -1,12 +1,13 @@
 import React from 'react';
-import Detail from '../detail/Detail';
+
 import { loadPinImage, pinImages, removeMapLayersAndSource } from './GlobeCluster.util';
+import Detail from '../detail/Detail';
 
 import type { Tables } from '../../types/supabase';
 
 interface Props {
   mapLocation: any;
-  postsData: Tables<'posts'>[] | undefined;
+  postsData: Array<Tables<'posts'>> | undefined;
   mount: (name: string, element: React.ReactNode) => void;
   flyToLocation: (lng: number, lat: number) => void;
   isPostModalOpened: boolean | null;
@@ -15,7 +16,9 @@ interface Props {
 
 export const globeCluster = ({ mapLocation, postsData, mount, flyToLocation, isPostModalOpened, isRightModalOpened }: Props) => {
   const clusterData = postsData?.slice(5);
-  pinImages.forEach(({ name, url }) => loadPinImage(mapLocation, name, url));
+  pinImages.forEach(({ name, url }) => {
+    loadPinImage(mapLocation, name, url);
+  });
 
   if (clusterData) {
     const getValue = mapLocation.getSource('pinPoint');
@@ -34,7 +37,7 @@ export const globeCluster = ({ mapLocation, postsData, mount, flyToLocation, isP
         if (error) return;
         mapLocation.easeTo({
           center: features[0].geometry.coordinates,
-          zoom: zoom,
+          zoom,
         });
       });
     };
@@ -57,7 +60,7 @@ export const globeCluster = ({ mapLocation, postsData, mount, flyToLocation, isP
         features: clusterData.map(post => ({
           type: 'Feature',
           properties: {
-            cluster: `${post.id}`, // Adjust this based on your data
+            cluster: `${post.id}`,
           },
           geometry: {
             type: 'Point',
@@ -75,7 +78,6 @@ export const globeCluster = ({ mapLocation, postsData, mount, flyToLocation, isP
       source: 'pinPoint',
       filter: ['has', 'point_count'],
       layout: {
-        // 'icon-image': 'smallPin',
         'icon-image': ['step', ['get', 'point_count'], 'clusterFive', 5, 'clusterTen', 10, 'clusterTwenty'],
         'icon-size': 2,
       },

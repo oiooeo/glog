@@ -1,15 +1,17 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
+
 import toast from 'react-simple-toasts';
-import { QueryClient } from '@tanstack/react-query';
-import { getPostByPostId, getPostByUserId } from '../../api/supabaseDatabase';
+
 import { supabase } from '../../api/supabaseClient';
-import Detail from '../detail/Detail';
+import { getPostByPostId, getPostByUserId } from '../../api/supabaseDatabase';
 import { usePostStore } from '../../zustand/usePostStore';
+import Detail from '../detail/Detail';
 
-import type { Session } from '@supabase/supabase-js';
 import type { LocationInfoTypes } from './Post';
+import type { Session } from '@supabase/supabase-js';
+import type { QueryClient } from '@tanstack/react-query';
 
-type handleMutationFunctionProps = {
+interface handleMutationFunctionProps {
   type: string;
   session: Session | null;
   contents: string;
@@ -21,22 +23,22 @@ type handleMutationFunctionProps = {
   };
   switchChecked: any;
   data: any;
-};
+}
 
-type handleMutationSuccessProps = {
+interface handleMutationSuccessProps {
   queryClient: QueryClient;
   type: string;
   mount: (name: string, element: ReactNode) => void;
   unmount: (name: string) => void;
   userId: string | undefined;
   postId: string | undefined;
-};
+}
 
 export const handleMutationFunction = async ({ type, session, contents, imgUrl, locationInfo, location, switchChecked, data }: handleMutationFunctionProps) => {
   type === 'post'
     ? await supabase.from('posts').insert({
         userId: session?.user.id,
-        contents: contents,
+        contents,
         images: imgUrl,
         countryId: locationInfo.countryId,
         regionId: locationInfo.regionId,
@@ -49,7 +51,7 @@ export const handleMutationFunction = async ({ type, session, contents, imgUrl, 
         .from('posts')
         .update({
           userId: session?.user.id,
-          contents: contents,
+          contents,
           images: imgUrl,
           private: switchChecked,
         })

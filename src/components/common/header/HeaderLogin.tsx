@@ -1,14 +1,16 @@
 import { BsPlusCircle, BsXCircle } from 'react-icons/bs';
+
+import * as Styled from './style';
 import { usePostStore } from '../../../zustand/usePostStore';
 import { useSessionStore } from '../../../zustand/useSessionStore';
-import * as Styled from './style';
 
-type HeaderLoginTypes = {
+interface HeaderLoginTypes {
   openPost: () => void;
-  signinHandler: () => Promise<void>;
-  signoutHandler: () => Promise<void>;
+  signinHandler: () => void;
+  signoutHandler: () => void;
   closePost: () => void;
-};
+}
+
 const HeaderLogin = (props: HeaderLoginTypes) => {
   const { openPost, signinHandler, signoutHandler, closePost } = props;
   const session = useSessionStore(state => state.session);

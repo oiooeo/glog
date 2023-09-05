@@ -1,15 +1,19 @@
 import React, { useRef, useState } from 'react';
+
 import * as Styled from './style';
-import Like from '../../like/Like';
-import useOnClickOutside from '../../../hooks/useOnClickOutSide';
-import Detail from '../../detail/Detail';
 import { signin } from '../../../api/supabaseAuth';
+import useOnClickOutside from '../../../hooks/useOnClickOutSide';
 import { useMapLocationStore } from '../../../zustand/useMapLocationStore';
+import Detail from '../../detail/Detail';
 import { pickLocationWithMarker } from '../../globe/globe.util';
+import Like from '../../like/Like';
 
 import type { Tables } from '../../../types/supabase';
 
-type PostItemProps = { data: Tables<'posts'>; lastItem?: boolean };
+interface PostItemProps {
+  data: Tables<'posts'>;
+  lastItem?: boolean;
+}
 
 const PostItem = ({ data, lastItem }: PostItemProps) => {
   const ref = useRef<HTMLDivElement>(null);
