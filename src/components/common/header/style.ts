@@ -36,7 +36,6 @@ export const HeaderLogo = styled.img`
 export const HeaderLogoMobile = styled.img`
   width: 40px;
   height: 40px;
-  margin-bottom: 10px;
   cursor: pointer;
 
   @media (min-width: 1060px) {
@@ -72,7 +71,7 @@ export const OpenPostButton = styled(CircleButton)`
   @media (max-width: 1060px) {
     position: fixed;
     bottom: 20px;
-    margin-left: 20px;
+    margin-left: 10px;
   }
 `;
 
@@ -101,7 +100,8 @@ export const SwitchBox = styled.div`
 
   @media (max-width: 1060px) {
     position: fixed;
-    top: calc(100vh - 50px);
+    top: auto;
+    bottom: 0px;
     left: 50%;
     transform: translate(-50%, -50%);
   }

@@ -42,7 +42,7 @@ export const SwitchBox = styled.div<StyledProps>`
 
   @media (max-width: 1060px) {
     width: calc((${props => `calc(${props.width} - 20px)`}) / 2 - 20px);
-    height: 28px;
+    height: 31px;
     font-size: 12px;
   }
 `;
