@@ -15,4 +15,8 @@ export const LoadingDiv = styled.div`
   height: fit-content;
   float: right;
   padding: 20px 0;
+
+  @media (max-width: 1060px) {
+    display: none;
+  }
 `;

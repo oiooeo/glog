@@ -9,12 +9,31 @@ export const FooterWrapper = styled.footer`
   width: 100%;
   height: fit-content;
   z-index: 98;
+
+  @media (max-width: 1060px) {
+    justify-content: right;
+    bottom: 10px;
+  }
+`;
+
+export const FooterTextMobile = styled.p`
+  margin-right: 6px;
+  font-size: 7px;
+  color: #cccfd3;
+
+  @media (min-width: 1060px) {
+    display: none;
+  }
 `;
 
 export const FooterText = styled.p`
   margin-right: 6px;
   font-size: 12px;
   color: #cccfd3;
+
+  @media (max-width: 1060px) {
+    display: none;
+  }
 `;
 
 export const GitHubLink = styled.a`
@@ -22,4 +41,8 @@ export const GitHubLink = styled.a`
   color: #cccfd3;
   font-size: 12px;
   text-decoration: none;
+
+  @media (max-width: 1060px) {
+    display: none;
+  }
 `;

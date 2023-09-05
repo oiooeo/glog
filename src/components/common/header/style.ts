@@ -11,6 +11,11 @@ export const HeaderWrapper = styled.header`
   padding: 0 50px;
   background: transparent;
   z-index: 100;
+
+  @media (max-width: 1060px) {
+    top: 10px;
+    padding: 0 10px;
+  }
 `;
 
 export const Wrapper = styled.div`
@@ -22,6 +27,21 @@ export const HeaderLogo = styled.img`
   width: fit-content;
   height: 40px;
   cursor: pointer;
+
+  @media (max-width: 1060px) {
+    display: none;
+  }
+`;
+
+export const HeaderLogoMobile = styled.img`
+  width: 40px;
+  height: 40px;
+  margin-bottom: 10px;
+  cursor: pointer;
+
+  @media (min-width: 1060px) {
+    display: none;
+  }
 `;
 
 export const CircleButton = styled.button`
@@ -48,6 +68,12 @@ export const OpenPostButton = styled(CircleButton)`
   &:hover {
     background-color: rgba(221, 82, 1, 0.7);
   }
+
+  @media (max-width: 1060px) {
+    position: fixed;
+    bottom: 20px;
+    margin-left: 20px;
+  }
 `;
 
 export const ClosePostButton = styled(OpenPostButton)`
@@ -60,6 +86,11 @@ export const AuthSpan = styled.span`
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
+
+  @media (max-width: 1060px) {
+    width: 40px;
+    font-size: 11px;
+  }
 `;
 
 export const SwitchBox = styled.div`
@@ -67,8 +98,12 @@ export const SwitchBox = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  @media (max-width: 540px) {
-    bottom: 5px;
+
+  @media (max-width: 1060px) {
+    position: fixed;
+    top: calc(100vh - 50px);
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 `;
 
@@ -90,6 +125,10 @@ export const SearchBox = styled.div`
       opacity: 1;
     }
   }
+
+  @media (max-width: 1060px) {
+    width: 200px;
+  }
 `;
 
 export const SearchInput = styled.input`
@@ -107,6 +146,10 @@ export const SearchInput = styled.input`
 
   &::placeholder {
     color: #72808e;
+  }
+
+  @media (max-width: 1060px) {
+    width: 160px;
   }
 `;
 

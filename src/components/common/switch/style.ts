@@ -22,6 +22,11 @@ export const SwitchLabel = styled.label<StyledProps>`
   border-radius: 30px;
   border: 1px solid rgba(53, 60, 73, 1);
   cursor: pointer;
+
+  @media (max-width: 1060px) {
+    width: calc(${props => props.width} - 40px);
+    height: 40px;
+  }
 `;
 
 export const SwitchBox = styled.div<StyledProps>`
@@ -34,6 +39,12 @@ export const SwitchBox = styled.div<StyledProps>`
   font-size: 14px;
   transition: all 0.2s ease-in;
   z-index: 10;
+
+  @media (max-width: 1060px) {
+    width: calc((${props => `calc(${props.width} - 20px)`}) / 2 - 20px);
+    height: 28px;
+    font-size: 12px;
+  }
 `;
 
 export const SwitchLeftText = styled(SwitchBox)<StyledProps>`

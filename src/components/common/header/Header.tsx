@@ -10,6 +10,7 @@ import { AuthError, signin, signout } from '../../../api/supabaseAuth';
 import { supabase } from '../../../api/supabaseClient';
 import { addNewUser } from '../../../api/supabaseDatabase';
 import logo from '../../../assets/logo.svg';
+import miniLogo from '../../../assets/miniLogo.svg';
 import { useSessionStore } from '../../../zustand/useSessionStore';
 import { useTabStore } from '../../../zustand/useTabStore';
 import Switch from '../switch/Switch';
@@ -95,6 +96,7 @@ const Header = () => {
     <Styled.HeaderWrapper>
       <Styled.Wrapper>
         <Styled.HeaderLogo src={logo} alt="" onClick={() => (window.location.href = '/')} />
+        <Styled.HeaderLogoMobile src={miniLogo} alt="" onClick={() => (window.location.href = '/')} />
         <HeaderLogin openPost={openPost} closePost={closePost} signinHandler={signinHandler} signoutHandler={signoutHandler} />
       </Styled.Wrapper>
 
