@@ -17,6 +17,9 @@ export const PageLanding = styled.div<{ completeclass: string }>`
   &.complete {
     opacity: 0;
   }
+  @media (max-width: 540px) {
+    width: 100%;
+  }
 `;
 export const Landing = styled.div`
   width: 600px;
@@ -24,10 +27,13 @@ export const Landing = styled.div`
   border-radius: 5px;
   background-color: #fff;
   overflow: hidden;
+  @media (max-width: 540px) {
+    width: 80%;
+  }
 `;
 export const LandingBar = styled.div<{ percentage: number }>`
   background-color: #e55a54;
-  width: ${props => props.percentage}%;
+  width: ${props => (props.percentage > 100 ? '100' : props.percentage)}%;
   height: 100%;
 `;
 
@@ -36,10 +42,16 @@ export const MainText = styled.div`
   font-size: 24px;
   font-weight: 400;
   margin-bottom: 20px;
+  @media (max-width: 540px) {
+    font-size: 18px;
+  }
 `;
 export const ServeText = styled.div`
   color: white;
   font-size: 18px;
   font-weight: 200;
   margin-bottom: 30px;
+  @media (max-width: 540px) {
+    font-size: 15px;
+  }
 `;
