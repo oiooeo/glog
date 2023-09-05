@@ -12,6 +12,7 @@ export const PostItemLayout = styled.div<{ lastItem?: boolean }>`
   float: right;
   transition-property: margin-right;
   transition-duration: 0.3s;
+  z-index: 101;
 
   &:hover {
     margin-right: 50px;
@@ -44,6 +45,7 @@ export const DetailLayout = styled.div`
   float: right;
   transform: translate(-50px, 0);
   animation: fadein 0.5s;
+  z-index: 101;
 
   @keyframes fadein {
     from {

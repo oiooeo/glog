@@ -49,6 +49,12 @@ export const LeftModalInner = styled.div`
   padding-top: 90px;
   padding-left: 50px;
   background: transparent;
+
+  @media (max-width: 1060px) {
+    height: calc(100vh - 65px);
+    padding-top: 90px;
+    padding-left: 50px;
+  }
 `;
 
 export const RightModalInner = styled.div`
@@ -59,6 +65,11 @@ export const RightModalInner = styled.div`
   height: 100vh;
   padding: 90px 30px 0 0;
   background: transparent;
+
+  @media (max-width: 1060px) {
+    height: calc(100vh - 65px);
+    padding: 70px 20px 0 0;
+  }
 
   &::-webkit-scrollbar {
     display: none;
