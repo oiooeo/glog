@@ -67,6 +67,9 @@ export const SwitchBox = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  @media (max-width: 540px) {
+    bottom: 5px;
+  }
 `;
 
 export const SearchBox = styled.div`
