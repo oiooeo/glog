@@ -1,4 +1,5 @@
-import { MouseEvent, ReactNode } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
+
 import * as Styled from './style';
 import { useOverlayContext } from '../Overlay.context';
 

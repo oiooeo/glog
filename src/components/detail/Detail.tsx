@@ -1,16 +1,17 @@
-import * as Styled from './style';
 import { SlPencil } from 'react-icons/sl';
-import { useSessionStore } from '../../zustand/useSessionStore';
+
+import * as Styled from './style';
 import { usePostStore } from '../../zustand/usePostStore';
+import { useSessionStore } from '../../zustand/useSessionStore';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
-import Post from '../post/Post';
 import Like from '../like/Like';
+import Post from '../post/Post';
 
 import type { Tables } from '../../types/supabase';
 
-type DetailProps = {
+interface DetailProps {
   data: Tables<'posts'>;
-};
+}
 
 const Detail = ({ data }: DetailProps) => {
   const session = useSessionStore(state => state.session);
@@ -33,10 +34,16 @@ const Detail = ({ data }: DetailProps) => {
         </Styled.LikeBox>
         {session?.user.id === data.userId && (
           <Styled.EditButton>
-            <SlPencil size={'20px'} className="edit" onClick={() => openUpdate(data.id)} />
+            <SlPencil
+              size={'20px'}
+              className="edit"
+              onClick={() => {
+                openUpdate(data.id);
+              }}
+            />
           </Styled.EditButton>
         )}
-        <Styled.DetailImage src={data.images!} alt={`Image for ${data.contents}`} />
+        {data.images ? <Styled.DetailImage src={data.images} alt={`Image for ${data.contents}`} /> : null}
       </Styled.DetailImageContainer>
 
       <Styled.DetailContainer>

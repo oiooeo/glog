@@ -1,5 +1,6 @@
-import { ReactNode } from 'react';
-import { styled, css } from 'styled-components';
+import type { ReactNode } from 'react';
+
+import { css, styled } from 'styled-components';
 
 export interface ButtonProps {
   color?: string;
@@ -53,7 +54,14 @@ export const Button = styled.button<ButtonProps>`
     css`
       background-color: #4d5765;
       color: #e4e7eb;
-      box-shadow: 3px 3px 20px rgba(251, 232, 189, 0.4);
+    `}
+
+  ${props =>
+    props.size === 'circle' &&
+    css`
+      width: 30px;
+      height: 30px;
+      border-radius: 100px;
     `}
 
   ${props =>

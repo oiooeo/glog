@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+
 import * as Styled from './style';
 
 const Landing = () => {
@@ -6,15 +7,25 @@ const Landing = () => {
   const completeclass = percentage >= 100 ? 'true' : 'false';
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setPercentage((prevPercentage: number) => prevPercentage + 1);
-      if (percentage >= 100) {
+    let timer: NodeJS.Timeout | null = null;
+
+    const increasePercentage = () => {
+      setPercentage((prevPercentage: number) => {
+        const newPercentage = prevPercentage + 1;
+        if (newPercentage >= 100) {
+          clearInterval(timer as NodeJS.Timeout);
+          return 100; // percentage가 100 이상으로 가지 않도록 보장
+        }
+        return newPercentage;
+      });
+    };
+
+    timer = setInterval(increasePercentage, 30);
+
+    return () => {
+      if (timer) {
         clearInterval(timer);
       }
-    }, 30);
-    return () => {
-      clearInterval(timer);
-      setPercentage(101);
     };
   }, []);
 

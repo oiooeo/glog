@@ -9,8 +9,12 @@ export const DetailLayout = styled.div`
   margin: 10px 0;
   background: #ffffff;
   border-radius: 20px;
-  z-index: 100;
+  z-index: 101;
   box-shadow: 3px 3px 20px rgba(251, 232, 189, 0.4);
+
+  @media (max-width: 1060px) {
+    margin: 0 0 10px 0;
+  }
 `;
 
 export const DetailImageContainer = styled.div`

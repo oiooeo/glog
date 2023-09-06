@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react';
-import Globe from '../components/globe/Globe';
+
+import { useQuery } from '@tanstack/react-query';
+
 import { getMyPosts, getPosts } from '../api/supabaseDatabase';
+import Globe from '../components/globe/Globe';
+import Landing from '../components/landing/Landing';
 import { useSessionStore } from '../zustand/useSessionStore';
 import { useTabStore } from '../zustand/useTabStore';
-import { useQuery } from '@tanstack/react-query';
-import Landing from '../components/landing/Landing';
 
-import { Tables } from '../types/supabase';
+import type { Tables } from '../types/supabase';
 
 const Home = () => {
   const session = useSessionStore(state => state.session);
   const tab = useTabStore(state => state.tab);
-  const [data, setData] = useState<Tables<'posts'>[]>();
-  const [myData, setMyData] = useState<Tables<'posts'>[]>();
+  const [data, setData] = useState<Array<Tables<'posts'>>>();
+  const [myData, setMyData] = useState<Array<Tables<'posts'>>>();
   const { data: posts } = useQuery(['getPosts'], getPosts);
 
   const fetchMyPosts = async (id: string) => {
@@ -25,7 +27,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (session) {
+    if (session !== null) {
       fetchMyPosts(session?.user.id);
     }
   }, [tab, posts]);
@@ -37,7 +39,7 @@ const Home = () => {
   return (
     <>
       <Globe postsData={data} />
-      <Landing/>
+      <Landing />
     </>
   );
 };

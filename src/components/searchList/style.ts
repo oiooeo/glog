@@ -12,16 +12,26 @@ export const LoginGuideButton = styled.button`
   color: #f4f4f5;
   font-size: 15px;
   font-weight: 600;
-  z-index: 1;
+  z-index: 102;
   cursor: pointer;
+
+  @media (max-width: 1060px) {
+    display: none;
+  }
 `;
 
 export const ScrollDiv = styled.div`
   overflow-y: scroll;
   height: 100%;
+  z-index: 101;
 
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  @media (max-width: 1060px) {
+    display: flex;
+    height: fit-content;
   }
 `;
 
@@ -32,4 +42,8 @@ export const LoadingDiv = styled.div`
   height: fit-content;
   float: right;
   margin: 20px 0;
+
+  @media (max-width: 1060px) {
+    display: none;
+  }
 `;

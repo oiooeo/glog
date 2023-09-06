@@ -1,7 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Home from '../pages/Home';
-import Header from '../components/common/header/Header';
+
 import Footer from '../components/common/footer/Footer';
+import Header from '../components/common/header/Header';
+import Home from '../pages/Home';
 
 const Router: React.FC = () => {
   return (

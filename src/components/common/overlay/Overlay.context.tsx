@@ -1,8 +1,9 @@
-import { createContext, Fragment, PropsWithChildren, ReactNode, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, Fragment, useCallback, useContext, useMemo, useState } from 'react';
+import type { PropsWithChildren, ReactNode } from 'react';
 
 const OverlayContext = createContext<{
-  mount(id: string, element: ReactNode): void;
-  unmount(id: string): void;
+  mount: (id: string, element: ReactNode) => void;
+  unmount: (id: string) => void;
 } | null>(null);
 
 export const OverlayProvider = ({ children }: PropsWithChildren) => {
@@ -10,19 +11,19 @@ export const OverlayProvider = ({ children }: PropsWithChildren) => {
 
   const mount = useCallback((id: string, element: ReactNode) => {
     setOverlays(_overlays => {
-      const __overlays = new Map(_overlays);
-      __overlays.set(id, element);
+      const overlays = new Map(_overlays);
+      overlays.set(id, element);
 
-      return __overlays;
+      return overlays;
     });
   }, []);
 
   const unmount = useCallback((id: string) => {
     setOverlays(_overlays => {
-      const __overlays = new Map(_overlays);
-      __overlays.delete(id);
+      const overlays = new Map(_overlays);
+      overlays.delete(id);
 
-      return __overlays;
+      return overlays;
     });
   }, []);
 

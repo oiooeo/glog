@@ -1,29 +1,31 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useQueryClient, useMutation } from '@tanstack/react-query';
-import * as Styled from './style';
-import useInput from '../../hooks/useInput';
-import { useModal } from '../common/overlay/modal/Modal.hooks';
-import { getPostByPostId, deleteButton } from '../../api/supabaseDatabase';
-import { useSessionStore } from '../../zustand/useSessionStore';
-import { useLocationStore } from '../../zustand/useLocationStore';
-import UploadBox from './Post.UploadBox';
-import ContentsSection from './Post.ContentsSection';
-import { handleMutationFunction, handleMutationSuccess } from './Post.util';
-import { usePostStore } from '../../zustand/usePostStore';
-import toast from 'react-simple-toasts';
-import ImageUploadHook from './Post.hooks';
+import React, { useEffect, useRef, useState } from 'react';
 
-type PostProps = {
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-simple-toasts';
+
+import ContentsSection from './Post.ContentsSection';
+import ImageUploadHook from './Post.hooks';
+import UploadBox from './Post.UploadBox';
+import { handleMutationFunction, handleMutationSuccess } from './Post.util';
+import * as Styled from './style';
+import { deleteButton, getPostByPostId } from '../../api/supabaseDatabase';
+import useInput from '../../hooks/useInput';
+import { useLocationStore } from '../../zustand/useLocationStore';
+import { usePostStore } from '../../zustand/usePostStore';
+import { useSessionStore } from '../../zustand/useSessionStore';
+import { useModal } from '../common/overlay/modal/Modal.hooks';
+
+interface PostProps {
   unmount: (name: string) => void;
   type: string;
   postId?: string;
-};
+}
 
-export type LocationInfoTypes = {
+export interface LocationInfoTypes {
   countryId: string | null;
   regionId: string | null;
   address: string | null;
-};
+}
 
 const Post = ({ type, unmount, postId }: PostProps) => {
   const { mount } = useModal();
@@ -50,7 +52,7 @@ const Post = ({ type, unmount, postId }: PostProps) => {
     },
   });
 
-  const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     if (event.dataTransfer.files && event.dataTransfer.files?.length > 1) {
       toast('사진은 한 게시물에 한장까지만 업로드 돼요!', { className: 'image-alert', position: 'top-left', duration: 1000 });
@@ -58,11 +60,11 @@ const Post = ({ type, unmount, postId }: PostProps) => {
 
     const file = event.dataTransfer.files[0];
     if (file) {
-      await handleImageInputChange(file);
+      handleImageInputChange(file);
     }
   };
 
-  const handleImageSubmit = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageSubmit = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files?.length > 1) {
       toast('사진은 한 게시물에 한장까지만 업로드 돼요!', { className: 'image-alert', position: 'top-left', duration: 1000 });
     }
@@ -75,9 +77,18 @@ const Post = ({ type, unmount, postId }: PostProps) => {
     const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${location.longitude},${location.latitude}.json?access_token=${process.env.REACT_APP_ACCESS_TOKEN}&language=ko`);
     const data = await response.json();
     const dataFeatures = data.features;
-    const placeName = dataFeatures[dataFeatures.length - 2].place_name_ko || dataFeatures[dataFeatures.length - 2].place_name;
-    const placeComponents = placeName.split(', ');
-    setLocationInfo({ countryId: placeComponents[placeComponents.length - 2], regionId: placeComponents[placeComponents.length - 1], address: dataFeatures[0].place_name_ko !== undefined ? dataFeatures[0].place_name_ko : dataFeatures[0].place_name });
+    if (dataFeatures.length === 0) {
+      toast(`육지에 핀을 꽂아주세요!`, { className: 'post-alert', position: 'top-center' });
+    } else {
+      const placeName = dataFeatures[dataFeatures.length - 2].place_name_ko || dataFeatures[dataFeatures.length - 2].place_name;
+      const placeComponents = placeName.split(', ');
+      setLocationInfo({
+        countryId: placeComponents[placeComponents.length - 2],
+        regionId: placeComponents[placeComponents.length - 1],
+        address: dataFeatures[0].place_name_ko !== undefined ? dataFeatures[0].place_name_ko : dataFeatures[0].place_name,
+      });
+      setHere(true);
+    }
   };
 
   useEffect(() => {
@@ -86,7 +97,6 @@ const Post = ({ type, unmount, postId }: PostProps) => {
   }, [location]);
 
   const handleToSetLocation = () => {
-    setHere(true);
     setLocation({ longitude: clickedLocation.longitude, latitude: clickedLocation.latitude });
   };
 
@@ -106,14 +116,19 @@ const Post = ({ type, unmount, postId }: PostProps) => {
     setImgFile(postData.images);
     setLocation({ longitude: postData.longitude, latitude: postData.latitude });
     setSwitchChecked(postData.private);
-    setLocationInfo({ countryId: postData.countryId!, regionId: postData.regionId!, address: postData.address! });
+    setLocationInfo({ countryId: postData.countryId, regionId: postData.regionId, address: postData.address });
   };
 
-  const deletePostMutation = useMutation((postId: string) => deleteButton(postId), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['getPosts']);
+  const deletePostMutation = useMutation(
+    async (postId: string) => {
+      await deleteButton(postId);
     },
-  });
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['getPosts']);
+      },
+    },
+  );
 
   const handleDelete = () => {
     if (!data) return;
@@ -144,7 +159,6 @@ const Post = ({ type, unmount, postId }: PostProps) => {
         handleToSetLocation={handleToSetLocation}
         handleToResetLocation={handleToResetLocation}
         handleToSubmit={handleToSubmit}
-        deleteButton={deleteButton}
         data={data}
       />
     </Styled.PostLayout>

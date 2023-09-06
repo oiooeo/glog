@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { usePostStore } from '../../../zustand/usePostStore';
-import { useModal } from '../overlay/modal/Modal.hooks';
+
+import { clearToasts } from 'react-simple-toasts';
+
 import useInput from '../../../hooks/useInput';
-import LikesList from '../../likesList/LikesList';
-import SearchList from '../../searchList/SearchList';
-import Post from '../../post/Post';
 import { useMarkerInvisible } from '../../../zustand/useMarkerInvisible';
+import { usePostStore } from '../../../zustand/usePostStore';
+import LikesList from '../../likesList/LikesList';
+import Post from '../../post/Post';
+import SearchList from '../../searchList/SearchList';
+import { useModal } from '../overlay/modal/Modal.hooks';
 
 export const useHeaderModal = () => {
   const { leftMount, rightMount, unmount } = useModal();
@@ -16,6 +19,7 @@ export const useHeaderModal = () => {
   const closePost = () => {
     usePostStore.getState().setIsPosting(false);
     unmount('post');
+    clearToasts();
   };
 
   const closeSearchList = () => {
@@ -58,6 +62,7 @@ export const useHeaderModal = () => {
     setIsSearchListOpened(true);
     handleToSearch();
     useMarkerInvisible.getState().setIsMarkerInvisible(true);
+    clearToasts();
   };
 
   const openLikesList = () => {
@@ -65,6 +70,7 @@ export const useHeaderModal = () => {
     setIsLikeListOpened(true);
     rightMount('likesList', <LikesList />);
     useMarkerInvisible.getState().setIsMarkerInvisible(true);
+    clearToasts();
   };
 
   return {

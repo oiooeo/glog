@@ -1,6 +1,8 @@
-import { Tables } from '../types/supabase';
-import { supabase } from './supabaseClient';
 import toast from 'react-simple-toasts';
+
+import { supabase } from './supabaseClient';
+
+import type { Tables } from '../types/supabase';
 
 export const getUser = async (email?: string) => {
   const { data, error } = await supabase.from('users').select('*').eq('email', email);
@@ -11,9 +13,9 @@ export const getUser = async (email?: string) => {
 export const addNewUser = async (id: string, email: string, name: string, profileImg: string) => {
   const data = await getUser(email);
   if (!data) {
-    await supabase.from('users').insert({ id: id, email: email, name: name, profileImg: profileImg });
+    await supabase.from('users').insert({ id, email, name, profileImg });
   } else {
-    await supabase.from('users').update({ name: name, profileImg: profileImg }).eq('id', id);
+    await supabase.from('users').update({ name, profileImg }).eq('id', id);
   }
 };
 
@@ -58,7 +60,7 @@ export const getLikes = async (userId: string) => {
 };
 
 export const addLike = async ({ postId, userId }: { postId: string; userId: string }) => {
-  await supabase.from('likes').insert({ postId: postId, userId: userId });
+  await supabase.from('likes').insert({ postId, userId });
 };
 
 export const deleteLike = async (id: string) => {
