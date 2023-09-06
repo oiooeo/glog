@@ -51,9 +51,11 @@ export const LeftModalInner = styled.div`
   background: transparent;
 
   @media (max-width: 1060px) {
-    height: calc(100vh - 65px);
-    padding-top: 90px;
-    padding-left: 50px;
+    width: 100vw;
+    height: fit-content;
+    max-height: 500px;
+    padding-top: 0;
+    padding-left: 0;
   }
 `;
 
@@ -66,12 +68,14 @@ export const RightModalInner = styled.div`
   padding: 90px 30px 0 0;
   background: transparent;
 
-  @media (max-width: 1060px) {
-    height: calc(100vh - 65px);
-    padding: 70px 20px 0 0;
-  }
-
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  @media (max-width: 1060px) {
+    bottom: 0;
+    height: fit-content;
+    width: 100vw;
+    padding: 0px;
   }
 `;

@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 
-import { useNavigate } from 'react-router-dom';
-
 import { useHeaderModal } from './Header.hooks';
 import HeaderLogin from './HeaderLogin';
 import HeaderSearch from './HeaderSearch';
@@ -10,7 +8,8 @@ import { AuthError, signin, signout } from '../../../api/supabaseAuth';
 import { supabase } from '../../../api/supabaseClient';
 import { addNewUser } from '../../../api/supabaseDatabase';
 import logo from '../../../assets/logo.svg';
-import miniLogo from '../../../assets/miniLogo.svg';
+import { useMarkerInvisible } from '../../../zustand/useMarkerInvisible';
+import { usePostStore } from '../../../zustand/usePostStore';
 import { useSessionStore } from '../../../zustand/useSessionStore';
 import { useTabStore } from '../../../zustand/useTabStore';
 import Switch from '../switch/Switch';
@@ -23,7 +22,9 @@ const Header = () => {
   const { closePost, closeSearchList, closeLikesList, openPost, handleToSearch, handleOnEnterPress, openSearchList, openLikesList, isSearchListOpened, isLikeListOpened, handleChangeKeyword } = useHeaderModal();
   const session = useSessionStore(state => state.session);
   const setSession = useSessionStore(state => state.setSession);
-  const navigate = useNavigate();
+  const isPostModalOpened = usePostStore(state => state.isPosting);
+  const isRightModalOpened = useMarkerInvisible(state => state.isMarkerInvisible);
+  const close = isPostModalOpened || isRightModalOpened || false;
 
   const signinHandler = () => {
     try {
@@ -35,11 +36,10 @@ const Header = () => {
     }
   };
 
-  const signoutHandler = () => {
+  const signoutHandler = async () => {
     try {
-      signout();
+      await signout();
       setUser(undefined);
-      navigate('/');
       window.location.reload();
     } catch (error) {
       if (error instanceof AuthError) {
@@ -79,7 +79,7 @@ const Header = () => {
     } else {
       useTabStore.getState().setTab('explore');
     }
-  }, [switchChecked, navigate, session]);
+  }, [switchChecked, session]);
 
   useEffect(() => {
     async function getUserData() {
@@ -96,11 +96,10 @@ const Header = () => {
     <Styled.HeaderWrapper>
       <Styled.Wrapper>
         <Styled.HeaderLogo src={logo} alt="" onClick={() => (window.location.href = '/')} />
-        <Styled.HeaderLogoMobile src={miniLogo} alt="" onClick={() => (window.location.href = '/')} />
-        <HeaderLogin openPost={openPost} closePost={closePost} signinHandler={signinHandler} signoutHandler={signoutHandler} />
+        <HeaderLogin openPost={openPost} closePost={closePost} signinHandler={signinHandler} signoutHandler={signoutHandler} isSearchListOpened={isSearchListOpened} />
       </Styled.Wrapper>
 
-      <Styled.SwitchBox>
+      <Styled.SwitchBox close={isPostModalOpened || isRightModalOpened || undefined}>
         <Switch
           checked={switchChecked}
           onChange={setSwitchChecked}

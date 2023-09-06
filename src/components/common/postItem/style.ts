@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 export const PostItemLayout = styled.div<{ lastItem?: boolean }>`
   position: relative;
@@ -16,6 +16,14 @@ export const PostItemLayout = styled.div<{ lastItem?: boolean }>`
 
   &:hover {
     margin-right: 50px;
+  }
+
+  @media (max-width: 1060px) {
+    margin: 0px 0 25px 20px;
+    height: 300px;
+    margin: 15px 20px 15px 0;
+    border-radius: 16px;
+    filter: ${props => (props.lastItem ? 'blur(5px)' : 'none')};
   }
 `;
 
@@ -41,6 +49,15 @@ export const LikeBox = styled.div`
   right: 15px;
 `;
 
+const fadeInUp = keyframes`
+0% {
+  transform: translateY(100%);
+}
+100% {
+  transform: translateY(0);
+}
+`;
+
 export const DetailLayout = styled.div`
   float: right;
   transform: translate(-50px, 0);
@@ -53,6 +70,14 @@ export const DetailLayout = styled.div`
     }
     to {
       opacity: 1;
+    }
+  }
+
+  @media (max-width: 1060px) {
+    transform: translate(0, 0);
+    margin: 0 20px 0 0;
+    &.slider {
+      animation: ${fadeInUp} 0.5s;
     }
   }
 `;

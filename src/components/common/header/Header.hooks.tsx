@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { clearToasts } from 'react-simple-toasts';
+
 import useInput from '../../../hooks/useInput';
 import { useMarkerInvisible } from '../../../zustand/useMarkerInvisible';
 import { usePostStore } from '../../../zustand/usePostStore';
@@ -17,6 +19,7 @@ export const useHeaderModal = () => {
   const closePost = () => {
     usePostStore.getState().setIsPosting(false);
     unmount('post');
+    clearToasts();
   };
 
   const closeSearchList = () => {
@@ -59,6 +62,7 @@ export const useHeaderModal = () => {
     setIsSearchListOpened(true);
     handleToSearch();
     useMarkerInvisible.getState().setIsMarkerInvisible(true);
+    clearToasts();
   };
 
   const openLikesList = () => {
@@ -66,6 +70,7 @@ export const useHeaderModal = () => {
     setIsLikeListOpened(true);
     rightMount('likesList', <LikesList />);
     useMarkerInvisible.getState().setIsMarkerInvisible(true);
+    clearToasts();
   };
 
   return {

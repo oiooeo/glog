@@ -21,11 +21,11 @@ const SessionDependentView = ({ session, scrollRef, searchResult, loading }: Pro
       {session ? (
         <Styled.ScrollDiv ref={scrollRef}>{searchResult && renderPostItems(searchResult, 0, searchResult.length)}</Styled.ScrollDiv>
       ) : (
-        <>
+        <Styled.ScrollDiv>
           {searchResult && renderPostItems(searchResult, 0, 4)}
           <Styled.LoginGuideButton onClick={() => signin}>더 많은 정보를 보고 싶으시다면 로그인 해주세요!</Styled.LoginGuideButton>
           {searchResult && renderPostItems(searchResult, 4, 5, true)}
-        </>
+        </Styled.ScrollDiv>
       )}
       {loading && (
         <Styled.LoadingDiv>

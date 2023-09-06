@@ -13,7 +13,7 @@ export const HeaderWrapper = styled.header`
   z-index: 100;
 
   @media (max-width: 1060px) {
-    top: 10px;
+    top: 15px;
     padding: 0 10px;
   }
 `;
@@ -29,21 +29,11 @@ export const HeaderLogo = styled.img`
   cursor: pointer;
 
   @media (max-width: 1060px) {
-    display: none;
+    height: 32px;
   }
 `;
 
-export const HeaderLogoMobile = styled.img`
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-
-  @media (min-width: 1060px) {
-    display: none;
-  }
-`;
-
-export const CircleButton = styled.button`
+export const CircleButton = styled.button<{ opened?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,6 +45,10 @@ export const CircleButton = styled.button`
   color: #cccfd3;
   margin-left: 10px;
   cursor: pointer;
+
+  @media (max-width: 1060px) {
+    margin-left: ${props => (props.opened ? '0' : '10px')};
+  }
 `;
 
 export const OpenPostButton = styled(CircleButton)`
@@ -79,7 +73,7 @@ export const ClosePostButton = styled(OpenPostButton)`
   background-color: rgba(221, 82, 1, 0.7);
 `;
 
-export const AuthSpan = styled.span`
+export const AuthSpan = styled.span<{ opened?: boolean }>`
   margin-left: 10px;
   color: #72808e;
   font-size: 15px;
@@ -87,18 +81,21 @@ export const AuthSpan = styled.span`
   cursor: pointer;
 
   @media (max-width: 1060px) {
+    display: ${props => (props.opened ? 'none' : 'block')};
     width: 40px;
     font-size: 11px;
+    font-weight: 500;
   }
 `;
 
-export const SwitchBox = styled.div`
+export const SwitchBox = styled.div<{ close?: boolean }>`
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 
   @media (max-width: 1060px) {
+    display: ${props => (props.close ? 'none' : 'flex')};
     position: fixed;
     top: auto;
     bottom: 0px;
@@ -127,7 +124,8 @@ export const SearchBox = styled.div`
   }
 
   @media (max-width: 1060px) {
-    width: 200px;
+    width: 230px;
+    margin-right: 10px;
   }
 `;
 
@@ -149,7 +147,8 @@ export const SearchInput = styled.input`
   }
 
   @media (max-width: 1060px) {
-    width: 160px;
+    padding: 0 0 0 15px;
+    width: 190px;
   }
 `;
 
@@ -162,4 +161,8 @@ export const SearchButton = styled.button`
   color: rgba(204, 207, 211, 0.8);
   font-size: 12px;
   cursor: pointer;
+
+  @media (max-width: 1060px) {
+    margin-right: 10px;
+  }
 `;

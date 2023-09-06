@@ -7,14 +7,18 @@ import { useSessionStore } from '../../../zustand/useSessionStore';
 interface HeaderLoginTypes {
   openPost: () => void;
   signinHandler: () => void;
-  signoutHandler: () => void;
+  signoutHandler: () => Promise<void>;
   closePost: () => void;
+  isSearchListOpened: boolean;
 }
 
 const HeaderLogin = (props: HeaderLoginTypes) => {
-  const { openPost, signinHandler, signoutHandler, closePost } = props;
+  const { openPost, signinHandler, signoutHandler, closePost, isSearchListOpened } = props;
   const session = useSessionStore(state => state.session);
   const isPostModalOpened = usePostStore(state => state.isPosting);
+  const handleToSignOut = () => {
+    signoutHandler();
+  };
 
   return (
     <>
@@ -28,7 +32,15 @@ const HeaderLogin = (props: HeaderLoginTypes) => {
         </Styled.OpenPostButton>
       )}
 
-      {session ? <Styled.AuthSpan onClick={signoutHandler}>로그아웃</Styled.AuthSpan> : <Styled.AuthSpan onClick={signinHandler}>로그인</Styled.AuthSpan>}
+      {session ? (
+        <Styled.AuthSpan onClick={handleToSignOut} opened={isSearchListOpened || undefined}>
+          로그아웃
+        </Styled.AuthSpan>
+      ) : (
+        <Styled.AuthSpan onClick={signinHandler} opened={isSearchListOpened || undefined}>
+          로그인
+        </Styled.AuthSpan>
+      )}
     </>
   );
 };

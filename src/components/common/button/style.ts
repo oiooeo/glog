@@ -57,6 +57,14 @@ export const Button = styled.button<ButtonProps>`
     `}
 
   ${props =>
+    props.size === 'circle' &&
+    css`
+      width: 30px;
+      height: 30px;
+      border-radius: 100px;
+    `}
+
+  ${props =>
     props.size === 'small' &&
     css`
       width: 88px;
