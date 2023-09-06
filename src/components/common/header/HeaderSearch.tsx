@@ -27,7 +27,7 @@ const HeaderSearch = (props: HeaderSearchTypes) => {
     <Styled.Wrapper>
       {isSearchListOpened ? (
         <>
-          <Styled.CircleButton onClick={closeSearchList}>
+          <Styled.CircleButton onClick={closeSearchList} opened={isSearchListOpened || undefined}>
             <BsXCircle size={'22px'} />
           </Styled.CircleButton>
           <Styled.SearchBox>

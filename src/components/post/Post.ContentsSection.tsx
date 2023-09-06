@@ -1,8 +1,10 @@
 import React from 'react';
 
+import { BsCheckLg } from 'react-icons/bs';
+import { SlPencil } from 'react-icons/sl';
+
 import * as Styled from './style';
 import pin from '../../assets/pin/pinLarge.svg';
-import Button from '../common/button/Button';
 import Switch from '../common/switch/Switch';
 import GlobeSearch from '../globeSearch/GlobeSearch';
 
@@ -22,7 +24,6 @@ interface ContentsSectionProps {
   handleToSetLocation: () => void;
   handleToResetLocation: () => void;
   handleToSubmit: () => void;
-  deleteButton: (postId: string) => Promise<void>;
   data: any;
 }
 
@@ -40,35 +41,50 @@ const ContentsSection = ({
   handleToSetLocation,
   handleToResetLocation,
   handleToSubmit,
-  deleteButton,
   data,
 }: ContentsSectionProps) => {
   return (
     <>
       {type === 'post' && imgFile && (
         <>
-          <GlobeSearch />
           {here ? (
-            <Styled.PinBackground>
-              <Styled.Pin src={pin} alt="위치" />
-              <Styled.PinButton size="large" variant="black" onClick={handleToResetLocation}>
-                수정하기
-              </Styled.PinButton>
-            </Styled.PinBackground>
+            <>
+              <Styled.SearchInput value={`${locationInfo?.countryId}, ${locationInfo?.regionId}`} disabled />
+              <Styled.PinBackground>
+                <Styled.Pin src={pin} alt="위치" />
+                <Styled.PinButton size="large" variant="black" onClick={handleToResetLocation}>
+                  수정하기
+                </Styled.PinButton>
+                <Styled.PencilButtonForMobile size="circle" variant="black" onClick={handleToResetLocation}>
+                  <SlPencil size={'15px'} />
+                </Styled.PencilButtonForMobile>
+              </Styled.PinBackground>
+            </>
           ) : (
             <>
+              <GlobeSearch />
               <Styled.PinParagraph>
                 지구본을 움직여 <br /> 정확한 위치에 핀을 꽂아주세요!
               </Styled.PinParagraph>
               <Styled.Pin src={pin} alt="위치" />
               {clickedLocation.latitude === 0 || clickedLocation.longitude === 0 ? (
-                <Styled.PinButton size="large" variant="gray">
-                  여기예요!
-                </Styled.PinButton>
+                <>
+                  <Styled.PinButton size="large" variant="gray">
+                    여기예요!
+                  </Styled.PinButton>
+                  <Styled.CheckButtonForMobile size="circle" variant="gray">
+                    <BsCheckLg size={'24px'} color="#ffffff" />
+                  </Styled.CheckButtonForMobile>
+                </>
               ) : (
-                <Styled.PinButton size="large" variant="orange" onClick={handleToSetLocation}>
-                  여기예요!
-                </Styled.PinButton>
+                <>
+                  <Styled.PinButton size="large" variant="orange" onClick={handleToSetLocation}>
+                    여기예요!
+                  </Styled.PinButton>
+                  <Styled.CheckButtonForMobile size="circle" variant="orange" onClick={handleToSetLocation}>
+                    <BsCheckLg size={'24px'} />
+                  </Styled.CheckButtonForMobile>
+                </>
               )}
             </>
           )}
@@ -78,25 +94,30 @@ const ContentsSection = ({
       {clickedLocation && here && (
         <>
           <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" onChange={handleChangeContents} maxLength={30} rows={2} />
-          <Switch
-            checked={switchChecked}
-            onChange={setSwitchChecked}
-            leftText={'전체공개'}
-            rightText={'나만보기'}
-            width={'300px'}
-            checkedtextcolor={'#353C49'}
-            textcolor={'#72808E'}
-            checkedbackground={'#72808E'}
-            background={'rgba(18, 18, 18, 0.6)'}
-          />
+          <Styled.SwitchBox>
+            <Switch
+              checked={switchChecked}
+              onChange={setSwitchChecked}
+              leftText={'전체공개'}
+              rightText={'나만보기'}
+              width={'300px'}
+              checkedtextcolor={'#353C49'}
+              textcolor={'#72808E'}
+              checkedbackground={'#72808E'}
+              background={'rgba(18, 18, 18, 0.6)'}
+            />
+          </Styled.SwitchBox>
+          <Styled.SwitchBoxMobile>
+            <Switch checked={switchChecked} onChange={setSwitchChecked} leftText={'lock'} rightText={'lock'} width={'70px'} checkedtextcolor={'#353C49'} textcolor={'#72808E'} checkedbackground={'#72808E'} background={'rgba(18, 18, 18, 0.6)'} />
+          </Styled.SwitchBoxMobile>
           {contents === '' ? (
-            <Button size="large" variant="gray">
+            <Styled.PostSubmitButton size="large" variant="gray">
               작성하기
-            </Button>
+            </Styled.PostSubmitButton>
           ) : (
-            <Button size="large" variant="orange-shadow" onClick={handleToSubmit}>
+            <Styled.PostSubmitButton size="large" variant="orange-shadow" onClick={handleToSubmit}>
               작성하기
-            </Button>
+            </Styled.PostSubmitButton>
           )}
         </>
       )}
@@ -109,29 +130,34 @@ const ContentsSection = ({
           </Styled.PinBackground>
           <Styled.SearchInput value={`${locationInfo.countryId}, ${locationInfo.regionId}`} disabled />
           <Styled.ContentsInput placeholder="짧은 글을 남겨주세요!" defaultValue={data?.contents} onChange={handleChangeContents} maxLength={30} rows={2} />
-          <Switch
-            checked={switchChecked}
-            onChange={setSwitchChecked}
-            leftText={'전체공개'}
-            rightText={'나만보기'}
-            width={'300px'}
-            checkedtextcolor={'#353C49'}
-            textcolor={'#72808E'}
-            checkedbackground={'#72808E'}
-            background={'rgba(18, 18, 18, 0.6)'}
-          />
+          <Styled.SwitchBox>
+            <Switch
+              checked={switchChecked}
+              onChange={setSwitchChecked}
+              leftText={'전체공개'}
+              rightText={'나만보기'}
+              width={'300px'}
+              checkedtextcolor={'#353C49'}
+              textcolor={'#72808E'}
+              checkedbackground={'#72808E'}
+              background={'rgba(18, 18, 18, 0.6)'}
+            />
+          </Styled.SwitchBox>
+          <Styled.SwitchBoxMobile>
+            <Switch checked={switchChecked} onChange={setSwitchChecked} leftText={'lock'} rightText={'lo'} width={'70px'} checkedtextcolor={'#353C49'} textcolor={'#72808E'} checkedbackground={'#72808E'} background={'rgba(18, 18, 18, 0.6)'} />
+          </Styled.SwitchBoxMobile>
           <div style={{ display: 'flex', gap: '10px' }}>
-            <Button size="medium" variant="deep-gray" onClick={handleDelete}>
+            <Styled.PostDeleteSubmitButtonForMobile size="medium" variant="deep-gray" onClick={handleDelete}>
               삭제하기
-            </Button>
+            </Styled.PostDeleteSubmitButtonForMobile>
             {contents === '' ? (
-              <Button size="medium" variant="gray">
+              <Styled.PostEditSubmitButtonForMobile size="medium" variant="gray">
                 수정하기
-              </Button>
+              </Styled.PostEditSubmitButtonForMobile>
             ) : (
-              <Button size="medium" variant="orange-shadow" onClick={handleToSubmit}>
+              <Styled.PostEditSubmitButtonForMobile size="medium" variant="orange-shadow" onClick={handleToSubmit}>
                 수정하기
-              </Button>
+              </Styled.PostEditSubmitButtonForMobile>
             )}
           </div>
         </>

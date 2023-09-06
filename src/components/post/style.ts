@@ -6,6 +6,10 @@ export const PostLayout = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  @media (max-width: 1060px) {
+    height: fit-content;
+  }
 `;
 
 export const UploadImgFileContainer = styled.div`
@@ -13,13 +17,19 @@ export const UploadImgFileContainer = styled.div`
   justify-content: center;
   align-items: center;
 
-  & > p {
+  & > label {
     position: absolute;
     top: 100px;
     left: 65px;
-    text-align: center;
-    color: rgba(239, 235, 237, 0.8);
-    filter: drop-shadow(rgba(0, 0, 0, 0.4) 0px 0px 9px);
+    color: rgba(204, 207, 211, 0.8);
+    margin-bottom: 8px;
+
+    @media (max-width: 1060px) {
+      top: 3px;
+      left: 3px;
+      color: #f4f4f5;
+      opacity: 0.8;
+    }
   }
 
   & > span {
@@ -31,6 +41,32 @@ export const UploadImgFileContainer = styled.div`
     color: rgba(239, 235, 237, 0.8);
     font-weight: 500;
     filter: drop-shadow(rgba(0, 0, 0, 0.4) 0px 0px 9px);
+
+    @media (max-width: 1060px) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 1060px) {
+    position: fixed;
+    bottom: 70px;
+    width: 70px;
+    height: 70px;
+    margin-left: 20px;
+    border-radius: 10px;
+  }
+`;
+
+export const LoadingParagraph = styled.p`
+  position: absolute;
+  top: 100px;
+  left: 65px;
+  text-align: center;
+  color: rgba(239, 235, 237, 0.8);
+  filter: drop-shadow(rgba(0, 0, 0, 0.4) 0px 0px 9px);
+
+  @media (max-width: 1060px) {
+    display: none;
   }
 `;
 
@@ -67,6 +103,46 @@ export const ImgBox = styled.div`
     font-size: 14px;
     color: rgba(239, 235, 237, 0.8);
     font-weight: 500;
+
+    @media (max-width: 1060px) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 1060px) {
+    margin: 0 auto;
+    margin-top: 70px;
+  }
+`;
+
+export const LoadingDivMobile = styled.div`
+  position: fixed;
+  bottom: 70px;
+  width: fit-content;
+  height: fit-content;
+`;
+
+export const LoadingParagraphMobile = styled.p`
+  font-size: 12px;
+  margin-bottom: 10px;
+  margin-left: 20px;
+  text-align: center;
+  color: rgba(239, 235, 237, 0.8);
+  filter: drop-shadow(rgba(0, 0, 0, 1) 0px 0px 9px);
+
+  @media (min-width: 1060px) {
+    display: none;
+  }
+`;
+
+export const ImgBoxMobile = styled(ImgBox)`
+  @media (max-width: 1060px) {
+    width: 70px;
+    height: 70px;
+    margin-top: 0px;
+    margin-left: 20px;
+    padding-top: 6px;
+    border-radius: 10px;
   }
 `;
 
@@ -76,6 +152,12 @@ export const UploadImgFile = styled.img`
   object-fit: cover;
   border-radius: 20px;
   box-shadow: 3px 3px 20px rgba(251, 232, 189, 0.4);
+
+  @media (max-width: 1060px) {
+    width: 71px;
+    height: 71px;
+    border-radius: 10px;
+  }
 `;
 
 export const UploadBox = styled.div`
@@ -93,6 +175,20 @@ export const SearchInput = styled.input`
   border: 1px solid #b3bac1;
   color: #72808e;
   font-size: 15px;
+
+  @media (max-width: 1060px) {
+    position: fixed;
+    bottom: 150px;
+    left: 100px;
+    width: calc(100vw - 120px);
+    height: 30px;
+    padding: 0 12px;
+    background: rgba(18, 18, 18, 0.9);
+    border: none;
+    border-radius: 10px;
+    color: #b3bac1;
+    font-size: 14px;
+  }
 `;
 
 export const ContentsInput = styled.textarea`
@@ -118,6 +214,54 @@ export const ContentsInput = styled.textarea`
   &::-webkit-scrollbar {
     display: none;
   }
+
+  @media (max-width: 1060px) {
+    position: fixed;
+    bottom: 70px;
+    left: 100px;
+    width: calc(100vw - 120px);
+    height: 70px;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 15px;
+
+    &::placeholder {
+      font-size: 15px;
+    }
+  }
+`;
+
+export const PostSubmitButton = styled(Button)`
+  @media (max-width: 1060px) {
+    position: fixed;
+    bottom: 20px;
+    left: 70px;
+    width: calc(100vw - 90px);
+    height: 40px;
+    font-size: 15px;
+  }
+`;
+
+export const PostEditSubmitButtonForMobile = styled(Button)`
+  @media (max-width: 1060px) {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    height: 40px;
+    width: calc(50vw - 50px);
+    font-size: 15px;
+  }
+`;
+
+export const PostDeleteSubmitButtonForMobile = styled(Button)`
+  @media (max-width: 1060px) {
+    position: fixed;
+    bottom: 20px;
+    left: 70px;
+    height: 40px;
+    width: calc(50vw - 50px);
+    font-size: 15px;
+  }
 `;
 
 export const PinParagraph = styled.p`
@@ -130,6 +274,10 @@ export const PinParagraph = styled.p`
   font-size: 21px;
   line-height: 28px;
   text-shadow: 3px 3px 10px rgba(251, 232, 189, 0.4);
+
+  @media (max-width: 1060px) {
+    display: none;
+  }
 `;
 
 export const Pin = styled.img`
@@ -146,6 +294,44 @@ export const PinButton = styled(Button)`
   top: 65%;
   left: 50%;
   transform: translate(-50%, -50%);
+
+  @media (max-width: 1060px) {
+    display: none;
+  }
+`;
+
+export const CheckButtonForMobile = styled(Button)`
+  @media (max-width: 1060px) {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 25px;
+    right: 26px;
+    padding: 0;
+    z-index: 1;
+  }
+
+  @media (min-width: 1060px) {
+    display: none;
+  }
+`;
+
+export const PencilButtonForMobile = styled(Button)`
+  @media (max-width: 1060px) {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 150px;
+    right: 26px;
+    padding: 0;
+    z-index: 1;
+  }
+
+  @media (min-width: 1060px) {
+    display: none;
+  }
 `;
 
 export const PinBackground = styled.div`
@@ -156,6 +342,12 @@ export const PinBackground = styled.div`
   height: 100vh;
   background-color: transparent;
   z-index: 100;
+
+  @media (max-width: 1060px) {
+    left: 0px;
+    width: 100vw;
+    height: calc(100vh - 180px);
+  }
 `;
 
 export const PinWarning = styled.p`
@@ -167,4 +359,21 @@ export const PinWarning = styled.p`
   border-radius: 18px;
   color: #f4f4f5;
   transform: translate(-50%, -50%);
+`;
+
+export const SwitchBox = styled.div`
+  @media (max-width: 1060px) {
+    display: none;
+  }
+`;
+
+export const SwitchBoxMobile = styled.div`
+  position: fixed;
+  bottom: 150px;
+  left: 20px;
+  width: 70px;
+
+  @media (min-width: 1060px) {
+    display: none;
+  }
 `;

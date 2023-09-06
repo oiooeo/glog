@@ -24,8 +24,8 @@ export const SwitchLabel = styled.label<StyledProps>`
   cursor: pointer;
 
   @media (max-width: 1060px) {
-    width: calc(${props => props.width} - 40px);
-    height: 40px;
+    width: ${props => (props.width === '70px' ? props.width : `calc(${props.width} - 40px)`)};
+    height: ${props => (props.width === '70px' ? '30px' : '40px')};
   }
 `;
 
@@ -41,8 +41,8 @@ export const SwitchBox = styled.div<StyledProps>`
   z-index: 10;
 
   @media (max-width: 1060px) {
-    width: calc((${props => `calc(${props.width} - 20px)`}) / 2 - 20px);
-    height: 31px;
+    width: ${props => (props.width === '70px' ? '25px' : `calc((${props.width} - 20px) / 2 - 20px)`)};
+    height: ${props => (props.width === '70px' ? '20px' : '31px')};
     font-size: 12px;
   }
 `;
@@ -70,4 +70,9 @@ export const SwitchSpan = styled(SwitchBox)<StyledProps>`
   transition: transform 0.15s;
   transform: translateX(${props => (props.checked ? 'calc(100% + 7px)' : '0px')});
   z-index: 11;
+
+  @media (max-width: 1060px) {
+    font-size: 12px;
+    transform: translateX(${props => (props.width === '70px' ? (props.checked ? 'calc(100% + 8px)' : '0px') : props.checked ? 'calc(100% + 7px)' : '0px')});
+  }
 `;

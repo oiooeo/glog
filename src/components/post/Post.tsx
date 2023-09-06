@@ -77,9 +77,18 @@ const Post = ({ type, unmount, postId }: PostProps) => {
     const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${location.longitude},${location.latitude}.json?access_token=${process.env.REACT_APP_ACCESS_TOKEN}&language=ko`);
     const data = await response.json();
     const dataFeatures = data.features;
-    const placeName = dataFeatures[dataFeatures.length - 2].place_name_ko || dataFeatures[dataFeatures.length - 2].place_name;
-    const placeComponents = placeName.split(', ');
-    setLocationInfo({ countryId: placeComponents[placeComponents.length - 2], regionId: placeComponents[placeComponents.length - 1], address: dataFeatures[0].place_name_ko !== undefined ? dataFeatures[0].place_name_ko : dataFeatures[0].place_name });
+    if (dataFeatures.length === 0) {
+      toast(`육지에 핀을 꽂아주세요!`, { className: 'post-alert', position: 'top-center' });
+    } else {
+      const placeName = dataFeatures[dataFeatures.length - 2].place_name_ko || dataFeatures[dataFeatures.length - 2].place_name;
+      const placeComponents = placeName.split(', ');
+      setLocationInfo({
+        countryId: placeComponents[placeComponents.length - 2],
+        regionId: placeComponents[placeComponents.length - 1],
+        address: dataFeatures[0].place_name_ko !== undefined ? dataFeatures[0].place_name_ko : dataFeatures[0].place_name,
+      });
+      setHere(true);
+    }
   };
 
   useEffect(() => {
@@ -88,7 +97,6 @@ const Post = ({ type, unmount, postId }: PostProps) => {
   }, [location]);
 
   const handleToSetLocation = () => {
-    setHere(true);
     setLocation({ longitude: clickedLocation.longitude, latitude: clickedLocation.latitude });
   };
 
@@ -151,7 +159,6 @@ const Post = ({ type, unmount, postId }: PostProps) => {
         handleToSetLocation={handleToSetLocation}
         handleToResetLocation={handleToResetLocation}
         handleToSubmit={handleToSubmit}
-        deleteButton={deleteButton}
         data={data}
       />
     </Styled.PostLayout>
