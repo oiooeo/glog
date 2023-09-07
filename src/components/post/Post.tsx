@@ -106,6 +106,7 @@ const Post = ({ type, unmount, postId }: PostProps) => {
 
   const handleToSubmit = () => {
     mutate();
+    unmount('post');
   };
 
   const fetchData = async () => {
