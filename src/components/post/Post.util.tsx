@@ -58,9 +58,8 @@ export const handleMutationFunction = async ({ type, session, contents, imgUrl, 
         .eq('id', data?.id);
 };
 
-export const handleMutationSuccess = async ({ queryClient, type, mount, unmount, userId, postId }: handleMutationSuccessProps) => {
+export const handleMutationSuccess = async ({ queryClient, type, mount, userId, postId }: handleMutationSuccessProps) => {
   queryClient.invalidateQueries(['getPosts']);
-  unmount('post');
   usePostStore.getState().setIsPosting(false);
 
   if (type === 'post') {
