@@ -31,7 +31,7 @@ const LikesList = () => {
       }
     }
     fetchLikedPosts();
-  }, [session, page]);
+  }, [session, page, likedPosts]);
 
   const handleScroll = () => {
     setLoading(true);
