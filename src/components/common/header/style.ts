@@ -71,6 +71,10 @@ export const OpenPostButton = styled(CircleButton)`
 
 export const ClosePostButton = styled(OpenPostButton)`
   background-color: rgba(221, 82, 1, 0.7);
+
+  @media (max-width: 1060px) {
+    background-color: rgba(53, 60, 73, 0.8);
+  }
 `;
 
 export const AuthSpan = styled.span<{ opened?: boolean }>`
@@ -83,6 +87,7 @@ export const AuthSpan = styled.span<{ opened?: boolean }>`
   @media (max-width: 1060px) {
     display: ${props => (props.opened ? 'none' : 'block')};
     width: 40px;
+    margin-left: 5px;
     font-size: 11px;
     font-weight: 500;
   }
@@ -124,8 +129,7 @@ export const SearchBox = styled.div`
   }
 
   @media (max-width: 1060px) {
-    width: 230px;
-    margin-right: 10px;
+    width: calc(100vw - 170px);
   }
 `;
 
@@ -144,11 +148,15 @@ export const SearchInput = styled.input`
 
   &::placeholder {
     color: #72808e;
+
+    @media (max-width: 1060px) {
+      font-size: 13px;
+    }
   }
 
   @media (max-width: 1060px) {
     padding: 0 0 0 15px;
-    width: 190px;
+    width: calc(100vw - 215px);
   }
 `;
 
@@ -163,6 +171,5 @@ export const SearchButton = styled.button`
   cursor: pointer;
 
   @media (max-width: 1060px) {
-    margin-right: 10px;
   }
 `;

@@ -32,6 +32,11 @@ export const LocationParagraph = styled.p`
   font-size: 15px;
   font-weight: 600;
   text-shadow: 0px 0px 8px rgb(0, 0, 0);
+
+  @media (max-width: 1060px) {
+    font-weight: 500;
+    text-shadow: 0px 0px 5px rgb(0, 0, 0);
+  }
 `;
 
 export const LikeBox = styled.div`

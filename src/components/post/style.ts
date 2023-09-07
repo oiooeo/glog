@@ -58,7 +58,7 @@ export const UploadImgFileContainer = styled.div`
 `;
 
 export const LoadingParagraph = styled.p`
-  position: absolute;
+  position: flex;
   top: 100px;
   left: 65px;
   text-align: center;
@@ -93,6 +93,11 @@ export const ImgBox = styled.div`
     font-size: 17px;
     font-weight: 500;
     line-height: 25px;
+
+    @media (max-width: 1060px) {
+      font-weight: 300;
+      line-height: 22px;
+    }
   }
 
   & > span {
@@ -116,10 +121,12 @@ export const ImgBox = styled.div`
 `;
 
 export const LoadingDivMobile = styled.div`
-  position: fixed;
-  bottom: 70px;
-  width: fit-content;
-  height: fit-content;
+  @media (max-width: 1060px) {
+    position: fixed;
+    bottom: 70px;
+    width: fit-content;
+    height: fit-content;
+  }
 `;
 
 export const LoadingParagraphMobile = styled.p`
@@ -306,9 +313,13 @@ export const CheckButtonForMobile = styled(Button)`
     display: flex;
     justify-content: center;
     align-items: center;
+    align-content: center;
     bottom: 25px;
     right: 26px;
     padding: 0;
+    padding-right: 2px;
+    background-color: #dd5201;
+    text-align: center;
     z-index: 1;
   }
 
@@ -346,7 +357,8 @@ export const PinBackground = styled.div`
   @media (max-width: 1060px) {
     left: 0px;
     width: 100vw;
-    height: calc(100vh - 180px);
+    /* height: calc(100vh - 180px); */
+    height: calc(var(--vh, 1vh) * 100 - 180px);
   }
 `;
 
