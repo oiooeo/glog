@@ -30,8 +30,12 @@ const Globe = ({ postsData }: MapProps) => {
   let vh = 0;
 
   useEffect(() => {
-    vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
+    const setVh = () => {
+      vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+    window.addEventListener('resize', setVh);
+    setVh();
   }, []);
 
   useEffect(() => {
