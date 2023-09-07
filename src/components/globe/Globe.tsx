@@ -27,6 +27,17 @@ const Globe = ({ postsData }: MapProps) => {
   const isPostModalOpened = usePostStore(state => state.isPosting);
   const isRightModalOpened = useMarkerInvisible(state => state.isMarkerInvisible);
 
+  let vh = 0;
+
+  useEffect(() => {
+    const setVh = () => {
+      vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+    window.addEventListener('resize', setVh);
+    setVh();
+  }, []);
+
   useEffect(() => {
     if (!map.current && mapContainerRef.current) {
       map.current = new mapboxgl.Map({
