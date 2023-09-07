@@ -74,6 +74,7 @@ export const ClosePostButton = styled(OpenPostButton)`
 
   @media (max-width: 1060px) {
     background-color: rgba(53, 60, 73, 0.8);
+    border: 1px solid rgba(114, 128, 142, 1);
   }
 `;
 
