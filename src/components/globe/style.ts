@@ -3,7 +3,8 @@ import { styled } from 'styled-components';
 export const GlobeLayout = styled.div`
   z-index: 1;
   width: 100vw;
-  height: 100vh;
+  /* height: 100vh; */
+  height: calc(var(--vh, 1vh) * 100);
 
   & > .mapboxgl-canvas-container .image-marker-div {
     width: 70px;
