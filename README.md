@@ -1,4 +1,4 @@
-## [Glog\*](https://glog-alpha.vercel.app/)
+## [Glog\*](https://www.glog.world/)
 
 > `Globe` + `Log` = `Glog`
 

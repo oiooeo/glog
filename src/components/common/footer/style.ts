@@ -12,12 +12,12 @@ export const FooterWrapper = styled.footer`
 
   @media (max-width: 1060px) {
     justify-content: right;
-    bottom: 10px;
+    bottom: 6px;
   }
 `;
 
 export const FooterTextMobile = styled.p`
-  margin-right: 6px;
+  margin-right: 4px;
   font-size: 7px;
   color: #cccfd3;
 
