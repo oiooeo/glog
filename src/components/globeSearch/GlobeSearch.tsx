@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
-import toast from 'react-simple-toasts';
 
 import SearchBox from './GlobeSearch.SearchBox';
 import { getSearchData } from '../../api/mapbox';
@@ -32,10 +31,6 @@ const GlobeSearch = () => {
   const handleSearch = (_value: string) => {
     refetch();
   };
-
-  useEffect(() => {
-    toast('지구본을 움직여 정확한 위치에 핀을 꽂아주세요!', { className: 'globe-alert', position: 'center', duration: 3000, maxVisibleToasts: 1 });
-  }, []);
 
   useEffect(() => {
     if (searchData && searchData.length > 0) {

@@ -287,6 +287,22 @@ export const PinParagraph = styled.p`
   }
 `;
 
+export const PinParagraphForMobile = styled.p`
+  position: fixed;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  text-align: center;
+  font-size: 14px;
+  text-shadow: 3px 3px 10px rgba(251, 232, 189, 0.4);
+  white-space: nowrap;
+
+  @media (min-width: 1060px) {
+    display: none;
+  }
+`;
+
 export const Pin = styled.img`
   position: fixed;
   top: 50%;
@@ -294,6 +310,23 @@ export const Pin = styled.img`
   width: 50px;
   height: 50px;
   transform: translate(-50%, -50%);
+
+  @media (max-width: 1060px) {
+    display: none;
+  }
+`;
+
+export const PinForMobile = styled.img`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  transform: translate(-50%, -50%);
+
+  @media (min-width: 1060px) {
+    display: none;
+  }
 `;
 
 export const PinButton = styled(Button)`
@@ -303,27 +336,6 @@ export const PinButton = styled(Button)`
   transform: translate(-50%, -50%);
 
   @media (max-width: 1060px) {
-    display: none;
-  }
-`;
-
-export const CheckButtonForMobile = styled(Button)`
-  @media (max-width: 1060px) {
-    position: fixed;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-    bottom: 25px;
-    right: 26px;
-    padding: 0;
-    padding-right: 2px;
-    background-color: #dd5201;
-    text-align: center;
-    z-index: 1;
-  }
-
-  @media (min-width: 1060px) {
     display: none;
   }
 `;

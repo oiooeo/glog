@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { BsCheckLg } from 'react-icons/bs';
 import { SlPencil } from 'react-icons/sl';
 
 import * as Styled from './style';
 import pin from '../../assets/pin/pinLarge.svg';
+import focus from '../../assets/pin/pinLargeFocus.svg';
 import Switch from '../common/switch/Switch';
 import GlobeSearch from '../globeSearch/GlobeSearch';
 
@@ -69,21 +69,19 @@ const ContentsSection = ({
               <Styled.Pin src={pin} alt="위치" />
               {clickedLocation.latitude === 0 || clickedLocation.longitude === 0 ? (
                 <>
+                  <Styled.PinParagraphForMobile>지구본을 움직여서 정확한 위치에 핀을 꽂아주세요!</Styled.PinParagraphForMobile>
+                  <Styled.PinForMobile src={pin} alt="위치" />
                   <Styled.PinButton size="large" variant="gray">
                     여기예요!
                   </Styled.PinButton>
-                  <Styled.CheckButtonForMobile size="circle" variant="gray">
-                    <BsCheckLg size={'24px'} color="#ffffff" />
-                  </Styled.CheckButtonForMobile>
                 </>
               ) : (
                 <>
+                  <Styled.PinParagraphForMobile>핀을 터치하면 위치가 확정돼요!</Styled.PinParagraphForMobile>
+                  <Styled.PinForMobile src={focus} alt="위치" onClick={handleToSetLocation} style={{ cursor: 'pointer' }} />
                   <Styled.PinButton size="large" variant="orange" onClick={handleToSetLocation}>
                     여기예요!
                   </Styled.PinButton>
-                  <Styled.CheckButtonForMobile size="circle" variant="orange" onClick={handleToSetLocation}>
-                    <BsCheckLg size={'24px'} />
-                  </Styled.CheckButtonForMobile>
                 </>
               )}
             </>
