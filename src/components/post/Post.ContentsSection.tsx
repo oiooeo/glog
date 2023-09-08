@@ -52,6 +52,7 @@ const ContentsSection = ({
               <Styled.SearchInput value={`${locationInfo?.countryId}, ${locationInfo?.regionId}`} disabled />
               <Styled.PinBackground>
                 <Styled.Pin src={pin} alt="위치" />
+                <Styled.PinForMobile src={pin} alt="위치" />
                 <Styled.PinButton size="large" variant="black" onClick={handleToResetLocation}>
                   수정하기
                 </Styled.PinButton>
@@ -106,7 +107,8 @@ const ContentsSection = ({
             />
           </Styled.SwitchBox>
           <Styled.SwitchBoxMobile>
-            <Switch checked={switchChecked} onChange={setSwitchChecked} leftText={'lock'} rightText={'lock'} width={'70px'} checkedtextcolor={'#353C49'} textcolor={'#72808E'} checkedbackground={'#72808E'} background={'rgba(18, 18, 18, 0.6)'} />
+            <p>공개범위</p>
+            <Switch checked={switchChecked} onChange={setSwitchChecked} leftText={'전체'} rightText={'MY'} width={'70px'} checkedtextcolor={'#353C49'} textcolor={'#B3BAC1'} checkedbackground={'#B3BAC1'} background={'rgba(18, 18, 18, 0.6)'} />
           </Styled.SwitchBoxMobile>
           {contents === '' ? (
             <Styled.PostSubmitButton size="large" variant="gray">
@@ -142,7 +144,8 @@ const ContentsSection = ({
             />
           </Styled.SwitchBox>
           <Styled.SwitchBoxMobile>
-            <Switch checked={switchChecked} onChange={setSwitchChecked} leftText={'lock'} rightText={'lo'} width={'70px'} checkedtextcolor={'#353C49'} textcolor={'#72808E'} checkedbackground={'#72808E'} background={'rgba(18, 18, 18, 0.6)'} />
+            <p>공개범위</p>
+            <Switch checked={switchChecked} onChange={setSwitchChecked} leftText={'전체'} rightText={'MY'} width={'70px'} checkedtextcolor={'#353C49'} textcolor={'#B3BAC1'} checkedbackground={'#B3BAC1'} background={'rgba(18, 18, 18, 0.6)'} />
           </Styled.SwitchBoxMobile>
           <div style={{ display: 'flex', gap: '10px' }}>
             <Styled.PostDeleteSubmitButtonForMobile size="medium" variant="deep-gray" onClick={handleDelete}>

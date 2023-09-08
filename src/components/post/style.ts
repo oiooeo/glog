@@ -349,6 +349,7 @@ export const PencilButtonForMobile = styled(Button)`
     bottom: 150px;
     right: 26px;
     padding: 0;
+    background: transparent;
     z-index: 1;
   }
 
@@ -396,6 +397,14 @@ export const SwitchBoxMobile = styled.div`
   bottom: 150px;
   left: 20px;
   width: 70px;
+
+  & > p {
+    margin-bottom: 2px;
+    color: rgba(244, 244, 245, 0.8);
+    text-align: center;
+    font-size: 12px;
+    font-weight: 400;
+  }
 
   @media (min-width: 1060px) {
     display: none;
