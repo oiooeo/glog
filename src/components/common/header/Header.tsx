@@ -19,7 +19,7 @@ import type { User } from '@supabase/supabase-js';
 const Header = () => {
   const [_user, setUser] = useState<User>();
   const [switchChecked, setSwitchChecked] = useState(false);
-  const { closePost, closeSearchList, closeLikesList, openPost, handleToSearch, handleOnEnterPress, openSearchList, openLikesList, isSearchListOpened, isLikeListOpened, handleChangeKeyword } = useHeaderModal();
+  const { closePost, closeSearchList, closeLikesList, openPost, handleToSearch, handleOnEnterPress, openSearchList, openLikesList, isSearchListOpened, isLikeListOpened, handleChangeKeyword, unmount } = useHeaderModal();
   const session = useSessionStore(state => state.session);
   const setSession = useSessionStore(state => state.setSession);
   const isPostModalOpened = usePostStore(state => state.isPosting);
@@ -72,12 +72,14 @@ const Header = () => {
     if (switchChecked) {
       if (session) {
         useTabStore.getState().setTab('my');
+        unmount('detail');
       }
       if (!session) {
         signinHandler();
       }
     } else {
       useTabStore.getState().setTab('explore');
+      unmount('detail');
     }
   }, [switchChecked, session]);
 
