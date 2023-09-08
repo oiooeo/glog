@@ -85,5 +85,6 @@ export const useHeaderModal = () => {
     handleOnEnterPress,
     openSearchList,
     openLikesList,
+    unmount,
   };
 };
