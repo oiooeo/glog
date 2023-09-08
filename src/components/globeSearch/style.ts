@@ -51,8 +51,4 @@ export const SearchButton = styled.button`
   color: rgba(204, 207, 211, 0.8);
   font-size: 12px;
   cursor: pointer;
-
-  @media (max-width: 1060px) {
-    display: none;
-  }
 `;
