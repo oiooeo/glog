@@ -29,6 +29,7 @@ const HeaderLogin = (props: HeaderLoginTypes) => {
       ) : (
         <Styled.OpenPostButton onClick={session ? openPost : signinHandler}>
           <BsPlusCircle size={'22px'} className="plus" />
+          {!session && <Styled.Tooltip>글 작성하기</Styled.Tooltip>}
         </Styled.OpenPostButton>
       )}
 
