@@ -178,3 +178,38 @@ export const SearchButton = styled.button`
   @media (max-width: 1060px) {
   }
 `;
+
+export const Tooltip = styled.span`
+  position: absolute;
+  background-color: #333;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  top: 50px;
+  white-space: nowrap;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent transparent #333 transparent;
+  }
+
+  @media (max-width: 1060px) {
+    top: -45px;
+    margin-left: 28px;
+    &::before {
+      top: 100%;
+      left: 32%;
+      transform: translateX(-50%);
+      border-width: 13px 4px;
+      border-style: solid;
+      border-color: #333 transparent transparent transparent;
+    }
+  }
+`;
