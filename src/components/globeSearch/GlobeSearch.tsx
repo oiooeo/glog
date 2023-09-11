@@ -35,7 +35,12 @@ const GlobeSearch = () => {
   useEffect(() => {
     if (searchData && searchData.length > 0) {
       const coordinates: [number, number] = [searchData[0].lon, searchData[0].lat];
-      mapLocation.flyTo({ center: coordinates, zoom: 7 });
+      const isMobile = window.innerWidth <= 1060;
+      if (isMobile) {
+        mapLocation.flyTo({ center: coordinates, zoom: 16 });
+      } else {
+        mapLocation.flyTo({ center: coordinates, zoom: 7 });
+      }
     }
   }, [searchData, mapLocation]);
 
