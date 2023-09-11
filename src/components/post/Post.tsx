@@ -65,6 +65,12 @@ const Post = ({ type, unmount, postId }: PostProps) => {
   };
 
   const handleImageSubmit = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const allowedFormats = ['image/png', 'image/jpeg', 'image/jpg', 'image/heic'];
+
+    if (event.target.files && !allowedFormats.includes(event.target.files[0].type)) {
+      toast('이미지 파일(png, jpeg, jpg, heic)을 선택하세요.', { className: 'image-alert', position: 'top-left', duration: 1000 });
+      return;
+    }
     if (event.target.files && event.target.files?.length > 1) {
       toast('사진은 한 게시물에 한장까지만 업로드 돼요!', { className: 'image-alert', position: 'top-left', duration: 1000 });
     }
