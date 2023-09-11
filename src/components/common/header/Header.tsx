@@ -24,7 +24,6 @@ const Header = () => {
   const setSession = useSessionStore(state => state.setSession);
   const isPostModalOpened = usePostStore(state => state.isPosting);
   const isRightModalOpened = useMarkerInvisible(state => state.isMarkerInvisible);
-  const close = isPostModalOpened || isRightModalOpened || false;
 
   const signinHandler = () => {
     try {

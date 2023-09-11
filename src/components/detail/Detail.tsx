@@ -3,6 +3,7 @@ import { SlPencil } from 'react-icons/sl';
 import * as Styled from './style';
 import { usePostStore } from '../../zustand/usePostStore';
 import { useSessionStore } from '../../zustand/useSessionStore';
+import { useHeaderModal } from '../common/header/Header.hooks';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Like from '../like/Like';
 import Post from '../post/Post';
@@ -16,13 +17,14 @@ interface DetailProps {
 const Detail = ({ data }: DetailProps) => {
   const session = useSessionStore(state => state.session);
   const { leftMount, unmount } = useModal();
+  const { closeSearchList, closeLikesList } = useHeaderModal();
 
-  const openUpdate = (id: string) => {
+  const openUpdate = () => {
     usePostStore.getState().setIsPosting(true);
-    leftMount('post', <Post type={'update'} unmount={unmount} postId={id} />);
+    leftMount('post', <Post data={data} />);
+    closeSearchList();
+    closeLikesList();
     unmount('detail');
-    unmount('searchList');
-    unmount('likesList');
   };
 
   return (
@@ -36,13 +38,7 @@ const Detail = ({ data }: DetailProps) => {
         </Styled.LikeBox>
         {session?.user.id === data.userId && (
           <Styled.EditButton>
-            <SlPencil
-              size={'20px'}
-              className="edit"
-              onClick={() => {
-                openUpdate(data.id);
-              }}
-            />
+            <SlPencil size={'20px'} className="edit" onClick={openUpdate} />
           </Styled.EditButton>
         )}
         {data.images ? <Styled.DetailImage src={data.images} alt={`Image for ${data.contents}`} /> : null}

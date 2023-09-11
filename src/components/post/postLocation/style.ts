@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-import Button from '../common/button/Button';
+import Button from '../../common/button/Button';
 
 export const PostLayout = styled.div`
   display: flex;
@@ -74,39 +74,6 @@ export const ContentsInput = styled.textarea`
     &::placeholder {
       font-size: 15px;
     }
-  }
-`;
-
-export const PostSubmitButton = styled(Button)`
-  @media (max-width: 1060px) {
-    position: fixed;
-    bottom: 20px;
-    left: 70px;
-    width: calc(100vw - 90px);
-    height: 40px;
-    font-size: 15px;
-  }
-`;
-
-export const PostEditSubmitButtonForMobile = styled(Button)`
-  @media (max-width: 1060px) {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    height: 40px;
-    width: calc(50vw - 50px);
-    font-size: 15px;
-  }
-`;
-
-export const PostDeleteSubmitButtonForMobile = styled(Button)`
-  @media (max-width: 1060px) {
-    position: fixed;
-    bottom: 20px;
-    left: 70px;
-    height: 40px;
-    width: calc(50vw - 50px);
-    font-size: 15px;
   }
 `;
 

@@ -4,9 +4,9 @@ import { BsFillImageFill } from 'react-icons/bs';
 import { TbCameraRotate } from 'react-icons/tb';
 
 import * as Styled from './style';
-import Loader from '../common/loader/Loader';
+import Loader from '../../common/loader/Loader';
 
-interface UploadBoxTypes {
+interface ImageUploadProps {
   imgFile: string | null;
   loading: boolean;
   handleImageSubmit: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -14,7 +14,7 @@ interface UploadBoxTypes {
   handleDrop: (event: React.DragEvent<HTMLDivElement>) => void;
 }
 
-const useImageUpload = ({ imgFile, loading, handleImageSubmit, imgRef, handleDrop }: UploadBoxTypes) => {
+const ImageUpload = ({ imgFile, loading, handleImageSubmit, imgRef, handleDrop }: ImageUploadProps) => {
   return (
     <Styled.UploadBox onDragEnter={(event: any) => event.preventDefault()} onDragOver={(event: any) => event.preventDefault()} onDragLeave={(event: any) => event.preventDefault()} onDrop={handleDrop}>
       {imgFile ? (
@@ -59,4 +59,4 @@ const useImageUpload = ({ imgFile, loading, handleImageSubmit, imgRef, handleDro
   );
 };
 
-export default useImageUpload;
+export default ImageUpload;

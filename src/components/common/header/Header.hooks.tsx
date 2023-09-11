@@ -36,7 +36,7 @@ export const useHeaderModal = () => {
 
   const openPost = () => {
     usePostStore.getState().setIsPosting(true);
-    leftMount('post', <Post type={'post'} unmount={unmount} />);
+    leftMount('post', <Post />);
     closeLikesList();
     closeSearchList();
     unmount('detail');
