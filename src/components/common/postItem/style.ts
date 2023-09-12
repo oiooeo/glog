@@ -1,25 +1,34 @@
 import styled, { keyframes } from 'styled-components';
 
+export const PostHoverLayout = styled.div`
+  transition: filter 0.3s ease;
+  transition-property: margin-right;
+  transition-duration: 0.3s;
+  &:hover {
+    margin-right: 50px;
+    z-index: 103;
+  }
+  @media (max-width: 1060px) {
+    width: 320px;
+  }
+`;
+
 export const PostItemLayout = styled.div<{ lastItem?: boolean }>`
   position: relative;
   overflow: hidden;
   width: 300px;
   height: ${props => (props.lastItem ? '150px' : '300px')};
-  margin: ${props => (props.lastItem ? '15px 20px 0 0' : '15px 20px 15px 0')};
   border-radius: ${props => (props.lastItem ? '16px 16px 0 0' : '16px')};
   filter: ${props => (props.lastItem ? 'blur(5px)' : 'none')};
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   transition: filter 0.3s ease;
-  float: right;
   transition-property: margin-right;
   transition-duration: 0.3s;
   z-index: 101;
 
-  &:hover {
-    margin-right: 50px;
-  }
-
   @media (max-width: 1060px) {
-    margin: 0px 0 25px 20px;
     height: 300px;
     margin: 15px 20px 15px 0;
     border-radius: 16px;
@@ -67,7 +76,7 @@ const fadeInUp = keyframes`
 
 export const DetailLayout = styled.div`
   float: right;
-  transform: translate(-50px, 0);
+  transform: translate(0, 0);
   animation: fadein 0.5s;
   z-index: 101;
 
@@ -82,7 +91,7 @@ export const DetailLayout = styled.div`
 
   @media (max-width: 1060px) {
     transform: translate(0, 0);
-    margin: 0 20px 0 0;
+    margin: 0 23px 0 20px;
     &.slider {
       animation: ${fadeInUp} 0.5s;
     }
