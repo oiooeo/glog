@@ -22,6 +22,7 @@ export const GlobeLayout = styled.div`
       border-radius: 10px;
       transition: transform 0.3s ease-in;
       box-shadow: 1px 1px 15px rgba(251, 232, 189, 0.4);
+      object-fit: cover;
 
       &:hover {
         transform: translateY(-20px);
