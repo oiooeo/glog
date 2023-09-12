@@ -59,11 +59,11 @@ export const getLikes = async (userId: string) => {
   return data;
 };
 
-export const getPostLikes = async (userId: string, page: number) => {
+export const getPostLikes = async (postId: string[], page: number) => {
   const LAST_INDEX = 4;
   const from = page;
   const to = from + LAST_INDEX;
-  const { data, error } = await supabase.from('posts').select('*, user:userId(*)').eq('userId', userId).eq('private', false).order('createdAt', { ascending: false }).range(from, to);
+  const { data, error } = await supabase.from('posts').select('*, user:userId(*)').in('id', postId).eq('private', false).order('createdAt', { ascending: false }).range(from, to);
   if (error) throw new Error(`에러!! ${error.message}`);
   return data;
 };

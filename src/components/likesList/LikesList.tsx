@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 import * as Styled from './style';
-import { getPostLikes } from '../../api/supabaseDatabase';
+import { getLikes, getPostLikes } from '../../api/supabaseDatabase';
 import { useSessionStore } from '../../zustand/useSessionStore';
 import PostItem from '../common/postItem/PostItem';
 
@@ -19,7 +19,9 @@ const LikesList = () => {
   const loadMoreLikedPosts = async () => {
     if (session) {
       try {
-        const postData = await getPostLikes(session.user.id, page);
+        const likes = await getLikes(session.user.id);
+        const likedPostIds = likes.map(like => like.postId);
+        const postData = await getPostLikes(likedPostIds, page);
         setLikedPosts(prevPosts => [...prevPosts, ...postData]);
       } catch (error) {
         console.error('Error fetching liked posts:', error);
