@@ -4,6 +4,7 @@ import { useInView } from 'react-intersection-observer';
 
 import * as Styled from './style';
 import { getLikes, getPostLikes } from '../../api/supabaseDatabase';
+import { useLikeStore } from '../../zustand/useLikeStore';
 import { useSessionStore } from '../../zustand/useSessionStore';
 import PostItem from '../common/postItem/PostItem';
 
@@ -14,6 +15,7 @@ export const PAGE_COUNT = 5;
 const LikesList = () => {
   const session = useSessionStore(state => state.session);
   const [likedPosts, setLikedPosts] = useState<Array<Tables<'posts'>>>([]);
+  const { setLikedPostsId } = useLikeStore();
   const [page, setPage] = useState<number>(0);
 
   const loadMoreLikedPosts = async () => {
@@ -23,6 +25,7 @@ const LikesList = () => {
         const likedPostIds = likes.map(like => like.postId);
         const postData = await getPostLikes(likedPostIds, page);
         setLikedPosts(prevPosts => [...prevPosts, ...postData]);
+        setLikedPostsId(likedPostIds);
       } catch (error) {
         console.error('Error fetching liked posts:', error);
       } finally {
