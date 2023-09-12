@@ -59,6 +59,15 @@ export const getLikes = async (userId: string) => {
   return data;
 };
 
+export const getPostLikes = async (postId: string[], page: number) => {
+  const LAST_INDEX = 4;
+  const from = page;
+  const to = from + LAST_INDEX;
+  const { data, error } = await supabase.from('posts').select('*, user:userId(*)').in('id', postId).eq('private', false).order('createdAt', { ascending: false }).range(from, to);
+  if (error) throw new Error(`에러!! ${error.message}`);
+  return data;
+};
+
 export const addLike = async ({ postId, userId }: { postId: string; userId: string }) => {
   await supabase.from('likes').insert({ postId, userId });
 };
