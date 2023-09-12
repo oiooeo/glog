@@ -15,8 +15,8 @@ interface PostItemProps {
   lastItem?: boolean;
 }
 
-const PostItem = ({ data, lastItem }: PostItemProps) => {
-  const ref = useRef<HTMLDivElement>(null);
+const PostItem = ({ data, lastItem }: PostItemProps, ref: any) => {
+  const DetailLayoutref = useRef<HTMLDivElement>(null);
   const itemRef = useRef<HTMLDivElement>(null);
   const [isClicked, setIsClicked] = useState(false);
   const mapLocation = useMapLocationStore(state => state.mapLocation);
@@ -33,12 +33,12 @@ const PostItem = ({ data, lastItem }: PostItemProps) => {
     setIsClicked(!isClicked);
   };
 
-  useOnClickOutside(ref, showDetail);
+  useOnClickOutside(DetailLayoutref, showDetail);
 
   return (
-    <div>
+    <Styled.PostHoverLayout ref={ref}>
       {isClicked ? (
-        <Styled.DetailLayout ref={ref}>
+        <Styled.DetailLayout ref={DetailLayoutref}>
           <Detail data={data} />
         </Styled.DetailLayout>
       ) : (
@@ -52,8 +52,8 @@ const PostItem = ({ data, lastItem }: PostItemProps) => {
           </Styled.LikeBox>
         </Styled.PostItemLayout>
       )}
-    </div>
+    </Styled.PostHoverLayout>
   );
 };
 
-export default PostItem;
+export default React.forwardRef(PostItem);

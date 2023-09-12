@@ -5,10 +5,12 @@ import mapboxgl from 'mapbox-gl';
 import { INITIAL_CENTER, ZOOM } from './Globe.content';
 import { pickImageMarker } from './globe.util';
 import * as Styled from './style';
+import { useLikeStore } from '../../zustand/useLikeStore';
 import { useLocationStore } from '../../zustand/useLocationStore';
 import { useMapLocationStore } from '../../zustand/useMapLocationStore';
 import { useMarkerInvisible } from '../../zustand/useMarkerInvisible';
 import { usePostStore } from '../../zustand/usePostStore';
+import { useSearchStore } from '../../zustand/useSearchStore';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import { globeCluster } from '../globeCluster/GlobeCluster';
 
@@ -21,12 +23,14 @@ interface MapProps {
 const Globe = ({ postsData }: MapProps) => {
   mapboxgl.accessToken = process.env.REACT_APP_ACCESS_TOKEN ? process.env.REACT_APP_ACCESS_TOKEN : '';
   const { mount } = useModal();
+  const { key, isSearchListOpened } = useSearchStore();
+  const { likedPostsId } = useLikeStore();
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const mapLocation = useMapLocationStore(state => state.mapLocation);
   const isPostModalOpened = usePostStore(state => state.isPosting);
   const isRightModalOpened = useMarkerInvisible(state => state.isMarkerInvisible);
-
+  let clusterData = postsData?.slice(5);
   let vh = 0;
 
   useEffect(() => {
@@ -86,17 +90,22 @@ const Globe = ({ postsData }: MapProps) => {
   };
 
   useEffect(() => {
-    if (postsData && postsData.length !== 0 && !isPostModalOpened && !isRightModalOpened) {
+    const markerCount = Math.min(postsData?.length || 0, 6);
+    const clusterSearchData = postsData?.slice(5).filter(item => item.countryId?.includes(key) || item.regionId?.includes(key) || item.address?.includes(key));
+    const clusterLikedPostsData = postsData?.slice(5)?.filter(item => likedPostsId.includes(item.id));
+    if (postsData && postsData.length > 0 && !isPostModalOpened && !isRightModalOpened) {
       const sortedData = [...postsData].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-      const markerCount = Math.min(sortedData.length, 6);
       handleImageMarkers(sortedData, markerCount);
-    } else if (isPostModalOpened || postsData?.length === 0 || isRightModalOpened) {
+    } else if (postsData && isRightModalOpened) {
+      const imageSearchData = postsData.slice(0, markerCount).filter(item => item.countryId?.includes(key) || item.regionId?.includes(key) || item.address?.includes(key));
+      const imageLikedPostsData = postsData.slice(0, markerCount).filter(item => likedPostsId.includes(item.id));
+      handleImageMarkers(isSearchListOpened ? imageSearchData : imageLikedPostsData, markerCount);
+      clusterData = isSearchListOpened ? clusterSearchData : clusterLikedPostsData;
+    } else {
       handleImageMarkers([], 0);
     }
-
-    globeCluster({ mapLocation, postsData, mount, isPostModalOpened, isRightModalOpened, flyToLocation });
-  }, [mount, postsData, isPostModalOpened, isRightModalOpened, handleImageMarkers]);
-
+    globeCluster({ clusterData, mapLocation, postsData, mount, flyToLocation, isPostModalOpened });
+  }, [clusterData, mount, postsData, isPostModalOpened, isRightModalOpened, isSearchListOpened]);
   return <Styled.GlobeLayout ref={mapContainerRef} className="globeScroll" />;
 };
 
