@@ -62,6 +62,7 @@ export const useHeaderModal = () => {
     closeLikesList();
     setIsSearchListOpened(true);
     handleToSearch();
+    useMarkerInvisible.getState().setIsMarkerInvisible(true);
     clearToasts();
   };
 
