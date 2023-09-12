@@ -64,7 +64,7 @@ export const RightModalInner = styled.div`
   overflow-y: auto;
   right: 0;
   height: 100vh;
-  padding: 90px 30px 0 0;
+  padding: 90px 55px 0 0;
   background: transparent;
 
   &::-webkit-scrollbar {

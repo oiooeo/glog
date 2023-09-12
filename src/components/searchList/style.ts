@@ -23,7 +23,7 @@ export const LoginGuideButton = styled.button`
 export const ScrollDiv = styled.div`
   width: 350px;
   height: 100%;
-  gap: 20px;
+  gap: 30px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
