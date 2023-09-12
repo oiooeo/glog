@@ -7,15 +7,18 @@ import type { Tables } from '../../types/supabase';
 
 interface Props {
   mapLocation: any;
+  clusterData: Array<Tables<'posts'>> | undefined;
   postsData: Array<Tables<'posts'>> | undefined;
   mount: (name: string, element: React.ReactNode) => void;
   flyToLocation: (lng: number, lat: number) => void;
   isPostModalOpened: boolean | null;
-  isRightModalOpened: boolean | null;
 }
 
-export const globeCluster = ({ mapLocation, postsData, mount, flyToLocation, isPostModalOpened, isRightModalOpened }: Props) => {
-  const clusterData = postsData?.slice(5);
+export const globeCluster = ({ clusterData, mapLocation, postsData, mount, flyToLocation, isPostModalOpened }: Props) => {
+  if (isPostModalOpened) {
+    removeMapLayersAndSource(mapLocation);
+    clusterData = [];
+  }
   pinImages.forEach(({ name, url }) => {
     loadPinImage(mapLocation, name, url);
   });
@@ -96,9 +99,5 @@ export const globeCluster = ({ mapLocation, postsData, mount, flyToLocation, isP
 
     mapLocation.on('click', 'cluster-pin', handleClusterPointClick);
     mapLocation.on('click', 'unclustered-point', handleUnclusteredPointClick);
-  }
-
-  if (isPostModalOpened || isRightModalOpened) {
-    removeMapLayersAndSource(mapLocation);
   }
 };
