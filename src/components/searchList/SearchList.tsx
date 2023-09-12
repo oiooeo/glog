@@ -5,6 +5,8 @@ import { useQuery } from '@tanstack/react-query';
 import SessionDependentView from './SearchList.SessionDependentView';
 import { scrollToTop } from './SearchList.util';
 import { getMyPosts, getPosts } from '../../api/supabaseDatabase';
+import { useMapLocationStore } from '../../zustand/useMapLocationStore';
+import { useSearchStore } from '../../zustand/useSearchStore';
 import { useSessionStore } from '../../zustand/useSessionStore';
 import { useTabStore } from '../../zustand/useTabStore';
 
@@ -16,9 +18,10 @@ interface SearchListProps {
 }
 
 const SearchList = ({ keyword, isSearchListOpened }: SearchListProps) => {
-  const [key, setKey] = useState('');
+  const { key, setKey } = useSearchStore();
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
+  const mapLocation = useMapLocationStore(state => state.mapLocation);
 
   const [searchResult, setSearchResult] = useState<Array<Tables<'posts'>>>();
   const session = useSessionStore(state => state.session);
@@ -73,6 +76,16 @@ const SearchList = ({ keyword, isSearchListOpened }: SearchListProps) => {
     const filterData = searchData?.slice(0, page * 5);
     setSearchResult(filterData);
   }, [data, page, key]);
+
+  useEffect(() => {
+    if (searchResult && searchResult.length > 0 && key.length > 0) {
+      const correctResult = searchResult[0]?.countryId?.includes(key) || searchResult[0]?.regionId?.includes(key) || searchResult[0].address?.includes(key);
+      if (correctResult) {
+        const coordinates: [number, number] = [searchResult[0].longitude, searchResult[0].latitude];
+        mapLocation.flyTo({ center: coordinates, zoom: 4 });
+      }
+    }
+  }, [key, searchResult, mapLocation]);
 
   return <SessionDependentView session={session} scrollRef={scrollRef} searchResult={searchResult} loading={loading} />;
 };
