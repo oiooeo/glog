@@ -63,7 +63,6 @@ export const RightModalInner = styled.div`
   position: absolute;
   overflow-y: auto;
   right: 0;
-  width: 440px;
   height: 100vh;
   padding: 90px 30px 0 0;
   background: transparent;

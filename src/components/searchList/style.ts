@@ -21,8 +21,13 @@ export const LoginGuideButton = styled.button`
 `;
 
 export const ScrollDiv = styled.div`
-  overflow-y: scroll;
+  width: 350px;
   height: 100%;
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  overflow-y: scroll;
   z-index: 101;
 
   &::-webkit-scrollbar {
@@ -31,7 +36,10 @@ export const ScrollDiv = styled.div`
 
   @media (max-width: 1060px) {
     display: flex;
+    flex-direction: row;
     height: fit-content;
+    width: 100%;
+    gap: 0;
   }
 `;
 
