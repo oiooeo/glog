@@ -5,6 +5,7 @@ import { clearToasts } from 'react-simple-toasts';
 import useInput from '../../../hooks/useInput';
 import { useMarkerInvisible } from '../../../zustand/useMarkerInvisible';
 import { usePostStore } from '../../../zustand/usePostStore';
+import { useSearchStore } from '../../../zustand/useSearchStore';
 import LikesList from '../../likesList/LikesList';
 import Post from '../../post/Post';
 import SearchList from '../../searchList/SearchList';
@@ -13,7 +14,7 @@ import { useModal } from '../overlay/modal/Modal.hooks';
 export const useHeaderModal = () => {
   const { leftMount, rightMount, unmount } = useModal();
   const [isLikeListOpened, setIsLikeListOpened] = useState(false);
-  const [isSearchListOpened, setIsSearchListOpened] = useState(false);
+  const { isSearchListOpened, setIsSearchListOpened } = useSearchStore();
   const [keyword, handleChangeKeyword] = useInput();
 
   const closePost = () => {

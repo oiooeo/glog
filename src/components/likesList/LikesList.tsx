@@ -1,76 +1,59 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { useInView } from 'react-intersection-observer';
 
 import * as Styled from './style';
-import { getLikes, getPosts } from '../../api/supabaseDatabase';
+import { getLikes, getPostLikes } from '../../api/supabaseDatabase';
+import { useLikeStore } from '../../zustand/useLikeStore';
 import { useSessionStore } from '../../zustand/useSessionStore';
-import Loader from '../common/loader/Loader';
 import PostItem from '../common/postItem/PostItem';
 
 import type { Tables } from '../../types/supabase';
 
+export const PAGE_COUNT = 5;
+
 const LikesList = () => {
   const session = useSessionStore(state => state.session);
   const [likedPosts, setLikedPosts] = useState<Array<Tables<'posts'>>>([]);
-  const [page, setPage] = useState<number>(1);
-  const [loading, setLoading] = useState<boolean>(false);
-  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const { setLikedPostsId } = useLikeStore();
+  const [page, setPage] = useState<number>(0);
 
-  useEffect(() => {
-    async function fetchLikedPosts() {
+  const loadMoreLikedPosts = async () => {
+    if (session) {
       try {
-        if (session) {
-          const likes = await getLikes(session.user.id);
-          const likedPostIds = likes.map(like => like.postId);
-          const posts = await getPosts();
-          const filteredPosts = posts.filter(post => likedPostIds.includes(post.id));
-          const filteredPostsData = filteredPosts.slice(0, page * 5);
-          setLikedPosts(filteredPostsData);
-        }
+        const likes = await getLikes(session.user.id);
+        const likedPostIds = likes.map(like => like.postId);
+        const postData = await getPostLikes(likedPostIds, page);
+        setLikedPosts(prevPosts => [...prevPosts, ...postData]);
+        setLikedPostsId(likedPostIds);
       } catch (error) {
         console.error('Error fetching liked posts:', error);
-      }
-    }
-    fetchLikedPosts();
-  }, [session, page]);
-
-  const handleScroll = () => {
-    setLoading(true);
-    if (scrollRef.current) {
-      const isAtBottom = scrollRef.current.scrollHeight - scrollRef.current.scrollTop === scrollRef.current.clientHeight;
-      if (isAtBottom) {
-        setTimeout(() => {
-          setPage(prev => prev + 1);
-          setLoading(false);
-        }, 1000);
-      } else {
-        setLoading(false);
+      } finally {
+        setPage(prev => prev + PAGE_COUNT);
       }
     }
   };
 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.addEventListener('scroll', handleScroll);
-    }
-    return () => {
-      if (scrollRef.current) {
-        scrollRef.current.removeEventListener('scroll', handleScroll);
-      }
-    };
+    loadMoreLikedPosts();
   }, []);
+
+  const { ref } = useInView({
+    threshold: 1,
+    triggerOnce: true,
+    onChange: inView => {
+      if (!inView) return;
+      loadMoreLikedPosts();
+    },
+  });
 
   return (
     <>
-      <Styled.ScrollDiv ref={scrollRef}>
-        {likedPosts.map(post => (
-          <PostItem key={post.id} data={post} />
-        ))}
+      <Styled.ScrollDiv>
+        {likedPosts.map((post, index) => {
+          return <PostItem key={post.id} data={post} ref={likedPosts.length - 1 === index ? ref : null} />;
+        })}
       </Styled.ScrollDiv>
-      {loading && (
-        <Styled.LoadingDiv>
-          <Loader />
-        </Styled.LoadingDiv>
-      )}
     </>
   );
 };
