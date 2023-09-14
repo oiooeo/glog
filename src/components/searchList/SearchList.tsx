@@ -26,21 +26,28 @@ const SearchList = ({ keyword, isSearchListOpened }: SearchListProps) => {
   const session = useSessionStore(state => state.session);
   const tab = useTabStore(state => state.tab);
 
-  const addPostData = async () => {
-    setPage(prev => prev + PAGE_COUNT);
+  const checkPostData = (postData: Array<Tables<'posts'>>) => {
+    if (page !== 0 && page % 5 === 0) {
+      setSearchResult(prevPosts => [...prevPosts, ...postData]);
+      setPage(prev => prev + PAGE_COUNT);
+    } else {
+      setSearchResult(postData);
+      setPage(prev => prev + PAGE_COUNT);
+    }
+  };
 
+  const addPostData = async () => {
     if (key !== '') {
-      console.log('hi');
       const SearchData = await getPosts();
       const searchData = SearchData?.filter(item => item.countryId?.includes(key) || item.regionId?.includes(key) || item.address?.includes(key));
       setSearchResult(searchData);
+      setPage(0);
     } else if (tab === 'explore') {
-      console.log('test');
       const postData = await getListPost(page);
-      setSearchResult(prevPosts => [...prevPosts, ...postData]);
+      checkPostData(postData);
     } else {
       const postData = await getMyListPost({ userId: session?.user.id as string, page });
-      setSearchResult(prevPosts => [...prevPosts, ...postData]);
+      checkPostData(postData);
     }
   };
 
@@ -60,7 +67,6 @@ const SearchList = ({ keyword, isSearchListOpened }: SearchListProps) => {
   }, [keyword, isSearchListOpened]);
 
   useEffect(() => {
-    setPage(0);
     addPostData();
   }, [tab, key]);
 
