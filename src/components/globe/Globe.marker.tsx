@@ -1,9 +1,9 @@
-import * as Styled from './style';
+import * as St from './style';
 
 export const OrangeMarker = ({ pin }: { pin: string }) => {
   return (
     <div className="orange-pin-marker">
-      <Styled.PinMarker src={pin} alt="marker" />
+      <St.PinMarker src={pin} alt="marker" />
     </div>
   );
 };
@@ -11,7 +11,7 @@ export const OrangeMarker = ({ pin }: { pin: string }) => {
 export const ImageMarker = ({ pin }: { pin: string }) => {
   return (
     <div className="image-marker">
-      <Styled.PinMarker src={pin} alt="marker" />
+      <St.PinMarker src={pin} alt="marker" />
     </div>
   );
 };

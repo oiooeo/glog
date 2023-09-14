@@ -3,7 +3,7 @@ import React from 'react';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 
 import { useLike } from './Like.hooks';
-import * as Styled from './style';
+import * as St from './style';
 
 import type { Tables } from '../../types/supabase';
 export interface LikeProps {
@@ -14,10 +14,10 @@ const Like = ({ data }: LikeProps) => {
   const { pressLike, isLiked, likesData } = useLike({ data });
 
   return (
-    <Styled.LikeLayout>
-      <Styled.LikeButton onClick={pressLike}>{isLiked ? <BsHeartFill size={'18px'} className="like" /> : <BsHeart size={'18px'} className="like" />}</Styled.LikeButton>
-      <Styled.LikeParagraph>{likesData?.length}</Styled.LikeParagraph>
-    </Styled.LikeLayout>
+    <St.LikeLayout>
+      <St.LikeButton onClick={pressLike}>{isLiked ? <BsHeartFill size={'18px'} className="like" /> : <BsHeart size={'18px'} className="like" />}</St.LikeButton>
+      <St.LikeParagraph>{likesData?.length}</St.LikeParagraph>
+    </St.LikeLayout>
   );
 };
 

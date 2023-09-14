@@ -1,6 +1,6 @@
 import React from 'react';
 
-import * as Styled from './style';
+import * as St from './style';
 
 interface SwitchProps {
   checked: boolean;
@@ -21,17 +21,17 @@ const Switch: React.FC<SwitchProps> = ({ checked, onChange, leftText, rightText,
 
   return (
     <>
-      <Styled.SwitchLabel checked={checked} width={width} checkedtextcolor={checkedtextcolor} textcolor={textcolor} checkedbackground={checkedbackground} background={background} onClick={handleClick}>
-        <Styled.SwitchLeftText checked={checked} width={width} checkedtextcolor={checkedtextcolor} textcolor={textcolor} checkedbackground={checkedbackground} background={background}>
+      <St.SwitchLabel checked={checked} width={width} checkedtextcolor={checkedtextcolor} textcolor={textcolor} checkedbackground={checkedbackground} background={background} onClick={handleClick}>
+        <St.SwitchLeftText checked={checked} width={width} checkedtextcolor={checkedtextcolor} textcolor={textcolor} checkedbackground={checkedbackground} background={background}>
           {leftText}
-        </Styled.SwitchLeftText>
-        <Styled.SwitchRightText checked={checked} width={width} checkedtextcolor={checkedtextcolor} textcolor={textcolor} checkedbackground={checkedbackground} background={background}>
+        </St.SwitchLeftText>
+        <St.SwitchRightText checked={checked} width={width} checkedtextcolor={checkedtextcolor} textcolor={textcolor} checkedbackground={checkedbackground} background={background}>
           {rightText}
-        </Styled.SwitchRightText>
-        <Styled.SwitchSpan checked={checked} width={width} checkedtextcolor={checkedtextcolor} textcolor={textcolor} checkedbackground={checkedbackground} background={background}>
+        </St.SwitchRightText>
+        <St.SwitchSpan checked={checked} width={width} checkedtextcolor={checkedtextcolor} textcolor={textcolor} checkedbackground={checkedbackground} background={background}>
           {checked ? rightText : leftText}
-        </Styled.SwitchSpan>
-      </Styled.SwitchLabel>
+        </St.SwitchSpan>
+      </St.SwitchLabel>
     </>
   );
 };
