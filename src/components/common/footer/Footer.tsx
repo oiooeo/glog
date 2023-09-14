@@ -1,16 +1,16 @@
 import React from 'react';
 
-import * as Styled from './style';
+import * as St from './style';
 
 const Footer = () => {
   return (
-    <Styled.FooterWrapper>
-      <Styled.FooterTextMobile>&copy; Glog</Styled.FooterTextMobile>
-      <Styled.FooterText>&copy; 2023 Glog All rights reserved.</Styled.FooterText>
-      <Styled.GitHubLink href="https://github.com/oiooeo/glog" target="_blank" rel="noopener noreferrer">
+    <St.FooterWrapper>
+      <St.MobileFooterText>&copy; Glog</St.MobileFooterText>
+      <St.FooterText>&copy; 2023 Glog All rights reserved.</St.FooterText>
+      <St.GitHubLink href="https://github.com/oiooeo/glog" target="_blank" rel="noopener noreferrer">
         View on GitHub.
-      </Styled.GitHubLink>
-    </Styled.FooterWrapper>
+      </St.GitHubLink>
+    </St.FooterWrapper>
   );
 };
 

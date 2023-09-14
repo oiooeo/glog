@@ -2,16 +2,6 @@ import { styled } from 'styled-components';
 
 import Button from '../../common/button/Button';
 
-export const PostLayout = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  @media (max-width: 1060px) {
-    height: fit-content;
-  }
-`;
-
 export const SearchInput = styled.input`
   width: 300px;
   height: 40px;
@@ -37,46 +27,6 @@ export const SearchInput = styled.input`
   }
 `;
 
-export const ContentsInput = styled.textarea`
-  padding: 20px;
-  background-color: #f4f4f5;
-  border-radius: 20px;
-  border: none;
-  color: #4d5765;
-  font-size: 17px;
-  resize: none;
-
-  &::placeholder {
-    color: #b3bac1;
-    font-size: 17px;
-  }
-
-  &:focus {
-    border: none;
-    outline: none;
-    border-bottom: 1px solid #616161;
-  }
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  @media (max-width: 1060px) {
-    position: fixed;
-    bottom: 70px;
-    left: 100px;
-    width: calc(100vw - 120px);
-    height: 70px;
-    padding: 12px;
-    border-radius: 10px;
-    font-size: 15px;
-
-    &::placeholder {
-      font-size: 15px;
-    }
-  }
-`;
-
 export const PinParagraph = styled.p`
   position: fixed;
   top: 33%;
@@ -93,7 +43,7 @@ export const PinParagraph = styled.p`
   }
 `;
 
-export const PinParagraphForMobile = styled.p`
+export const MobilePinParagraph = styled.p`
   position: fixed;
   top: 15%;
   left: 50%;
@@ -122,7 +72,7 @@ export const Pin = styled.img`
   }
 `;
 
-export const PinForMobile = styled.img`
+export const MobilePin = styled.img`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -146,7 +96,7 @@ export const PinButton = styled(Button)`
   }
 `;
 
-export const PencilButtonForMobile = styled(Button)`
+export const MobilePencilButton = styled(Button)`
   @media (max-width: 1060px) {
     position: fixed;
     display: flex;
@@ -193,25 +143,6 @@ export const PinWarning = styled.p`
 
 export const SwitchBox = styled.div`
   @media (max-width: 1060px) {
-    display: none;
-  }
-`;
-
-export const SwitchBoxMobile = styled.div`
-  position: fixed;
-  bottom: 150px;
-  left: 20px;
-  width: 70px;
-
-  & > p {
-    margin-bottom: 2px;
-    color: rgba(244, 244, 245, 0.8);
-    text-align: center;
-    font-size: 12px;
-    font-weight: 400;
-  }
-
-  @media (min-width: 1060px) {
     display: none;
   }
 `;

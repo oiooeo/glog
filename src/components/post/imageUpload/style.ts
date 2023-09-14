@@ -109,7 +109,7 @@ export const ImgBox = styled.div`
   }
 `;
 
-export const LoadingDivMobile = styled.div`
+export const MobileLoadingDiv = styled.div`
   @media (max-width: 1060px) {
     position: fixed;
     bottom: 70px;
@@ -118,7 +118,7 @@ export const LoadingDivMobile = styled.div`
   }
 `;
 
-export const LoadingParagraphMobile = styled.p`
+export const MobileLoadingParagraph = styled.p`
   font-size: 12px;
   margin-bottom: 10px;
   margin-left: 20px;
@@ -131,7 +131,7 @@ export const LoadingParagraphMobile = styled.p`
   }
 `;
 
-export const ImgBoxMobile = styled(ImgBox)`
+export const MobileImgBox = styled(ImgBox)`
   @media (max-width: 1060px) {
     width: 70px;
     height: 70px;

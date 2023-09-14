@@ -8,6 +8,8 @@ import { supabase } from '../../api/supabaseClient';
 import { deletePost, getPostByPostId, getPostByUserId } from '../../api/supabaseDatabase';
 import { useLocationStore } from '../../zustand/useLocationStore';
 import { usePostStore } from '../../zustand/usePostStore';
+import { useSessionStore } from '../../zustand/useSessionStore';
+import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Detail from '../detail/Detail';
 
 import type { Tables } from '../../types/supabase';
@@ -47,17 +49,18 @@ interface SuccessProps {
 
 interface DeleteProps {
   data: Tables<'posts'>;
-  unmount: (name: string) => void;
 }
 
-const usePost = () => {
+const usePost = (data: Tables<'posts'> | undefined) => {
+  const { mount, unmount } = useModal();
   const queryClient = useQueryClient();
   const [here, setHere] = useState(false);
+  const session = useSessionStore(state => state.session);
   const clickedLocation = useLocationStore(state => state.clickedLocation);
   const [location, setLocation] = useState({ longitude: 0, latitude: 0 });
   const [locationInfo, setLocationInfo] = useState<LocationInfoTypes>({ countryId: '', regionId: '', address: '' });
 
-  const handleToInsertMutation = async ({ session, contents, imgUrl, locationInfo, location, switchChecked }: MutationInsertProps) => {
+  const handleOnInsert = async ({ session, contents, imgUrl, locationInfo, location, switchChecked }: MutationInsertProps) => {
     await supabase.from('posts').insert({
       userId: session?.user.id,
       contents,
@@ -71,7 +74,7 @@ const usePost = () => {
     });
   };
 
-  const handleToUpdateMutation = async ({ session, contents, imgUrl, switchChecked, data }: MutationUpdateProps) => {
+  const handleOnUpdate = async ({ session, contents, imgUrl, switchChecked, data }: MutationUpdateProps) => {
     await supabase
       .from('posts')
       .update({
@@ -83,7 +86,7 @@ const usePost = () => {
       .eq('id', data?.id);
   };
 
-  const insertCompleted = async ({ mount, userId }: SuccessProps) => {
+  const onInsertCompleted = async ({ mount, userId }: SuccessProps) => {
     queryClient.invalidateQueries(['getPosts']);
     usePostStore.getState().setIsPosting(false);
 
@@ -94,7 +97,7 @@ const usePost = () => {
     }
   };
 
-  const updateCompleted = async ({ mount, postId }: SuccessProps) => {
+  const onUpdateCompleted = async ({ mount, postId }: SuccessProps) => {
     queryClient.invalidateQueries(['getPosts']);
     usePostStore.getState().setIsPosting(false);
 
@@ -104,6 +107,24 @@ const usePost = () => {
       mount('detail', <Detail data={post} />);
     }
   };
+
+  const { mutate: onSubmit } = useMutation({
+    mutationFn: async ({ session, contents, imgUrl, locationInfo, location, switchChecked }: MutationInsertProps) => {
+      await handleOnInsert({ session, contents, imgUrl, locationInfo, location, switchChecked });
+    },
+    onSuccess: async () => {
+      await onInsertCompleted({ mount, userId: session?.user.id });
+    },
+  });
+
+  const { mutate: onUpdate } = useMutation({
+    mutationFn: async ({ session, contents, imgUrl, switchChecked, data }: MutationUpdateProps) => {
+      await handleOnUpdate({ session, contents, imgUrl, switchChecked, data });
+    },
+    onSuccess: async () => {
+      await onUpdateCompleted({ mount, postId: data?.id });
+    },
+  });
 
   const deletePostMutation = useMutation(
     async (postId: string) => {
@@ -116,7 +137,7 @@ const usePost = () => {
     },
   );
 
-  const handleToDelete = ({ data, unmount }: DeleteProps) => {
+  const handleToDelete = ({ data }: DeleteProps) => {
     if (!data) return;
     deletePostMutation.mutate(data.id);
     usePostStore.getState().setIsPosting(false);
@@ -152,10 +173,8 @@ const usePost = () => {
   };
 
   return {
-    handleToInsertMutation,
-    handleToUpdateMutation,
-    insertCompleted,
-    updateCompleted,
+    onSubmit,
+    onUpdate,
     handleToDelete,
     clickedLocation,
     handleToSetLocation,

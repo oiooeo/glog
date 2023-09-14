@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import * as Styled from './style';
+import * as St from './style';
 
 const Landing = () => {
   const [percentage, setPercentage] = useState(0);
@@ -30,23 +30,23 @@ const Landing = () => {
   }, []);
 
   return (
-    <Styled.PageLanding completeclass={completeclass}>
+    <St.PageLanding completeclass={completeclass}>
       {percentage <= 50 && (
         <>
-          <Styled.MainText>지구를 여행했던 기록을 남겨보세요</Styled.MainText>
-          <Styled.ServeText>멋진 여행의 순간을 많은 사람들과 공유하고 탐색해보세요</Styled.ServeText>
+          <St.MainText>지구를 여행했던 기록을 남겨보세요</St.MainText>
+          <St.ServeText>멋진 여행의 순간을 많은 사람들과 공유하고 탐색해보세요</St.ServeText>
         </>
       )}
       {percentage > 50 && (
         <>
-          <Styled.MainText>지구를 돌려서 가고싶은 여행장소를 살펴보세요</Styled.MainText>
-          <Styled.ServeText>지구 위 불빛들을 클릭해보세요</Styled.ServeText>
+          <St.MainText>지구를 돌려서 가고싶은 여행장소를 살펴보세요</St.MainText>
+          <St.ServeText>지구 위 불빛들을 클릭해보세요</St.ServeText>
         </>
       )}
-      <Styled.Landing>
-        <Styled.LandingBar percentage={percentage} />
-      </Styled.Landing>
-    </Styled.PageLanding>
+      <St.Landing>
+        <St.LandingBar percentage={percentage} />
+      </St.Landing>
+    </St.PageLanding>
   );
 };
 

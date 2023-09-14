@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { useInView } from 'react-intersection-observer';
 
-import * as Styled from './style';
+import * as St from './style';
 import { getLikes, getPostLikes } from '../../api/supabaseDatabase';
 import { useLikeStore } from '../../zustand/useLikeStore';
 import { useSessionStore } from '../../zustand/useSessionStore';
@@ -49,11 +49,11 @@ const LikesList = () => {
 
   return (
     <>
-      <Styled.ScrollDiv>
+      <St.ScrollDiv>
         {likedPosts.map((post, index) => {
           return <PostItem key={post.id} data={post} ref={likedPosts.length - 1 === index ? ref : null} />;
         })}
-      </Styled.ScrollDiv>
+      </St.ScrollDiv>
     </>
   );
 };

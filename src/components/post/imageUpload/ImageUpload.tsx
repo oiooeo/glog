@@ -3,7 +3,7 @@ import React from 'react';
 import { BsFillImageFill } from 'react-icons/bs';
 import { TbCameraRotate } from 'react-icons/tb';
 
-import * as Styled from './style';
+import * as St from './style';
 import Loader from '../../common/loader/Loader';
 
 interface ImageUploadProps {
@@ -16,32 +16,32 @@ interface ImageUploadProps {
 
 const ImageUpload = ({ imgFile, loading, handleImageSubmit, imgRef, handleDrop }: ImageUploadProps) => {
   return (
-    <Styled.UploadBox onDragEnter={(event: any) => event.preventDefault()} onDragOver={(event: any) => event.preventDefault()} onDragLeave={(event: any) => event.preventDefault()} onDrop={handleDrop}>
+    <St.UploadBox onDragEnter={(event: any) => event.preventDefault()} onDragOver={(event: any) => event.preventDefault()} onDragLeave={(event: any) => event.preventDefault()} onDrop={handleDrop}>
       {imgFile ? (
-        <Styled.UploadImgFileContainer>
+        <St.UploadImgFileContainer>
           <label htmlFor="inputImg">
             <TbCameraRotate size={'22px'} className="image" />
           </label>
-          <Styled.UploadImgFile src={imgFile} alt="이미지 업로드" />
+          <St.UploadImgFile src={imgFile} alt="이미지 업로드" />
           <span>1/1</span>
-        </Styled.UploadImgFileContainer>
+        </St.UploadImgFileContainer>
       ) : (
         <label htmlFor="inputImg">
           <>
             {loading ? (
-              <Styled.LoadingDivMobile>
-                <Styled.LoadingParagraphMobile>사진 업로드 중 ···</Styled.LoadingParagraphMobile>
-                <Styled.ImgBoxMobile>
+              <St.MobileLoadingDiv>
+                <St.MobileLoadingParagraph>사진 업로드 중 ···</St.MobileLoadingParagraph>
+                <St.MobileImgBox>
                   <Loader />
-                  <Styled.LoadingParagraph>
+                  <St.LoadingParagraph>
                     사진 업로드 중 ···
                     <br />
                     잠시만 기다려주세요!
-                  </Styled.LoadingParagraph>
-                </Styled.ImgBoxMobile>
-              </Styled.LoadingDivMobile>
+                  </St.LoadingParagraph>
+                </St.MobileImgBox>
+              </St.MobileLoadingDiv>
             ) : (
-              <Styled.ImgBox>
+              <St.ImgBox>
                 <span>0/1</span>
                 <BsFillImageFill size={'25px'} className="image" />
                 <p>
@@ -49,13 +49,13 @@ const ImageUpload = ({ imgFile, loading, handleImageSubmit, imgRef, handleDrop }
                   <br />
                   업로드 해주세요
                 </p>
-              </Styled.ImgBox>
+              </St.ImgBox>
             )}
           </>
         </label>
       )}
       <input id="inputImg" type="file" multiple accept="image/png, image/jpeg, image/jpg, image/HEIC, image/heic " onChange={handleImageSubmit} ref={imgRef} />
-    </Styled.UploadBox>
+    </St.UploadBox>
   );
 };
 
