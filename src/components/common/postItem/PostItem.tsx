@@ -12,7 +12,7 @@ import type { Tables } from '../../../types/supabase';
 
 interface PostItemProps {
   data: Tables<'posts'>;
-  lastItem?: boolean;
+  lastItem?: boolean | null;
 }
 
 const PostItem = ({ data, lastItem }: PostItemProps, ref: any) => {
