@@ -6,14 +6,13 @@ export const PostHoverLayout = styled.div`
   transition-duration: 0.3s;
   &:hover {
     margin-right: 50px;
-    z-index: 103;
   }
   @media (max-width: 1060px) {
     width: 320px;
   }
 `;
 
-export const PostItemLayout = styled.div<{ lastItem?: boolean }>`
+export const PostItemLayout = styled.div<{ lastItem?: boolean | null }>`
   position: relative;
   overflow: hidden;
   width: 300px;
@@ -26,7 +25,6 @@ export const PostItemLayout = styled.div<{ lastItem?: boolean }>`
   transition: filter 0.3s ease;
   transition-property: margin-right;
   transition-duration: 0.3s;
-  z-index: 101;
 
   @media (max-width: 1060px) {
     height: 300px;
