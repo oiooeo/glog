@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { renderPostItems } from './SearchList.util';
-import * as Styled from './style';
+import * as St from './style';
 import { signin } from '../../api/supabaseAuth';
 import Loader from '../common/loader/Loader';
 
@@ -19,18 +19,18 @@ const SessionDependentView = ({ session, scrollRef, searchResult, loading }: Pro
   return (
     <>
       {session ? (
-        <Styled.ScrollDiv ref={scrollRef}>{searchResult && renderPostItems(searchResult, 0, searchResult.length)}</Styled.ScrollDiv>
+        <St.ScrollDiv ref={scrollRef}>{searchResult && renderPostItems(searchResult, 0, searchResult.length)}</St.ScrollDiv>
       ) : (
-        <Styled.ScrollDiv>
+        <St.ScrollDiv>
           {searchResult && renderPostItems(searchResult, 0, 4)}
-          <Styled.LoginGuideButton onClick={() => signin}>더 많은 정보를 보고 싶으시다면 로그인 해주세요!</Styled.LoginGuideButton>
+          <St.LoginGuideButton onClick={() => signin}>더 많은 정보를 보고 싶으시다면 로그인 해주세요!</St.LoginGuideButton>
           {searchResult && renderPostItems(searchResult, 4, 5, true)}
-        </Styled.ScrollDiv>
+        </St.ScrollDiv>
       )}
       {loading && (
-        <Styled.LoadingDiv>
+        <St.LoadingDiv>
           <Loader />
-        </Styled.LoadingDiv>
+        </St.LoadingDiv>
       )}
     </>
   );

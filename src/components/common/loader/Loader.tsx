@@ -1,21 +1,21 @@
-import * as Styled from './style';
+import * as St from './style';
 import loaderBg from '../../../assets/loader/loaderBg.svg';
 import loaderLeft from '../../../assets/loader/loaderLeft.svg';
 import loaderRight from '../../../assets/loader/loaderRight.svg';
 
 const Loader = () => {
   return (
-    <Styled.EarthContainer>
-      <Styled.Earth>
+    <St.EarthContainer>
+      <St.Earth>
         <img src={loaderBg} alt="bg" />
-        <Styled.EarthLeft>
+        <St.EarthLeft>
           <img src={loaderLeft} alt="left" />
-        </Styled.EarthLeft>
-        <Styled.EarthRight>
+        </St.EarthLeft>
+        <St.EarthRight>
           <img src={loaderRight} alt="right" />
-        </Styled.EarthRight>
-      </Styled.Earth>
-    </Styled.EarthContainer>
+        </St.EarthRight>
+      </St.Earth>
+    </St.EarthContainer>
   );
 };
 

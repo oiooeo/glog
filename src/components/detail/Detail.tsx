@@ -1,8 +1,9 @@
 import { SlPencil } from 'react-icons/sl';
 
-import * as Styled from './style';
+import * as St from './style';
 import { usePostStore } from '../../zustand/usePostStore';
 import { useSessionStore } from '../../zustand/useSessionStore';
+import { useHeaderModal } from '../common/header/Header.hooks';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
 import Like from '../like/Like';
 import Post from '../post/Post';
@@ -16,42 +17,37 @@ interface DetailProps {
 const Detail = ({ data }: DetailProps) => {
   const session = useSessionStore(state => state.session);
   const { leftMount, unmount } = useModal();
+  const { closeSearchList, closeLikesList } = useHeaderModal();
 
-  const openUpdate = (id: string) => {
+  const openUpdate = () => {
     usePostStore.getState().setIsPosting(true);
-    leftMount('post', <Post type={'update'} unmount={unmount} postId={id} />);
+    leftMount('post', <Post data={data} />);
+    closeSearchList();
+    closeLikesList();
     unmount('detail');
-    unmount('searchList');
-    unmount('likesList');
   };
 
   return (
-    <Styled.DetailLayout>
-      <Styled.DetailImageContainer>
-        <Styled.LocationParagraph>
+    <St.DetailLayout>
+      <St.DetailImageContainer>
+        <St.LocationParagraph>
           {data.countryId}, {data.regionId}
-        </Styled.LocationParagraph>
-        <Styled.LikeBox>
+        </St.LocationParagraph>
+        <St.LikeBox>
           <Like data={data} />
-        </Styled.LikeBox>
+        </St.LikeBox>
         {session?.user.id === data.userId && (
-          <Styled.EditButton>
-            <SlPencil
-              size={'20px'}
-              className="edit"
-              onClick={() => {
-                openUpdate(data.id);
-              }}
-            />
-          </Styled.EditButton>
+          <St.EditButton>
+            <SlPencil size={'20px'} className="edit" onClick={openUpdate} />
+          </St.EditButton>
         )}
-        {data.images ? <Styled.DetailImage src={data.images} alt={`Image for ${data.contents}`} /> : null}
-      </Styled.DetailImageContainer>
+        {data.images ? <St.DetailImage src={data.images} alt={`Image for ${data.contents}`} /> : null}
+      </St.DetailImageContainer>
 
-      <Styled.DetailContainer>
-        <Styled.NameParagraph>{(data as any).user.name}</Styled.NameParagraph>
-        <Styled.ContentsParagraph>{data.contents}</Styled.ContentsParagraph>
-        <Styled.TimeParagraph>
+      <St.DetailContainer>
+        <St.NameParagraph>{(data as any).user.name}</St.NameParagraph>
+        <St.ContentsParagraph>{data.contents}</St.ContentsParagraph>
+        <St.TimeParagraph>
           {new Intl.DateTimeFormat('ko-KR', {
             year: 'numeric',
             month: '2-digit',
@@ -61,9 +57,9 @@ const Detail = ({ data }: DetailProps) => {
             hour12: false,
             timeZone: 'GMT',
           }).format(new Date(data.createdAt))}
-        </Styled.TimeParagraph>
-      </Styled.DetailContainer>
-    </Styled.DetailLayout>
+        </St.TimeParagraph>
+      </St.DetailContainer>
+    </St.DetailLayout>
   );
 };
 

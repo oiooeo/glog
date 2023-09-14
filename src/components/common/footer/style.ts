@@ -16,7 +16,7 @@ export const FooterWrapper = styled.footer`
   }
 `;
 
-export const FooterTextMobile = styled.p`
+export const MobileFooterText = styled.p`
   margin-right: 4px;
   font-size: 7px;
   color: #cccfd3;

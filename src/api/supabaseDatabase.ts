@@ -2,8 +2,6 @@ import toast from 'react-simple-toasts';
 
 import { supabase } from './supabaseClient';
 
-import type { Tables } from '../types/supabase';
-
 export const getUser = async (email?: string) => {
   const { data, error } = await supabase.from('users').select('*').eq('email', email);
   if (error) throw new Error(`error: ${error.message}`);
@@ -17,10 +15,6 @@ export const addNewUser = async (id: string, email: string, name: string, profil
   } else {
     await supabase.from('users').update({ name, profileImg }).eq('id', id);
   }
-};
-
-export const addPost = async (newPost: Tables<'posts'>) => {
-  await supabase.from('posts').insert(newPost);
 };
 
 export const getMyPosts = async (userId: string) => {
@@ -76,7 +70,7 @@ export const deleteLike = async (id: string) => {
   await supabase.from('likes').delete().eq('id', id);
 };
 
-export const deleteButton = async (postId: string) => {
+export const deletePost = async (postId: string) => {
   try {
     await supabase.from('likes').delete().eq('postId', postId);
     await supabase.from('posts').delete().eq('id', postId);
