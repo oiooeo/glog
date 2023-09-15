@@ -1,7 +1,7 @@
 import React from 'react';
 
 import RenderPostItems from './SearchList.util';
-import * as Styled from './style';
+import * as St from './style';
 import { signin } from '../../api/supabaseAuth';
 
 import type { Tables } from '../../types/supabase';
@@ -16,12 +16,12 @@ const SessionDependentView = ({ session, searchResult }: Props, ref: any) => {
   return (
     <>
       {session ? (
-        <Styled.ScrollDiv>{searchResult && <RenderPostItems searchResult={searchResult} ref={ref} />}</Styled.ScrollDiv>
+        <St.ScrollDiv>{searchResult && <RenderPostItems searchResult={searchResult} ref={ref} />}</St.ScrollDiv>
       ) : (
-        <Styled.ScrollDiv>
-          {searchResult && <RenderPostItems searchResult={searchResult} lastItem={true} />}
-          <Styled.LoginGuideButton onClick={() => signin}>더 많은 정보를 보고 싶으시다면 로그인 해주세요!</Styled.LoginGuideButton>
-        </Styled.ScrollDiv>
+        <St.ScrollDiv>
+          {searchResult && <RenderPostItems searchResult={searchResult} lastitem={true} />}
+          <St.LoginGuideButton onClick={() => signin}>더 많은 정보를 보고 싶으시다면 로그인 해주세요!</St.LoginGuideButton>
+        </St.ScrollDiv>
       )}
     </>
   );
