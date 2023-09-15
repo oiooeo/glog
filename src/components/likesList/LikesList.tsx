@@ -18,6 +18,20 @@ const LikesList = () => {
   const { setLikedPostsId } = useLikeStore();
   const [page, setPage] = useState<number>(0);
 
+  const fetchLikedPosts = async () => {
+    if (session) {
+      try {
+        const likes = await getLikes(session.user.id);
+        const likedPostIds = likes.map(like => like.postId);
+        const postData = await getPostLikes(likedPostIds, page);
+        setLikedPosts(postData);
+        setLikedPostsId(likedPostIds);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
+
   const loadMoreLikedPosts = async () => {
     if (session) {
       try {
@@ -53,7 +67,7 @@ const LikesList = () => {
     <>
       <St.ScrollDiv>
         {likedPosts.map((post, index) => {
-          return <PostItem key={post.id} data={post} ref={likedPosts.length - 1 === index ? ref : null} />;
+          return <PostItem key={post.id} data={post} ref={likedPosts.length - 1 === index ? ref : null} fetchLikedPosts={fetchLikedPosts} />;
         })}
       </St.ScrollDiv>
     </>
