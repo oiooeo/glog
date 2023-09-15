@@ -37,7 +37,7 @@ const PostItem = ({ data, lastitem, fetchLikedPosts }: PostItemProps, ref: any) 
   useOnClickOutside(DetailLayoutref, showDetail);
 
   return (
-    <St.PostHoverLayout ref={ref}>
+    <St.PostLayout ref={ref}>
       {isClicked ? (
         <St.DetailLayout ref={DetailLayoutref}>
           <Detail data={data} />
@@ -53,7 +53,7 @@ const PostItem = ({ data, lastitem, fetchLikedPosts }: PostItemProps, ref: any) 
           </St.LikeBox>
         </St.PostItemLayout>
       )}
-    </St.PostHoverLayout>
+    </St.PostLayout>
   );
 };
 

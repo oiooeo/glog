@@ -4,12 +4,6 @@ import PostItem from '../common/postItem/PostItem';
 
 import type { Tables } from '../../types/supabase';
 
-export const scrollToTop = (scrollRef: any) => {
-  scrollRef?.scrollTo({
-    top: 0,
-  });
-};
-
 interface renderPostItemsProps {
   searchResult: Array<Tables<'posts'>>;
   lastitem?: boolean | null;

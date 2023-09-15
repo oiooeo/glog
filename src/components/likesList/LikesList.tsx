@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 import * as St from './style';
-import { getLikes, getPostLikes } from '../../api/supabaseDatabase';
+import { getFetchPostLikes, getLikes, getPostLikes } from '../../api/supabaseDatabase';
 import { useLikeStore } from '../../zustand/useLikeStore';
 import { useSessionStore } from '../../zustand/useSessionStore';
 import PostItem from '../common/postItem/PostItem';
@@ -23,7 +23,7 @@ const LikesList = () => {
       try {
         const likes = await getLikes(session.user.id);
         const likedPostIds = likes.map(like => like.postId);
-        const postData = await getPostLikes(session.user.id, likedPostIds, page);
+        const postData = await getFetchPostLikes(session.user.id, likedPostIds, page - PAGE_COUNT);
         setLikedPosts(postData as Array<Tables<'posts'>>);
         setLikedPostsId(likedPostIds);
       } catch (e) {
@@ -32,26 +32,26 @@ const LikesList = () => {
     }
   };
 
-  const loadMoreLikedPosts = async () => {
+  const addLikedPosts = async (page: number) => {
     if (session) {
       try {
         const likes = await getLikes(session.user.id);
         const likedPostIds = likes.map(like => like.postId);
         const postData = await getPostLikes(session.user.id, likedPostIds, page);
-        if (postData) {
-          setLikedPosts(prevPosts => [...prevPosts, ...postData] as Array<Tables<'posts'>>);
+        if (postData && postData.length !== 0) {
+          const uniquePostData = postData.filter(item => !likedPosts.some(likedPost => likedPost.id === item?.id));
+          setLikedPosts(prevPosts => [...prevPosts, ...uniquePostData] as Array<Tables<'posts'>>);
           setLikedPostsId(likedPostIds);
+          setPage(prev => prev + PAGE_COUNT);
         }
       } catch (error) {
         console.error('Error fetching liked posts:', error);
-      } finally {
-        setPage(prev => prev + PAGE_COUNT);
       }
     }
   };
 
   useEffect(() => {
-    loadMoreLikedPosts();
+    addLikedPosts(page);
   }, []);
 
   const { ref } = useInView({
@@ -59,7 +59,7 @@ const LikesList = () => {
     triggerOnce: true,
     onChange: inView => {
       if (!inView) return;
-      loadMoreLikedPosts();
+      addLikedPosts(page);
     },
   });
 
