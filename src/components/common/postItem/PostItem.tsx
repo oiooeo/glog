@@ -12,11 +12,11 @@ import type { Tables } from '../../../types/supabase';
 
 interface PostItemProps {
   data: Tables<'posts'>;
-  lastItem?: boolean | null;
+  lastitem?: boolean | null;
   fetchLikedPosts?: () => Promise<void>;
 }
 
-const PostItem = ({ data, lastItem, fetchLikedPosts }: PostItemProps, ref: any) => {
+const PostItem = ({ data, lastitem, fetchLikedPosts }: PostItemProps, ref: any) => {
   const DetailLayoutref = useRef<HTMLDivElement>(null);
   const itemRef = useRef<HTMLDivElement>(null);
   const [isClicked, setIsClicked] = useState(false);
@@ -43,7 +43,7 @@ const PostItem = ({ data, lastItem, fetchLikedPosts }: PostItemProps, ref: any) 
           <Detail data={data} />
         </St.DetailLayout>
       ) : (
-        <St.PostItemLayout ref={itemRef} onClick={lastItem ? signin : focus} lastItem={lastItem}>
+        <St.PostItemLayout ref={itemRef} onClick={lastitem ? signin : focus} lastitem={lastitem}>
           {data.images !== null ? <St.PostItemImg src={data.images} alt="" /> : null}
           <St.LocationParagraph>
             {data.countryId}, {data.regionId}

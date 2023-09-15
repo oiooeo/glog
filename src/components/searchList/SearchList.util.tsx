@@ -12,14 +12,14 @@ export const scrollToTop = (scrollRef: any) => {
 
 interface renderPostItemsProps {
   searchResult: Array<Tables<'posts'>>;
-  lastItem?: boolean | null;
+  lastitem?: boolean | null;
 }
 
-const RefRenderPostItems = ({ searchResult, lastItem }: renderPostItemsProps, ref?: any) => {
+const RefRenderPostItems = ({ searchResult, lastitem }: renderPostItemsProps, ref?: any) => {
   return (
     <>
       {searchResult.map((post, index) => {
-        return <PostItem key={post.id} data={post} ref={searchResult.length - 1 === index ? ref : null} lastItem={searchResult.length - 1 === index ? lastItem : null} />;
+        return <PostItem key={post.id} data={post} ref={searchResult.length - 1 === index ? ref : null} lastitem={searchResult.length - 1 === index ? lastitem : null} />;
       })}
     </>
   );
