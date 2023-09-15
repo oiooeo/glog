@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { loadPinImage, pinImages, removeMapLayersAndSource } from './globeCluster.util';
+import { loadPinImage, pinImages, removeMapLayersAndSource } from './GlobeCluster.util';
 import Detail from '../detail/Detail';
 
 import type { Tables } from '../../types/supabase';
