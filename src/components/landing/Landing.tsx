@@ -14,7 +14,7 @@ const Landing = () => {
         const newPercentage = prevPercentage + 1;
         if (newPercentage >= 100) {
           clearInterval(timer as NodeJS.Timeout);
-          return 100; // percentage가 100 이상으로 가지 않도록 보장
+          return 100;
         }
         return newPercentage;
       });

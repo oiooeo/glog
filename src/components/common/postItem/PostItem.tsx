@@ -43,7 +43,7 @@ const PostItem = ({ data, lastitem, fetchLikedPosts }: PostItemProps, ref: any) 
           <Detail data={data} />
         </St.DetailLayout>
       ) : (
-        <St.PostItemLayout ref={itemRef} onClick={lastitem ? signin : focus} lastitem={lastitem}>
+        <St.PostItemLayout ref={itemRef} onClick={lastitem ? signin : focus} lastitem={lastitem?.toString()}>
           {data.images !== null ? <St.PostItemImg src={data.images} alt="" /> : null}
           <St.LocationParagraph>
             {data.countryId}, {data.regionId}

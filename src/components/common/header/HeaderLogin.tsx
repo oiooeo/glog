@@ -34,11 +34,11 @@ const HeaderLogin = (props: HeaderLoginTypes) => {
       )}
 
       {session ? (
-        <St.AuthSpan onClick={handleToSignOut} opened={isSearchListOpened || undefined}>
+        <St.AuthSpan onClick={handleToSignOut} opened={isSearchListOpened.toString() || undefined}>
           로그아웃
         </St.AuthSpan>
       ) : (
-        <St.AuthSpan onClick={signinHandler} opened={isSearchListOpened || undefined}>
+        <St.AuthSpan onClick={signinHandler} opened={isSearchListOpened.toString() || undefined}>
           로그인
         </St.AuthSpan>
       )}
