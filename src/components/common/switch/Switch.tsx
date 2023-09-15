@@ -14,7 +14,7 @@ interface SwitchProps {
   background: string;
 }
 
-const Switch: React.FC<SwitchProps> = ({ checked, onChange, leftText, rightText, width, checkedtextcolor, textcolor, checkedbackground, background }) => {
+const Switch = ({ checked, onChange, leftText, rightText, width, checkedtextcolor, textcolor, checkedbackground, background }: SwitchProps) => {
   const handleClick = () => {
     onChange(!checked);
   };
