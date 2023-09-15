@@ -23,9 +23,11 @@ const LikesList = () => {
       try {
         const likes = await getLikes(session.user.id);
         const likedPostIds = likes.map(like => like.postId);
-        const postData = await getPostLikes(likedPostIds, page);
-        setLikedPosts(prevPosts => [...prevPosts, ...postData]);
-        setLikedPostsId(likedPostIds);
+        const postData = await getPostLikes(session.user.id, likedPostIds, page);
+        if (postData) {
+          setLikedPosts(prevPosts => [...prevPosts, ...postData] as Array<Tables<'posts'>>);
+          setLikedPostsId(likedPostIds);
+        }
       } catch (error) {
         console.error('Error fetching liked posts:', error);
       } finally {
