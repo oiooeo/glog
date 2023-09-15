@@ -71,12 +71,22 @@ export const getIsLike = async (postId: string) => {
   return data;
 };
 
-export const getPostLikes = async (postId: string[], page: number) => {
+export const getPostLikes = async (userId: string, postId: string[], page: number) => {
   const from = page;
   const to = from + LAST_INDEX;
-  const { data, error } = await supabase.from('posts').select('*, user:userId(*)').in('id', postId).eq('private', false).order('createdAt', { ascending: false }).range(from, to);
-  if (error) throw new Error(`에러!! ${error.message}`);
-  return data;
+  const { data: likesData, error: likesError } = await supabase.from('likes').select('*').eq('userId', userId).in('postId', postId).order('createdAt', { ascending: false }).range(from, to);
+
+  if (likesError) {
+    throw new Error(`에러!! ${likesError.message}`);
+  }
+
+  const postIdsInLikes = likesData?.map(like => like.postId);
+
+  const { data: postsData, error: postsError } = await supabase.from('posts').select(`*, user:userId(*)`).in('id', postIdsInLikes).eq('private', false).order('id', { ascending: true });
+  if (postsError) throw new Error(`에러!! ${postsError.message}`);
+
+  const sortedPostsData = postIdsInLikes.map(postId => postsData.find(post => post.id === postId));
+  return sortedPostsData;
 };
 
 export const addLike = async ({ postId, userId }: { postId: string; userId: string }) => {
