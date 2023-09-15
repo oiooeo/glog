@@ -23,8 +23,8 @@ const LikesList = () => {
       try {
         const likes = await getLikes(session.user.id);
         const likedPostIds = likes.map(like => like.postId);
-        const postData = await getPostLikes(likedPostIds, page);
-        setLikedPosts(postData);
+        const postData = await getPostLikes(session.user.id, likedPostIds, page);
+        setLikedPosts(postData as Array<Tables<'posts'>>);
         setLikedPostsId(likedPostIds);
       } catch (e) {
         console.error(e);
