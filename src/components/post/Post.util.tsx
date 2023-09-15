@@ -133,6 +133,7 @@ const usePost = (data: Tables<'posts'> | undefined) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(['getPosts']);
+        usePostStore.getState().setIsPosting(false);
       },
     },
   );
@@ -140,7 +141,6 @@ const usePost = (data: Tables<'posts'> | undefined) => {
   const handleToDelete = ({ data }: DeleteProps) => {
     if (!data) return;
     deletePostMutation.mutate(data.id);
-    usePostStore.getState().setIsPosting(false);
     unmount('post');
     unmount('detail');
   };

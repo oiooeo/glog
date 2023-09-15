@@ -15,7 +15,7 @@ interface renderPostItemsProps {
   lastItem?: boolean | null;
 }
 
-const RefrenderPostItems = ({ searchResult, lastItem }: renderPostItemsProps, ref?: any) => {
+const RefRenderPostItems = ({ searchResult, lastItem }: renderPostItemsProps, ref?: any) => {
   return (
     <>
       {searchResult.map((post, index) => {
@@ -25,4 +25,4 @@ const RefrenderPostItems = ({ searchResult, lastItem }: renderPostItemsProps, re
   );
 };
 
-export default React.forwardRef(RefrenderPostItems);
+export default React.forwardRef(RefRenderPostItems);
