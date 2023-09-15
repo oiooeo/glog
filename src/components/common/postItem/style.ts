@@ -6,33 +6,31 @@ export const PostHoverLayout = styled.div`
   transition-duration: 0.3s;
   &:hover {
     margin-right: 50px;
-    z-index: 103;
   }
   @media (max-width: 1060px) {
     width: 320px;
   }
 `;
 
-export const PostItemLayout = styled.div<{ lastItem?: boolean }>`
+export const PostItemLayout = styled.div<{ lastitem?: boolean | null }>`
   position: relative;
   overflow: hidden;
   width: 300px;
-  height: ${props => (props.lastItem ? '150px' : '300px')};
-  border-radius: ${props => (props.lastItem ? '16px 16px 0 0' : '16px')};
-  filter: ${props => (props.lastItem ? 'blur(5px)' : 'none')};
+  height: ${props => (props.lastitem ? '150px' : '300px')};
+  border-radius: ${props => (props.lastitem ? '16px 16px 0 0' : '16px')};
+  filter: ${props => (props.lastitem ? 'blur(5px)' : 'none')};
   display: flex;
   justify-content: flex-end;
   align-items: center;
   transition: filter 0.3s ease;
   transition-property: margin-right;
   transition-duration: 0.3s;
-  z-index: 101;
 
   @media (max-width: 1060px) {
     height: 300px;
     margin: 15px 20px 15px 0;
     border-radius: 16px;
-    filter: ${props => (props.lastItem ? 'blur(5px)' : 'none')};
+    filter: ${props => (props.lastitem ? 'blur(5px)' : 'none')};
   }
 `;
 

@@ -37,7 +37,7 @@ const GlobeSearch = () => {
       const coordinates: [number, number] = [searchData[0].lon, searchData[0].lat];
       const isMobile = window.innerWidth <= 1060;
       if (isMobile) {
-        mapLocation.flyTo({ center: coordinates, zoom: 16 });
+        mapLocation.flyTo({ center: coordinates, zoom: 12, speed: 8 });
       } else {
         mapLocation.flyTo({ center: coordinates, zoom: 7 });
       }

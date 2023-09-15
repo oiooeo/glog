@@ -3,7 +3,7 @@ import React from 'react';
 import { BiHeart, BiSearch, BiSolidHeart } from 'react-icons/bi';
 import { BsXCircle } from 'react-icons/bs';
 
-import * as Styled from './style';
+import * as St from './style';
 import { useSessionStore } from '../../../zustand/useSessionStore';
 
 interface HeaderSearchTypes {
@@ -24,40 +24,40 @@ const HeaderSearch = (props: HeaderSearchTypes) => {
   const session = useSessionStore(state => state.session);
 
   return (
-    <Styled.Wrapper>
+    <St.Wrapper>
       {isSearchListOpened ? (
         <>
-          <Styled.CircleButton onClick={closeSearchList} opened={isSearchListOpened || undefined}>
+          <St.CircleButton onClick={closeSearchList} opened={isSearchListOpened || undefined}>
             <BsXCircle size={'22px'} />
-          </Styled.CircleButton>
-          <Styled.SearchBox>
-            <Styled.SearchInput placeholder="가고 싶은 여행지를 입력하세요" type="text" name="keyword" onChange={handleChangeKeyword} onKeyPress={handleOnEnterPress} maxLength={20} autoComplete="off" />
-            <Styled.SearchButton type="button" onClick={handleToSearch}>
+          </St.CircleButton>
+          <St.SearchBox>
+            <St.SearchInput placeholder="가고 싶은 여행지를 입력하세요" type="text" name="keyword" onChange={handleChangeKeyword} onKeyPress={handleOnEnterPress} maxLength={20} autoComplete="off" />
+            <St.SearchButton type="button" onClick={handleToSearch}>
               <BiSearch size={'22px'} />
-            </Styled.SearchButton>
-          </Styled.SearchBox>
+            </St.SearchButton>
+          </St.SearchBox>
         </>
       ) : (
         <>
-          <Styled.CircleButton onClick={openSearchList}>
+          <St.CircleButton onClick={openSearchList}>
             <BiSearch size={'22px'} />
-          </Styled.CircleButton>
+          </St.CircleButton>
           {isLikeListOpened ? (
             <>
-              <Styled.CircleButton onClick={closeLikesList}>
+              <St.CircleButton onClick={closeLikesList}>
                 <BiSolidHeart size={'22px'} />
-              </Styled.CircleButton>
+              </St.CircleButton>
             </>
           ) : (
             <>
-              <Styled.CircleButton onClick={session ? openLikesList : signinHandler}>
+              <St.CircleButton onClick={session ? openLikesList : signinHandler}>
                 <BiHeart size={'22px'} />
-              </Styled.CircleButton>
+              </St.CircleButton>
             </>
           )}
         </>
       )}
-    </Styled.Wrapper>
+    </St.Wrapper>
   );
 };
 

@@ -1,6 +1,6 @@
 import type { MouseEvent, ReactNode } from 'react';
 
-import * as Styled from './style';
+import * as St from './style';
 import { useOverlayContext } from '../Overlay.context';
 
 interface Props {
@@ -26,30 +26,30 @@ const Modal = ({ children, name, position }: Props) => {
   switch (position) {
     case 'center':
       content = (
-        <Styled.ModalOuter onClick={handleClose}>
-          <Styled.ModalInner>{children}</Styled.ModalInner>
-        </Styled.ModalOuter>
+        <St.ModalOuter onClick={handleClose}>
+          <St.ModalInner>{children}</St.ModalInner>
+        </St.ModalOuter>
       );
       break;
     case 'left':
       content = (
-        <Styled.LeftModalOuter>
-          <Styled.LeftModalInner>{children}</Styled.LeftModalInner>
-        </Styled.LeftModalOuter>
+        <St.LeftModalOuter>
+          <St.LeftModalInner>{children}</St.LeftModalInner>
+        </St.LeftModalOuter>
       );
       break;
     case 'right':
       content = (
-        <Styled.RightModalOuter>
-          <Styled.RightModalInner>{children}</Styled.RightModalInner>
-        </Styled.RightModalOuter>
+        <St.RightModalOuter>
+          <St.RightModalInner>{children}</St.RightModalInner>
+        </St.RightModalOuter>
       );
       break;
     default:
       content = (
-        <Styled.ModalOuter onClick={handleClose}>
-          <Styled.ModalInner>{children}</Styled.ModalInner>
-        </Styled.ModalOuter>
+        <St.ModalOuter onClick={handleClose}>
+          <St.ModalInner>{children}</St.ModalInner>
+        </St.ModalOuter>
       );
   }
 

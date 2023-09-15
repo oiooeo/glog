@@ -2,7 +2,7 @@ import toast from 'react-simple-toasts';
 
 import { supabase } from './supabaseClient';
 
-import type { Tables } from '../types/supabase';
+export const LAST_INDEX = 4;
 
 export const getUser = async (email?: string) => {
   const { data, error } = await supabase.from('users').select('*').eq('email', email);
@@ -19,8 +19,18 @@ export const addNewUser = async (id: string, email: string, name: string, profil
   }
 };
 
-export const addPost = async (newPost: Tables<'posts'>) => {
-  await supabase.from('posts').insert(newPost);
+export const getPosts = async () => {
+  const { data, error } = await supabase.from('posts').select('*, user:userId(*)').eq('private', false).order('createdAt', { ascending: false });
+  if (error) throw new Error(`에러!! ${error.message}`);
+  return data;
+};
+
+export const getListPost = async (page: number) => {
+  const from = page;
+  const to = from + LAST_INDEX;
+  const { data, error } = await supabase.from('posts').select('*, user:userId(*)').eq('private', false).order('createdAt', { ascending: false }).range(from, to);
+  if (error) throw new Error(`에러!! ${error.message}`);
+  return data;
 };
 
 export const getMyPosts = async (userId: string) => {
@@ -29,8 +39,10 @@ export const getMyPosts = async (userId: string) => {
   return data;
 };
 
-export const getPosts = async () => {
-  const { data, error } = await supabase.from('posts').select('*, user:userId(*)').eq('private', false).order('createdAt', { ascending: false });
+export const getMyListPost = async ({ userId, page }: { userId: string; page: number }) => {
+  const from = page;
+  const to = from + LAST_INDEX;
+  const { data, error } = await supabase.from('posts').select('*, user:userId(*)').eq('userId', userId).order('createdAt', { ascending: false }).range(from, to);
   if (error) throw new Error(`에러!! ${error.message}`);
   return data;
 };
@@ -47,25 +59,34 @@ export const getPostByUserId = async (userId: string) => {
   return data[0];
 };
 
-export const getIsLike = async (postId: string) => {
-  const { data, error } = await supabase.from('likes').select('*').eq('postId', postId);
-  if (error) throw new Error(`에러!! ${error.message}`);
-  return data;
-};
-
 export const getLikes = async (userId: string) => {
   const { data, error } = await supabase.from('likes').select('*').eq('userId', userId);
   if (error) throw new Error(`에러!! ${error.message}`);
   return data;
 };
 
-export const getPostLikes = async (postId: string[], page: number) => {
-  const LAST_INDEX = 4;
-  const from = page;
-  const to = from + LAST_INDEX;
-  const { data, error } = await supabase.from('posts').select('*, user:userId(*)').in('id', postId).eq('private', false).order('createdAt', { ascending: false }).range(from, to);
+export const getIsLike = async (postId: string) => {
+  const { data, error } = await supabase.from('likes').select('*').eq('postId', postId);
   if (error) throw new Error(`에러!! ${error.message}`);
   return data;
+};
+
+export const getPostLikes = async (userId: string, postId: string[], page: number) => {
+  const from = page;
+  const to = from + LAST_INDEX;
+  const { data: likesData, error: likesError } = await supabase.from('likes').select('*').eq('userId', userId).in('postId', postId).order('createdAt', { ascending: false }).range(from, to);
+
+  if (likesError) {
+    throw new Error(`에러!! ${likesError.message}`);
+  }
+
+  const postIdsInLikes = likesData?.map(like => like.postId);
+
+  const { data: postsData, error: postsError } = await supabase.from('posts').select(`*, user:userId(*)`).in('id', postIdsInLikes).eq('private', false).order('id', { ascending: true });
+  if (postsError) throw new Error(`에러!! ${postsError.message}`);
+
+  const sortedPostsData = postIdsInLikes.map(postId => postsData.find(post => post.id === postId));
+  return sortedPostsData;
 };
 
 export const addLike = async ({ postId, userId }: { postId: string; userId: string }) => {
@@ -76,7 +97,7 @@ export const deleteLike = async (id: string) => {
   await supabase.from('likes').delete().eq('id', id);
 };
 
-export const deleteButton = async (postId: string) => {
+export const deletePost = async (postId: string) => {
   try {
     await supabase.from('likes').delete().eq('postId', postId);
     await supabase.from('posts').delete().eq('id', postId);

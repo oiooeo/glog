@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 
-import * as Styled from './style';
+import * as St from './style';
 import { signin } from '../../../api/supabaseAuth';
 import useOnClickOutside from '../../../hooks/useOnClickOutSide';
 import { useMapLocationStore } from '../../../zustand/useMapLocationStore';
@@ -12,10 +12,11 @@ import type { Tables } from '../../../types/supabase';
 
 interface PostItemProps {
   data: Tables<'posts'>;
-  lastItem?: boolean;
+  lastitem?: boolean | null;
+  fetchLikedPosts?: () => Promise<void>;
 }
 
-const PostItem = ({ data, lastItem }: PostItemProps, ref: any) => {
+const PostItem = ({ data, lastitem, fetchLikedPosts }: PostItemProps, ref: any) => {
   const DetailLayoutref = useRef<HTMLDivElement>(null);
   const itemRef = useRef<HTMLDivElement>(null);
   const [isClicked, setIsClicked] = useState(false);
@@ -36,23 +37,23 @@ const PostItem = ({ data, lastItem }: PostItemProps, ref: any) => {
   useOnClickOutside(DetailLayoutref, showDetail);
 
   return (
-    <Styled.PostHoverLayout ref={ref}>
+    <St.PostHoverLayout ref={ref}>
       {isClicked ? (
-        <Styled.DetailLayout ref={DetailLayoutref}>
+        <St.DetailLayout ref={DetailLayoutref}>
           <Detail data={data} />
-        </Styled.DetailLayout>
+        </St.DetailLayout>
       ) : (
-        <Styled.PostItemLayout ref={itemRef} onClick={lastItem ? signin : focus} lastItem={lastItem}>
-          {data.images !== null ? <Styled.PostItemImg src={data.images} alt="" /> : null}
-          <Styled.LocationParagraph>
+        <St.PostItemLayout ref={itemRef} onClick={lastitem ? signin : focus} lastitem={lastitem}>
+          {data.images !== null ? <St.PostItemImg src={data.images} alt="" /> : null}
+          <St.LocationParagraph>
             {data.countryId}, {data.regionId}
-          </Styled.LocationParagraph>
-          <Styled.LikeBox>
-            <Like data={data} />
-          </Styled.LikeBox>
-        </Styled.PostItemLayout>
+          </St.LocationParagraph>
+          <St.LikeBox>
+            <Like data={data} fetchLikedPosts={fetchLikedPosts} />
+          </St.LikeBox>
+        </St.PostItemLayout>
       )}
-    </Styled.PostHoverLayout>
+    </St.PostHoverLayout>
   );
 };
 

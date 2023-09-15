@@ -1,174 +1,113 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-simple-toasts';
-
-import ContentsSection from './Post.ContentsSection';
-import ImageUploadHook from './Post.hooks';
-import UploadBox from './Post.UploadBox';
-import { handleMutationFunction, handleMutationSuccess } from './Post.util';
-import * as Styled from './style';
-import { deleteButton, getPostByPostId } from '../../api/supabaseDatabase';
+import ImageUpload from './imageUpload/ImageUpload';
+import useImageUpload from './imageUpload/ImageUpload.hooks';
+import usePost from './Post.util';
+import PostLocation from './postLocation/PostLocation';
+import * as St from './style';
 import useInput from '../../hooks/useInput';
-import { useLocationStore } from '../../zustand/useLocationStore';
-import { usePostStore } from '../../zustand/usePostStore';
 import { useSessionStore } from '../../zustand/useSessionStore';
 import { useModal } from '../common/overlay/modal/Modal.hooks';
+import Switch from '../common/switch/Switch';
+
+import type { Tables } from '../../types/supabase';
 
 interface PostProps {
-  unmount: (name: string) => void;
-  type: string;
-  postId?: string;
+  data?: Tables<'posts'>;
 }
 
-export interface LocationInfoTypes {
-  countryId: string | null;
-  regionId: string | null;
-  address: string | null;
-}
-
-const Post = ({ type, unmount, postId }: PostProps) => {
-  const { mount } = useModal();
-  const queryClient = useQueryClient();
-  const clickedLocation = useLocationStore(state => state.clickedLocation);
+const Post = ({ data }: PostProps) => {
+  const { unmount } = useModal();
   const session = useSessionStore(state => state.session);
   const userId = session?.user.id;
   const imgRef = useRef<HTMLInputElement>(null);
-  const [data, setData] = useState<any>(null);
-  const [here, setHere] = useState(false);
-  const [switchChecked, setSwitchChecked] = useState(type === 'post' ? false : data?.private);
-  const [contents, handleChangeContents] = useInput(type === 'post' ? '' : data?.contents);
-  const [location, setLocation] = useState({ longitude: 0, latitude: 0 });
-  const [locationInfo, setLocationInfo] = useState<LocationInfoTypes>({ countryId: '', regionId: '', address: '' });
+  const [switchChecked, setSwitchChecked] = useState<boolean>(data?.private ?? false);
+  const [contents, handleChangeContents] = useInput(data?.contents ?? '');
+  const isContentsEmpty = contents === '';
 
-  const { imgFile, setImgFile, imgUrl, loading, handleImageInputChange } = ImageUploadHook(userId!);
+  const { handleDrop, handleImageSubmit, imgFile, setImgFile, imgUrl, loading } = useImageUpload(userId!);
+  const { onSubmit, onUpdate, handleToDelete, clickedLocation, handleToSetLocation, location, getLocationInformation, locationInfo, setLocationInfo, handleToResetLocation, here, setHere } = usePost(data);
 
-  const { mutate } = useMutation({
-    mutationFn: async () => {
-      await handleMutationFunction({ type, session, contents, imgUrl, locationInfo, location, switchChecked, data });
-    },
-    onSuccess: async () => {
-      await handleMutationSuccess({ queryClient, type, mount, unmount, userId, postId });
-    },
-  });
-
-  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    if (event.dataTransfer.files && event.dataTransfer.files?.length > 1) {
-      toast('사진은 한 게시물에 한장까지만 업로드 돼요!', { className: 'image-alert', position: 'top-left', duration: 1000 });
-    }
-
-    const file = event.dataTransfer.files[0];
-    if (file) {
-      handleImageInputChange(file);
-    }
-  };
-
-  const handleImageSubmit = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const allowedFormats = ['image/png', 'image/jpeg', 'image/jpg', 'image/heic'];
-
-    if (event.target.files && !allowedFormats.includes(event.target.files[0].type)) {
-      toast('이미지 파일(png, jpeg, jpg, heic)을 선택하세요.', { className: 'image-alert', position: 'top-left', duration: 1000 });
-      return;
-    }
-    if (event.target.files && event.target.files?.length > 1) {
-      toast('사진은 한 게시물에 한장까지만 업로드 돼요!', { className: 'image-alert', position: 'top-left', duration: 1000 });
-    }
-    const file = event.target.files?.[0];
-    if (!file) return;
-    handleImageInputChange(file);
-  };
-
-  const getLocationInformation = async () => {
-    const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${location.longitude},${location.latitude}.json?access_token=${process.env.REACT_APP_ACCESS_TOKEN}&language=ko`);
-    const data = await response.json();
-    const dataFeatures = data.features;
-    if (dataFeatures.length === 0) {
-      toast(`육지에 핀을 꽂아주세요!`, { className: 'post-alert', position: 'top-center' });
-    } else {
-      const placeName = dataFeatures[dataFeatures.length - 2].place_name_ko || dataFeatures[dataFeatures.length - 2].place_name;
-      const placeComponents = placeName.split(', ');
-      setLocationInfo({
-        countryId: placeComponents[placeComponents.length - 2],
-        regionId: placeComponents[placeComponents.length - 1],
-        address: dataFeatures[0].place_name_ko !== undefined ? dataFeatures[0].place_name_ko : dataFeatures[0].place_name,
-      });
+  useEffect(() => {
+    if (data) {
+      setImgFile(data.images);
+      setLocationInfo({ countryId: data.countryId, regionId: data.regionId, address: data.address });
       setHere(true);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (location.latitude === 0 || location.longitude === 0) return;
     getLocationInformation();
   }, [location]);
 
-  const handleToSetLocation = () => {
-    setLocation({ longitude: clickedLocation.longitude, latitude: clickedLocation.latitude });
-  };
-
-  const handleToResetLocation = () => {
-    setHere(false);
-  };
-
   const handleToSubmit = () => {
-    mutate();
-    unmount('post');
+    if (!isContentsEmpty) {
+      onSubmit({ session, contents, imgUrl, locationInfo, location, switchChecked });
+      unmount('post');
+    }
   };
 
-  const fetchData = async () => {
-    if (!postId) return;
-    const postData = await getPostByPostId(postId);
-    if (!postData) return;
-    setData(postData);
-    setImgFile(postData.images);
-    setLocation({ longitude: postData.longitude, latitude: postData.latitude });
-    setSwitchChecked(postData.private);
-    setLocationInfo({ countryId: postData.countryId, regionId: postData.regionId, address: postData.address });
+  const handleToUpdate = () => {
+    if (!isContentsEmpty) {
+      onUpdate({ session, contents, imgUrl, switchChecked, data });
+      unmount('post');
+    }
   };
-
-  const deletePostMutation = useMutation(
-    async (postId: string) => {
-      await deleteButton(postId);
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['getPosts']);
-      },
-    },
-  );
-
-  const handleDelete = () => {
-    if (!data) return;
-    deletePostMutation.mutate(data.id);
-    usePostStore.getState().setIsPosting(false);
-    unmount('post');
-    unmount('detail');
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, [postId]);
 
   return (
-    <Styled.PostLayout>
-      <UploadBox imgFile={imgFile} loading={loading} handleImageSubmit={handleImageSubmit} imgRef={imgRef} handleDrop={handleDrop} />
-      <ContentsSection
-        type={type}
-        imgFile={imgFile}
-        here={here}
-        locationInfo={locationInfo}
-        clickedLocation={clickedLocation}
-        contents={contents}
-        switchChecked={switchChecked}
-        handleDelete={handleDelete}
-        setSwitchChecked={setSwitchChecked}
-        handleChangeContents={handleChangeContents}
-        handleToSetLocation={handleToSetLocation}
-        handleToResetLocation={handleToResetLocation}
-        handleToSubmit={handleToSubmit}
-        data={data}
-      />
-    </Styled.PostLayout>
+    <St.PostLayout>
+      <ImageUpload imgFile={imgFile} loading={loading} handleImageSubmit={handleImageSubmit} imgRef={imgRef} handleDrop={handleDrop} />
+      {imgFile && <PostLocation data={data} here={here} locationInfo={locationInfo} handleToResetLocation={handleToResetLocation} clickedLocation={clickedLocation} handleToSetLocation={handleToSetLocation}></PostLocation>}
+
+      {here && (
+        <>
+          <St.ContentsInput placeholder="짧은 글을 남겨주세요!" defaultValue={data?.contents ?? undefined} onChange={handleChangeContents} maxLength={30} rows={2} />
+          <St.SwitchBox>
+            <Switch
+              checked={switchChecked}
+              onChange={setSwitchChecked}
+              leftText={'전체공개'}
+              rightText={'나만보기'}
+              width={'300px'}
+              checkedtextcolor={'#353C49'}
+              textcolor={'#72808E'}
+              checkedbackground={'#72808E'}
+              background={'rgba(18, 18, 18, 0.6)'}
+            />
+          </St.SwitchBox>
+          <St.MobileSwitchBox>
+            <p>공개범위</p>
+            <Switch checked={switchChecked} onChange={setSwitchChecked} leftText={'전체'} rightText={'MY'} width={'70px'} checkedtextcolor={'#353C49'} textcolor={'#B3BAC1'} checkedbackground={'#B3BAC1'} background={'rgba(18, 18, 18, 0.6)'} />
+          </St.MobileSwitchBox>
+
+          <>
+            {data ? (
+              <>
+                <St.ButtonBox>
+                  <St.MobileDeleteButton
+                    size="medium"
+                    variant="deep-gray"
+                    onClick={() => {
+                      handleToDelete({ data });
+                    }}
+                  >
+                    삭제하기
+                  </St.MobileDeleteButton>
+                  <St.MobileEditButton size="medium" variant={isContentsEmpty ? 'gray' : 'orange-shadow'} onClick={handleToUpdate}>
+                    수정하기
+                  </St.MobileEditButton>
+                </St.ButtonBox>
+              </>
+            ) : (
+              <St.PostSubmitButton size="large" variant={isContentsEmpty ? 'gray' : 'orange-shadow'} onClick={handleToSubmit}>
+                작성하기
+              </St.PostSubmitButton>
+            )}
+          </>
+        </>
+      )}
+    </St.PostLayout>
   );
 };
 

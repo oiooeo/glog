@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
+import { useInView } from 'react-intersection-observer';
 
 import SessionDependentView from './SearchList.SessionDependentView';
-import { scrollToTop } from './SearchList.util';
-import { getMyPosts, getPosts } from '../../api/supabaseDatabase';
+import { getListPost, getMyListPost, getPosts } from '../../api/supabaseDatabase';
 import { useMapLocationStore } from '../../zustand/useMapLocationStore';
 import { useSearchStore } from '../../zustand/useSearchStore';
 import { useSessionStore } from '../../zustand/useSessionStore';
 import { useTabStore } from '../../zustand/useTabStore';
+import { PAGE_COUNT } from '../likesList/LikesList';
 
 import type { Tables } from '../../types/supabase';
 
@@ -19,51 +19,46 @@ interface SearchListProps {
 
 const SearchList = ({ keyword, isSearchListOpened }: SearchListProps) => {
   const { key, setKey } = useSearchStore();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(0);
   const mapLocation = useMapLocationStore(state => state.mapLocation);
 
-  const [searchResult, setSearchResult] = useState<Array<Tables<'posts'>>>();
+  const [searchResult, setSearchResult] = useState<Array<Tables<'posts'>>>([]);
   const session = useSessionStore(state => state.session);
   const tab = useTabStore(state => state.tab);
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-  const { data: postsData } = useQuery(['getPosts'], getPosts);
-  const { data: myData } = useQuery(['getMyPosts'], async () => await getMyPosts(session?.user.id as string));
 
-  const fetchData = tab === 'explore' ? postsData : tab === 'my' ? myData : null;
-  const data = tab === 'explore' || tab === 'my' ? fetchData : null;
-
-  const handleScroll = () => {
-    setLoading(true);
-    if (scrollRef.current) {
-      const isAtBottom = scrollRef.current.scrollHeight - scrollRef.current.scrollTop === scrollRef.current.clientHeight;
-      if (isAtBottom) {
-        setTimeout(() => {
-          setPage(prev => prev + 1);
-          setLoading(false);
-        }, 1000);
-      } else {
-        setLoading(false);
-      }
+  const checkPostData = (postData: Array<Tables<'posts'>>) => {
+    if (page !== 0 && page % 5 === 0) {
+      setSearchResult(prevPosts => [...prevPosts, ...postData]);
+      setPage(prev => prev + PAGE_COUNT);
+    } else {
+      setSearchResult(postData);
+      setPage(prev => prev + PAGE_COUNT);
     }
   };
 
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.addEventListener('scroll', handleScroll);
+  const addPostData = async () => {
+    if (key !== '') {
+      const SearchData = await getPosts();
+      const searchData = SearchData?.filter(item => item.countryId?.includes(key) || item.regionId?.includes(key) || item.address?.includes(key));
+      setSearchResult(searchData);
+      setPage(0);
+    } else if (tab === 'explore') {
+      const postData = await getListPost(page);
+      checkPostData(postData);
+    } else {
+      const postData = await getMyListPost({ userId: session?.user.id as string, page });
+      checkPostData(postData);
     }
+  };
 
-    return () => {
-      if (scrollRef.current) {
-        scrollRef.current.removeEventListener('scroll', handleScroll);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    scrollToTop(scrollRef);
-    setPage(1);
-  }, [tab]);
+  const { ref } = useInView({
+    threshold: 1,
+    triggerOnce: true,
+    onChange: inView => {
+      if (!inView) return;
+      addPostData();
+    },
+  });
 
   useEffect(() => {
     if (isSearchListOpened) {
@@ -72,10 +67,8 @@ const SearchList = ({ keyword, isSearchListOpened }: SearchListProps) => {
   }, [keyword, isSearchListOpened]);
 
   useEffect(() => {
-    const searchData = data?.filter(item => item.countryId?.includes(key) || item.regionId?.includes(key) || item.address?.includes(key));
-    const filterData = searchData?.slice(0, page * 5);
-    setSearchResult(filterData);
-  }, [data, page, key]);
+    addPostData();
+  }, [tab, key]);
 
   useEffect(() => {
     if (searchResult && searchResult.length > 0 && key.length > 0) {
@@ -87,7 +80,7 @@ const SearchList = ({ keyword, isSearchListOpened }: SearchListProps) => {
     }
   }, [key, searchResult, mapLocation]);
 
-  return <SessionDependentView session={session} scrollRef={scrollRef} searchResult={searchResult} loading={loading} />;
+  return <SessionDependentView session={session} searchResult={searchResult} ref={ref} />;
 };
 
 export default SearchList;

@@ -27,7 +27,9 @@ code {
 
 @media (max-width: 1060px) {
   .image-alert {
-    transform: translate(0px, 420px);
+    position: absolute;
+    left: calc((100vw - 370px) / 2);
+    transform: translate(0, 420px);
   }
 }
 

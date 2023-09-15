@@ -4,7 +4,7 @@ import mapboxgl from 'mapbox-gl';
 
 import { INITIAL_CENTER, ZOOM } from './Globe.content';
 import { pickImageMarker } from './globe.util';
-import * as Styled from './style';
+import * as St from './style';
 import { useLikeStore } from '../../zustand/useLikeStore';
 import { useLocationStore } from '../../zustand/useLocationStore';
 import { useMapLocationStore } from '../../zustand/useMapLocationStore';
@@ -106,7 +106,7 @@ const Globe = ({ postsData }: MapProps) => {
     }
     globeCluster({ clusterData, mapLocation, postsData, mount, flyToLocation, isPostModalOpened });
   }, [clusterData, mount, postsData, isPostModalOpened, isRightModalOpened, isSearchListOpened]);
-  return <Styled.GlobeLayout ref={mapContainerRef} className="globeScroll" />;
+  return <St.GlobeLayout ref={mapContainerRef} className="globeScroll" />;
 };
 
 export default Globe;

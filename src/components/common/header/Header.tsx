@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useHeaderModal } from './Header.hooks';
 import HeaderLogin from './HeaderLogin';
 import HeaderSearch from './HeaderSearch';
-import * as Styled from './style';
+import * as St from './style';
 import { AuthError, signin, signout } from '../../../api/supabaseAuth';
 import { supabase } from '../../../api/supabaseClient';
 import { addNewUser } from '../../../api/supabaseDatabase';
@@ -24,7 +24,6 @@ const Header = () => {
   const setSession = useSessionStore(state => state.setSession);
   const isPostModalOpened = usePostStore(state => state.isPosting);
   const isRightModalOpened = useMarkerInvisible(state => state.isMarkerInvisible);
-  const close = isPostModalOpened || isRightModalOpened || false;
 
   const signinHandler = () => {
     try {
@@ -95,13 +94,13 @@ const Header = () => {
   }, []);
 
   return (
-    <Styled.HeaderWrapper>
-      <Styled.Wrapper>
-        <Styled.HeaderLogo src={logo} alt="" onClick={() => (window.location.href = '/')} />
+    <St.HeaderWrapper>
+      <St.Wrapper>
+        <St.HeaderLogo src={logo} alt="" onClick={() => (window.location.href = '/')} />
         <HeaderLogin openPost={openPost} closePost={closePost} signinHandler={signinHandler} signoutHandler={signoutHandler} isSearchListOpened={isSearchListOpened} />
-      </Styled.Wrapper>
+      </St.Wrapper>
 
-      <Styled.SwitchBox close={isPostModalOpened || isRightModalOpened || undefined}>
+      <St.SwitchBox close={isPostModalOpened || isRightModalOpened || undefined}>
         <Switch
           checked={switchChecked}
           onChange={setSwitchChecked}
@@ -113,7 +112,7 @@ const Header = () => {
           checkedbackground={'rgba(221, 82, 1, 0.4)'}
           background={'rgba(18, 18, 18, 0.6)'}
         />
-      </Styled.SwitchBox>
+      </St.SwitchBox>
       <HeaderSearch
         openSearchList={openSearchList}
         closeSearchList={closeSearchList}
@@ -126,7 +125,7 @@ const Header = () => {
         isLikeListOpened={isLikeListOpened}
         handleChangeKeyword={handleChangeKeyword}
       />
-    </Styled.HeaderWrapper>
+    </St.HeaderWrapper>
   );
 };
 

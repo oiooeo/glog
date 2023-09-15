@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { useInView } from 'react-intersection-observer';
 
-import * as Styled from './style';
+import * as St from './style';
 import { getLikes, getPostLikes } from '../../api/supabaseDatabase';
 import { useLikeStore } from '../../zustand/useLikeStore';
 import { useSessionStore } from '../../zustand/useSessionStore';
@@ -18,14 +18,30 @@ const LikesList = () => {
   const { setLikedPostsId } = useLikeStore();
   const [page, setPage] = useState<number>(0);
 
+  const fetchLikedPosts = async () => {
+    if (session) {
+      try {
+        const likes = await getLikes(session.user.id);
+        const likedPostIds = likes.map(like => like.postId);
+        const postData = await getPostLikes(session.user.id, likedPostIds, page);
+        setLikedPosts(postData as Array<Tables<'posts'>>);
+        setLikedPostsId(likedPostIds);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
+
   const loadMoreLikedPosts = async () => {
     if (session) {
       try {
         const likes = await getLikes(session.user.id);
         const likedPostIds = likes.map(like => like.postId);
-        const postData = await getPostLikes(likedPostIds, page);
-        setLikedPosts(prevPosts => [...prevPosts, ...postData]);
-        setLikedPostsId(likedPostIds);
+        const postData = await getPostLikes(session.user.id, likedPostIds, page);
+        if (postData) {
+          setLikedPosts(prevPosts => [...prevPosts, ...postData] as Array<Tables<'posts'>>);
+          setLikedPostsId(likedPostIds);
+        }
       } catch (error) {
         console.error('Error fetching liked posts:', error);
       } finally {
@@ -49,11 +65,11 @@ const LikesList = () => {
 
   return (
     <>
-      <Styled.ScrollDiv>
+      <St.ScrollDiv>
         {likedPosts.map((post, index) => {
-          return <PostItem key={post.id} data={post} ref={likedPosts.length - 1 === index ? ref : null} />;
+          return <PostItem key={post.id} data={post} ref={likedPosts.length - 1 === index ? ref : null} fetchLikedPosts={fetchLikedPosts} />;
         })}
-      </Styled.ScrollDiv>
+      </St.ScrollDiv>
     </>
   );
 };
