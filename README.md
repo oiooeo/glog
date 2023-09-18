@@ -67,7 +67,7 @@ $ yarn start
 🛰️ <b>목록이 열리면 지구본 위에 별(pin)로 지역 표시</b>
 ![image](https://file.notion.so/f/f/4a4d655a-a571-44cc-a169-b5f3dbeb2eb1/52887d71-5490-45c8-916b-8f0916278bc0/listing.gif?id=123ef482-3da8-4bdc-849c-e1fcc93d27ce&table=block&spaceId=4a4d655a-a571-44cc-a169-b5f3dbeb2eb1&expirationTimestamp=1695103200000&signature=Pq0XxRdtUm0_nRIu_0ZVfscRaZ2KA74DfUDE3T5EnGw&downloadName=listing.gif)
 
-🚀 <b>사진의 메타데이터 활용해서 촬영했던 장소 안내</b>
+🚀 <b>사진의 메타데이터 활용해서 촬영했던 장소 안내</b><br/>
 ![image](https://file.notion.so/f/f/4a4d655a-a571-44cc-a169-b5f3dbeb2eb1/642c417c-e696-4de9-9bb4-f5db2a8f9f90/metad.gif?id=a3495862-16c0-46ba-aced-43431830d8ae&table=block&spaceId=4a4d655a-a571-44cc-a169-b5f3dbeb2eb1&expirationTimestamp=1695103200000&signature=YET9nB4cYWKJ9JvRApj2-gT8Lprp0UJhVuJOKAMIl8E&downloadName=metad.gif)
 
 ---
