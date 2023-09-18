@@ -4,9 +4,6 @@
 
 ![Slide 16_9 - 1](https://github.com/oiooeo/glog/assets/133937368/a50c6d6f-a58b-49e3-8adb-c89ffc0cd5d7)
 
-<!-- ![Sep-01-2023 20-39-36](https://github.com/oiooeo/glog/assets/133937368/0f497dc5-b1d3-4c57-b586-d7aafcc09ac1)
-![Sep-01-2023 20-38-43](https://github.com/oiooeo/glog/assets/133937368/6b849379-c089-4000-b0f2-f9641d7dfa1b) -->
-
 ---
 
 ## 팀구성
@@ -46,7 +43,7 @@ $ yarn start
 
 💻 Environment
 
-![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white) ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
+![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white) ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white) ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white) ![Vercel](https://img.shields.io/badge/vercel-%23121011.svg?style=for-the-badge&logo=vercel&logoColor=white)
 
 💾 Database
 
@@ -54,11 +51,24 @@ $ yarn start
 
 📚 Development
 
-![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![Styled Components](https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white) ![Yarn](https://img.shields.io/badge/yarn-%232C8EBB.svg?style=for-the-badge&logo=yarn&logoColor=white) ![mapbox](https://img.shields.io/badge/mapbox-000000.svg?style=for-the-badge&logo=mapbox&logoColor=white) ![React](https://img.shields.io/badge/zustand-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![React Query](https://img.shields.io/badge/-React%20Query-FF4154?style=for-the-badge&logo=react%20query&logoColor=white)
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![Styled Components](https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white) ![Yarn](https://img.shields.io/badge/yarn-%232C8EBB.svg?style=for-the-badge&logo=yarn&logoColor=white) ![mapbox](https://img.shields.io/badge/mapbox-4264fb.svg?style=for-the-badge&logo=mapbox&logoColor=white) ![React](https://img.shields.io/badge/zustand-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![React Query](https://img.shields.io/badge/-React%20Query-FF4154?style=for-the-badge&logo=react%20query&logoColor=white) ![ESLint](https://img.shields.io/badge/-ESLint-4B32C3?style=for-the-badge&logo=ESLint&logoColor=white)
 
 💬 Communication
 
 ![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=Slack&logoColor=white) ![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white) ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=Figma&logoColor=white)
+
+---
+
+## 주요 기능
+
+✨ <b>클러스터링</b>
+![image](https://file.notion.so/f/f/4a4d655a-a571-44cc-a169-b5f3dbeb2eb1/723d494f-5cae-4961-8c94-a763efa590a2/clustering.gif?id=5143a027-2463-4058-b94d-6d8924a72838&table=block&spaceId=4a4d655a-a571-44cc-a169-b5f3dbeb2eb1&expirationTimestamp=1695103200000&signature=4zMREQ_xUZig6bGnmAOQbcv3CViWAd5dq3dsAk3jq6Q&downloadName=clustering.gif)
+
+🛰️ <b>목록이 열리면 지구본 위에 별(pin)로 지역 표시</b>
+![image](https://file.notion.so/f/f/4a4d655a-a571-44cc-a169-b5f3dbeb2eb1/52887d71-5490-45c8-916b-8f0916278bc0/listing.gif?id=123ef482-3da8-4bdc-849c-e1fcc93d27ce&table=block&spaceId=4a4d655a-a571-44cc-a169-b5f3dbeb2eb1&expirationTimestamp=1695103200000&signature=Pq0XxRdtUm0_nRIu_0ZVfscRaZ2KA74DfUDE3T5EnGw&downloadName=listing.gif)
+
+🚀 <b>사진의 메타데이터 활용해서 촬영했던 장소 안내</b>
+![image](https://file.notion.so/f/f/4a4d655a-a571-44cc-a169-b5f3dbeb2eb1/642c417c-e696-4de9-9bb4-f5db2a8f9f90/metad.gif?id=a3495862-16c0-46ba-aced-43431830d8ae&table=block&spaceId=4a4d655a-a571-44cc-a169-b5f3dbeb2eb1&expirationTimestamp=1695103200000&signature=YET9nB4cYWKJ9JvRApj2-gT8Lprp0UJhVuJOKAMIl8E&downloadName=metad.gif)
 
 ---
 
@@ -103,9 +113,11 @@ $ yarn start
  ┃ ┃ ┣ 📜clusterTwenty.png
  ┃ ┃ ┣ 📜pinFocus.svg
  ┃ ┃ ┣ 📜pinLarge.svg
+ ┃ ┃ ┣ 📜pinLargeFocus.svg
  ┃ ┃ ┣ 📜pinSmall.svg
  ┃ ┃ ┗ 📜unclusterPin.png
- ┃ ┗ 📜logo.svg
+ ┃ ┣ 📜logo.svg
+ ┃ ┗ 📜miniLogo.svg
  ┣ 📂components
  ┃ ┣ 📂common
  ┃ ┃ ┣ 📂button
@@ -144,9 +156,6 @@ $ yarn start
  ┃ ┃ ┣ 📜Globe.tsx
  ┃ ┃ ┣ 📜globe.util.tsx
  ┃ ┃ ┗ 📜style.ts
- ┃ ┣ 📂globeCluster
- ┃ ┃ ┣ 📜GlobeCluster.tsx
- ┃ ┃ ┗ 📜GlobeCluster.util.ts
  ┃ ┣ 📂globeSearch
  ┃ ┃ ┣ 📜GlobeSearch.SearchBox.tsx
  ┃ ┃ ┣ 📜GlobeSearch.tsx
@@ -162,9 +171,13 @@ $ yarn start
  ┃ ┃ ┣ 📜LikesList.tsx
  ┃ ┃ ┗ 📜style.ts
  ┃ ┣ 📂post
- ┃ ┃ ┣ 📜Post.ContentsSection.tsx
- ┃ ┃ ┣ 📜Post.UploadBox.tsx
- ┃ ┃ ┣ 📜Post.hooks.ts
+ ┃ ┃ ┣ 📂imageUpload
+ ┃ ┃ ┃ ┣ 📜ImageUpload.hooks.ts
+ ┃ ┃ ┃ ┣ 📜ImageUpload.tsx
+ ┃ ┃ ┃ ┗ 📜style.ts
+ ┃ ┃ ┣ 📂postLocation
+ ┃ ┃ ┃ ┣ 📜PostLocation.tsx
+ ┃ ┃ ┃ ┗ 📜style.ts
  ┃ ┃ ┣ 📜Post.tsx
  ┃ ┃ ┣ 📜Post.util.tsx
  ┃ ┃ ┗ 📜style.ts
@@ -174,6 +187,8 @@ $ yarn start
  ┃ ┃ ┣ 📜SearchList.util.tsx
  ┃ ┃ ┗ 📜style.ts
  ┣ 📂hooks
+ ┃ ┣ 📂mutations
+ ┃ ┃ ┗ 📜useLikeMutation.ts
  ┃ ┣ 📜useInput.tsx
  ┃ ┣ 📜useLockBodyScroll.ts
  ┃ ┗ 📜useOnClickOutSide.ts
@@ -183,11 +198,15 @@ $ yarn start
  ┃ ┗ 📜Router.tsx
  ┣ 📂types
  ┃ ┗ 📜supabase.ts
+ ┣ 📂util
+ ┃ ┗ 📜GlobeCluster.tsx
  ┣ 📂zustand
+ ┃ ┣ 📜useLikeStore.ts
  ┃ ┣ 📜useLocationStore.ts
  ┃ ┣ 📜useMapLocationStore.ts
  ┃ ┣ 📜useMarkerInvisible.ts
  ┃ ┣ 📜usePostStore.ts
+ ┃ ┣ 📜useSearchStore.ts
  ┃ ┣ 📜useSessionStore.ts
  ┃ ┗ 📜useTabStore.ts
  ┣ 📜App.css
