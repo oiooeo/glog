@@ -5,7 +5,7 @@ import mapboxgl from 'mapbox-gl';
 import { INITIAL_CENTER, ZOOM } from './Globe.content';
 import { pickImageMarker } from './globe.util';
 import * as St from './style';
-import { globeCluster } from '../../utile/GlobeCluster';
+import { globeCluster } from '../../util/GlobeCluster';
 import { useLikeStore } from '../../zustand/useLikeStore';
 import { useLocationStore } from '../../zustand/useLocationStore';
 import { useMapLocationStore } from '../../zustand/useMapLocationStore';
