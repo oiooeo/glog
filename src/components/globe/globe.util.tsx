@@ -72,6 +72,6 @@ export const pickLocationWithMarker = (map: any, clickedPostLocation: { longitud
   map.flyTo({
     center: [clickedPostLocation.longitude, clickedPostLocation.latitude],
     zoom: 7,
-    speed: 10,
+    speed: 8,
   });
 };
