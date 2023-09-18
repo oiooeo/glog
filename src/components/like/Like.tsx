@@ -16,6 +16,7 @@ const Like = ({ data, fetchLikedPosts }: LikeProps) => {
   const stopTwiceClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
   };
+
   return (
     <St.LikeLayout onClick={stopTwiceClick}>
       <St.LikeButton
