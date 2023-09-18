@@ -4,7 +4,7 @@ import Footer from '../components/common/footer/Footer';
 import Header from '../components/common/header/Header';
 import Home from '../pages/Home';
 
-const Router: React.FC = () => {
+const Router = () => {
   return (
     <>
       <BrowserRouter>
