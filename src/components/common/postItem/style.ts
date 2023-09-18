@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 
-export const PostHoverLayout = styled.div`
+export const PostLayout = styled.div`
   transition: filter 0.3s ease;
   transition-property: margin-right;
   transition-duration: 0.3s;
@@ -12,13 +12,13 @@ export const PostHoverLayout = styled.div`
   }
 `;
 
-export const PostItemLayout = styled.div<{ lastitem?: boolean | null }>`
+export const PostItemLayout = styled.div<{ lastitem?: string | null }>`
   position: relative;
   overflow: hidden;
   width: 300px;
-  height: ${props => (props.lastitem ? '150px' : '300px')};
-  border-radius: ${props => (props.lastitem ? '16px 16px 0 0' : '16px')};
-  filter: ${props => (props.lastitem ? 'blur(5px)' : 'none')};
+  height: ${props => (props.lastitem === 'true' ? '150px' : '300px')};
+  border-radius: ${props => (props.lastitem === 'true' ? '16px 16px 0 0' : '16px')};
+  filter: ${props => (props.lastitem === 'true' ? 'blur(5px)' : 'none')};
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -30,7 +30,7 @@ export const PostItemLayout = styled.div<{ lastitem?: boolean | null }>`
     height: 300px;
     margin: 15px 20px 15px 0;
     border-radius: 16px;
-    filter: ${props => (props.lastitem ? 'blur(5px)' : 'none')};
+    filter: ${props => (props.lastitem === 'true' ? 'blur(5px)' : 'none')};
   }
 `;
 

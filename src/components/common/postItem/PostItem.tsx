@@ -37,13 +37,13 @@ const PostItem = ({ data, lastitem, fetchLikedPosts }: PostItemProps, ref: any) 
   useOnClickOutside(DetailLayoutref, showDetail);
 
   return (
-    <St.PostHoverLayout ref={ref}>
+    <St.PostLayout ref={ref}>
       {isClicked ? (
         <St.DetailLayout ref={DetailLayoutref}>
           <Detail data={data} />
         </St.DetailLayout>
       ) : (
-        <St.PostItemLayout ref={itemRef} onClick={lastitem ? signin : focus} lastitem={lastitem}>
+        <St.PostItemLayout ref={itemRef} onClick={lastitem ? signin : focus} lastitem={lastitem?.toString()}>
           {data.images !== null ? <St.PostItemImg src={data.images} alt="" /> : null}
           <St.LocationParagraph>
             {data.countryId}, {data.regionId}
@@ -53,7 +53,7 @@ const PostItem = ({ data, lastitem, fetchLikedPosts }: PostItemProps, ref: any) 
           </St.LikeBox>
         </St.PostItemLayout>
       )}
-    </St.PostHoverLayout>
+    </St.PostLayout>
   );
 };
 

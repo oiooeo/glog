@@ -90,6 +90,7 @@ const Header = () => {
         }
       });
     }
+    if (session === null) return;
     getUserData();
   }, []);
 
@@ -100,17 +101,17 @@ const Header = () => {
         <HeaderLogin openPost={openPost} closePost={closePost} signinHandler={signinHandler} signoutHandler={signoutHandler} isSearchListOpened={isSearchListOpened} />
       </St.Wrapper>
 
-      <St.SwitchBox close={isPostModalOpened || isRightModalOpened || undefined}>
+      <St.SwitchBox $close={isPostModalOpened?.toString() || isRightModalOpened?.toString() || undefined}>
         <Switch
           checked={switchChecked}
           onChange={setSwitchChecked}
           leftText={'탐색'}
           rightText={'MY'}
           width={'230px'}
-          checkedtextcolor={'#FFFFFF'}
-          textcolor={'#CCCFD3'}
-          checkedbackground={'rgba(221, 82, 1, 0.4)'}
-          background={'rgba(18, 18, 18, 0.6)'}
+          $checkedtextcolor={'#FFFFFF'}
+          $textcolor={'#CCCFD3'}
+          $checkedbackground={'rgba(221, 82, 1, 0.4)'}
+          $background={'rgba(18, 18, 18, 0.6)'}
         />
       </St.SwitchBox>
       <HeaderSearch
