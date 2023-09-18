@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { AuthError, signin } from '../../api/supabaseAuth';
 import { getIsLike } from '../../api/supabaseDatabase';
-import { useLikeMutation } from '../../zustand/mutations/useLikeMutation';
+import { useLikeMutation } from '../../hooks/mutations/useLikeMutation';
 import { useSessionStore } from '../../zustand/useSessionStore';
 
 import type { LikeProps } from './Like';
