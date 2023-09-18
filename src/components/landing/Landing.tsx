@@ -30,7 +30,7 @@ const Landing = () => {
   }, []);
 
   return (
-    <St.PageLanding completeclass={completeclass}>
+    <St.PageLanding $completeclass={completeclass}>
       {percentage <= 50 && (
         <>
           <St.MainText>지구를 여행했던 기록을 남겨보세요</St.MainText>
@@ -44,7 +44,7 @@ const Landing = () => {
         </>
       )}
       <St.Landing>
-        <St.LandingBar percentage={percentage} />
+        <St.LandingBar $percentage={percentage} />
       </St.Landing>
     </St.PageLanding>
   );

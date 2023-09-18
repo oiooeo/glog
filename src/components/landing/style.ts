@@ -1,7 +1,7 @@
 import { styled } from 'styled-components';
 
-export const PageLanding = styled.div<{ completeclass: string }>`
-  z-index: ${props => (props.completeclass === 'true' ? 0 : 101)};
+export const PageLanding = styled.div<{ $completeclass: string }>`
+  z-index: ${props => (props.$completeclass === 'true' ? 0 : 101)};
   position: fixed;
   width: 100%;
   height: 100%;
@@ -31,9 +31,9 @@ export const Landing = styled.div`
     width: 80%;
   }
 `;
-export const LandingBar = styled.div<{ percentage: number }>`
+export const LandingBar = styled.div<{ $percentage: number }>`
   background-color: #e55a54;
-  width: ${props => (props.percentage > 100 ? '100' : props.percentage)}%;
+  width: ${props => (props.$percentage > 100 ? '100' : props.$percentage)}%;
   height: 100%;
 `;
 

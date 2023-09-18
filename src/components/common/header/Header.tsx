@@ -90,6 +90,7 @@ const Header = () => {
         }
       });
     }
+    if (session === null) return;
     getUserData();
   }, []);
 
@@ -107,10 +108,10 @@ const Header = () => {
           leftText={'탐색'}
           rightText={'MY'}
           width={'230px'}
-          checkedtextcolor={'#FFFFFF'}
-          textcolor={'#CCCFD3'}
-          checkedbackground={'rgba(221, 82, 1, 0.4)'}
-          background={'rgba(18, 18, 18, 0.6)'}
+          $checkedtextcolor={'#FFFFFF'}
+          $textcolor={'#CCCFD3'}
+          $checkedbackground={'rgba(221, 82, 1, 0.4)'}
+          $background={'rgba(18, 18, 18, 0.6)'}
         />
       </St.SwitchBox>
       <HeaderSearch
