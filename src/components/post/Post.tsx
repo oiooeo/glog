@@ -70,15 +70,15 @@ const Post = ({ data }: PostProps) => {
               leftText={'전체공개'}
               rightText={'나만보기'}
               width={'300px'}
-              checkedtextcolor={'#353C49'}
-              textcolor={'#72808E'}
-              checkedbackground={'#72808E'}
-              background={'rgba(18, 18, 18, 0.6)'}
+              $checkedtextcolor={'#353C49'}
+              $textcolor={'#72808E'}
+              $checkedbackground={'#72808E'}
+              $background={'rgba(18, 18, 18, 0.6)'}
             />
           </St.SwitchBox>
           <St.MobileSwitchBox>
             <p>공개범위</p>
-            <Switch checked={switchChecked} onChange={setSwitchChecked} leftText={'전체'} rightText={'MY'} width={'70px'} checkedtextcolor={'#353C49'} textcolor={'#B3BAC1'} checkedbackground={'#B3BAC1'} background={'rgba(18, 18, 18, 0.6)'} />
+            <Switch checked={switchChecked} onChange={setSwitchChecked} leftText={'전체'} rightText={'MY'} width={'70px'} $checkedtextcolor={'#353C49'} $textcolor={'#B3BAC1'} $checkedbackground={'#B3BAC1'} $background={'rgba(18, 18, 18, 0.6)'} />
           </St.MobileSwitchBox>
 
           <>
