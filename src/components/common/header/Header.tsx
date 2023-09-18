@@ -101,7 +101,7 @@ const Header = () => {
         <HeaderLogin openPost={openPost} closePost={closePost} signinHandler={signinHandler} signoutHandler={signoutHandler} isSearchListOpened={isSearchListOpened} />
       </St.Wrapper>
 
-      <St.SwitchBox close={isPostModalOpened?.toString() || isRightModalOpened?.toString() || undefined}>
+      <St.SwitchBox $close={isPostModalOpened?.toString() || isRightModalOpened?.toString() || undefined}>
         <Switch
           checked={switchChecked}
           onChange={setSwitchChecked}

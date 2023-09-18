@@ -33,7 +33,7 @@ export const HeaderLogo = styled.img`
   }
 `;
 
-export const CircleButton = styled.button<{ opened?: string }>`
+export const CircleButton = styled.button<{ $opened?: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,7 +47,7 @@ export const CircleButton = styled.button<{ opened?: string }>`
   cursor: pointer;
 
   @media (max-width: 1060px) {
-    margin-left: ${props => (props.opened === 'true' ? '0' : '10px')};
+    margin-left: ${props => (props.$opened === 'true' ? '0' : '10px')};
   }
 `;
 
@@ -82,7 +82,7 @@ export const ClosePostButton = styled(OpenPostButton)`
   }
 `;
 
-export const AuthSpan = styled.span<{ opened?: string }>`
+export const AuthSpan = styled.span<{ $opened?: string }>`
   margin-left: 10px;
   color: #72808e;
   font-size: 15px;
@@ -90,7 +90,7 @@ export const AuthSpan = styled.span<{ opened?: string }>`
   cursor: pointer;
 
   @media (max-width: 1060px) {
-    display: ${props => (props.opened === 'true' ? 'none' : 'block')};
+    display: ${props => (props.$opened === 'true' ? 'none' : 'block')};
     width: 40px;
     margin-left: 5px;
     font-size: 11px;
@@ -98,14 +98,14 @@ export const AuthSpan = styled.span<{ opened?: string }>`
   }
 `;
 
-export const SwitchBox = styled.div<{ close?: string }>`
+export const SwitchBox = styled.div<{ $close?: string }>`
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 
   @media (max-width: 1060px) {
-    display: ${props => (props.close === 'true' ? 'none' : 'flex')};
+    display: ${props => (props.$close === 'true' ? 'none' : 'flex')};
     position: fixed;
     top: auto;
     bottom: 0px;
