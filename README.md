@@ -1,4 +1,4 @@
-## [Glog\*](https://www.glog.world/)
+## [Glog\*](https://www.glog.life/)
 
 > `Globe` + `Log` = `Glog`
 
